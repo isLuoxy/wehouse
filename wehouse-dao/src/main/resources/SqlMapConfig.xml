@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--环境配置-->
+    <!--默认环境-->
+    <environments default="mysql">
+        <!--mysql环境-->
+        <environment id="mysql">
+            <!--JDBC事务-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--POOLED连接池-->
+            <dataSource type="POOLED">
+                <!--四大参数-->
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/wehouse?useSSL=false"/>
+                <property name="username" value="root"/>
+                <property name="password" value=""/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/HouseMapper.xml"/>
+        <mapper resource="mapper/HouseExtMapper.xml"/>
+        <mapper resource="mapper/CollectionMapper.xml"/>
+        <mapper resource="mapper/CityMapper.xml"/>
+        <mapper resource="mapper/CommonMapper.xml" />
+    </mappers>
+</configuration>

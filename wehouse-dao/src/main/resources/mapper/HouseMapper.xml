@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.HouseDao">
+
+    <resultMap id="HouseResultMap" type="cn.l99.wehouse.pojo.House">
+        <id property="id" column="house_pri_id"/>
+        <result property="name" column="house_name"/>
+        <result property="rentalType" column="rental_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="orientation" column="orientation" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="area" column="area"/>
+        <result property="floor" column="floor"/>
+        <result property="price" column="price"/>
+        <result property="checkInTime" column="check-in-time"/>
+        <result property="elevator" column="elevator" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="houseType" column="house_type"/>
+        <result property="provinceCnName" column="province_cn_name"/>
+        <result property="cityCnName" column="city_cn_name"/>
+        <result property="regionCnName" column="region_cn_name"/>
+        <result property="placeCnName" column="place_cn_name"/>
+        <result property="village" column="village"/>
+        <result property="address" column="address"/>
+        <result property="houseStatus" column="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="distanceToSubway" column="distance_to_subway"/>
+        <result property="ownerId" column="ownerId"/>
+        <result property="pictureUrl" column="picture_url"/>
+    </resultMap>
+
+    <!--    <resultMap id="HouseExtResultMap" type="cn.l99.wehouse.pojo.HouseExt">-->
+    <!--        <id property="id" column="house_ext_pri_id" />-->
+    <!--        <result property="houseId" column="house_id" />-->
+    <!--        <result property="television" column="television" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="fridge" column="fridge" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="washingMachine" column="washing-machine" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="airConditioning" column="air-conditioning" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="heater" column="heater" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="bed" column="bed" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="broadband" column="broadband" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="wardrobe" column="wardrobe" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />-->
+    <!--        <result property="subwayLineId" column="subway_line_id" />-->
+    <!--        <result property="subwayStationId" column="subway_station_id" />-->
+    <!--        <result property="description" column="description" />-->
+    <!--    </resultMap>-->
+
+    <resultMap id="AHouseResultMap" type="cn.l99.wehouse.pojo.AHouse">
+        <association property="house" resultMap="HouseResultMap"/>
+        <association property="houseExt" resultMap="cn.l99.wehouse.dao.HouseExtDao.HouseExtResultMap"/>
+    </resultMap>
+
+    <sql id="House_Column_List">
+        h.id as house_pri_id,name as house_name,rental_type,orientation,area,floor,price,`check-in-time`,elevator,house_type,province_cn_name,city_cn_name,region_cn_name,place_cn_name,
+        village,address,status,distance_to_subway,owner_id,picture_url
+    </sql>
+
+    <sql id="House_Ext_Column_List">
+        he.id as house_ext_pri_id,house_id,television,fridge,`washing-machine`,`air-conditioning`,heater,bed,broadband,wardrobe,subway_line_id,subway_station_id,description
+    </sql>
+
+    <select id="getHouseByCityPyName" resultMap="HouseResultMap" parameterType="String">
+        select
+        <include refid="House_Column_List"/>
+        from house h where h.city_cn_name = (select cn_name from subway_citys where pre = #{cityName})
+    </select>
+
+
+    <select id="getAHouseByHouseId" resultMap="AHouseResultMap" parameterType="String">
+        select
+        <include refid="House_Column_List"/>,
+        <include refid="House_Ext_Column_List"/>
+        from house h,house_ext he where h.id = he.house_id and h.id = #{houseId}
+    </select>
+</mapper>

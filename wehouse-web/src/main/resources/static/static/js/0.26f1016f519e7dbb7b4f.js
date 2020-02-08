@@ -1,0 +1,2 @@
+webpackJsonp([0],{"2TRo":function(e,t){},MyhH:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r={render:function(){var e=this.$createElement;return(this._self._c||e)("div")},staticRenderFns:[]};var a=n("VU/8")({name:"reflushHome",data:function(){return this.$router.replace("/"),{}}},r,!1,function(e){n("2TRo")},"data-v-8a5081ae",null);t.default=a.exports}});
+//# sourceMappingURL=0.26f1016f519e7dbb7b4f.js.map

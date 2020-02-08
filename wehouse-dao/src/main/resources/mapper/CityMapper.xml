@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.CityDao">
+
+    <resultMap id="CityResultMap" type="cn.l99.wehouse.pojo.dto.CityDto">
+        <result property="cityId" column="city_id" />
+        <result property="cityCnName" column="city_cn_name" />
+        <result property="cityPyName" column="city_py_name" />
+    </resultMap>
+
+    <select id="getAllCitys" resultMap="CityResultMap" >
+        select distinct h.city_cn_name, city.id as city_id, city.pre as city_py_name from house h,subway_citys city where h.city_cn_name = city.cn_name;
+    </select>
+
+    <select id="getSubwayLinesByCityId"  resultMap="cn.l99.wehouse.dao.common.SubwayLinesResultMap">
+        select name as line_name,id as line_id from subway_lines where city_id = #{cityId}
+    </select>
+
+    <select id="getSubwayStationByLineId" resultMap="cn.l99.wehouse.dao.common.SubwayStationResultMap">
+        select name as station_name,id as station_id from subway_stations where line_id = #{lineId}
+    </select>
+</mapper>

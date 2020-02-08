@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.HouseExtDao">
+
+    <resultMap id="HouseExtResultMap" type="cn.l99.wehouse.pojo.HouseExt">
+        <id property="id" column = "house_ext_pri_id" />
+        <result property="houseId" column="house_id" />
+        <result property="television" column="television" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="fridge" column="fridge" typeHandler="org.apache.ibatis.type.EnumTypeHandler"  />
+        <result property="washingMachine" column="washing-machine" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="airConditioning" column="air-conditioning" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="heater" column="heater" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="bed" column="bed" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="broadband" column="broadband" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="wardrobe" column="wardrobe" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+        <result property="subwayLineId" column="subway_line_id" />
+        <result property="subwayStationId" column="subway_station_id" />
+        <result property="description" column="description" />
+    </resultMap>
+</mapper>

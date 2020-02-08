@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.UserDao">
+
+    <resultMap id="userResultMap" type="cn.l99.wehouse.pojo.User">
+        <id property="id" column="user_pri_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userNickname" column="user_nickname"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="studentAuthentication" column="student_authentication"
+                typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="userStatus" column="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="createTime" column="create_time"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+    </resultMap>
+
+    <resultMap id="houseCollectionMap" type="cn.l99.wehouse.pojo.HouseCollection">
+        <association property="house" javaType="cn.l99.wehouse.pojo.House"
+                     resultMap="cn.l99.wehouse.dao.HouseDao.HouseResultMap"/>
+        <association property="collection" javaType="cn.l99.wehouse.pojo.Collection"
+                     resultMap="cn.l99.wehouse.dao.CollectionDao.CollectionResultMap"/>
+    </resultMap>
+
+
+    <sql id="User_Column_List">
+        u.id as user_pri_id,user_name,user_nickname,user_password,student_authentication,user_phone,status,create_time,last_login_time
+    </sql>
+
+    <sql id="Base_User_Column_List">
+         u.id as user_pri_id,user_name ,user_nickname,user_password,student_authentication,user_phone
+    </sql>
+
+    <select id="selectUserByUserName" resultMap="userResultMap">
+        select
+        <include refid="Base_User_Column_List"/>
+        from user u where user_name = #{userName}
+    </select>
+
+    <select id="selectUserByUserPhone" resultMap="userResultMap">
+        select
+        <include refid="Base_User_Column_List"/>
+        from user u where user_phone = #{userPhone}
+    </select>
+
+    <select id="selectUserByUserId" resultMap="userResultMap">
+        select
+        <include refid="Base_User_Column_List"/>
+        from user u where id = #{userId}
+    </select>
+
+    <select id="selectHouseAndCollectionByUserId" resultMap="houseCollectionMap">
+        select <include refid="cn.l99.wehouse.dao.HouseDao.House_Column_List"/>,
+        <include refid="cn.l99.wehouse.dao.CollectionDao.Collection_Column_List"/>
+        from house h,collection c where c.house_id = h.id and c.user_id = #{userId}
+    </select>
+
+    <insert id="insertUser" parameterType="cn.l99.wehouse.pojo.User">
+        insert into user(user_name,user_nickname,user_password,user_phone,create_time) values(#{userName},#{userNickname},#{userPassword},#{userPhone},#{createTime})
+    </insert>
+</mapper>
