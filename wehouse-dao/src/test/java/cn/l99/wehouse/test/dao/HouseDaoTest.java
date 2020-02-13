@@ -4,7 +4,10 @@ import cn.l99.wehouse.dao.CityDao;
 import cn.l99.wehouse.dao.HouseDao;
 import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
+import cn.l99.wehouse.pojo.baseEnum.Orientation;
 import cn.l99.wehouse.pojo.dto.CityDto;
+import cn.l99.wehouse.utils.HouseUtils;
+import cn.l99.wehouse.utils.condition.HouseCondition;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -23,7 +26,9 @@ public class HouseDaoTest extends AbstractTest {
     @Test
     public void getHouseDtoByCityName() {
         HouseDao houseDao = session.getMapper(HouseDao.class);
-        List<House> sz = houseDao.getHouseByCityPyName("sz");
+        String conditonStr = "g1-a福田区-p2";
+        HouseCondition houseCondition = HouseUtils.acqConditions(conditonStr);
+        List<House> sz = houseDao.getHouseByCityPyNameAndCondition("sz", houseCondition);
         log.info("{}", JSONObject.toJSONString(sz));
 
     }

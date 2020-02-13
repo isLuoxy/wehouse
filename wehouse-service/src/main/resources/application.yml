@@ -5,6 +5,10 @@ mybatis:
 spring:
   profiles:
     active: dev
+  mail:
+    host: smtp.163.com
+    username: a1048733180@163.com
+    password: 1swehouse
 
 ---
 spring:
@@ -28,25 +32,25 @@ spring:
           log-slow-sql: true
           slow-sql-millis: 1
   redis:
-    host: 121.36.29.50
+    host: 127.0.0.1
     port: 6379
 
 # service version
-wm ehouse:
+wehouse:
   service:
-    version: 1.0.0
+    version: 1.0.dev
 
 # Dubbo Config properties
 dubbo:
   application:
-    id: wehouse-service
-    name: wehouse-service
+    id: wehouse-service-dev
+    name: wehouse-service-dev
   registry:
     protocol: zookeeper
     address: 121.36.29.50:2181
   protocol:
     name: dubbo
-    port: 20880
+    port: 20881
 # web port
 server:
   port: 8888
@@ -77,9 +81,9 @@ spring:
     port: 6666
 
 # service version
-wm ehouse:
+wehouse:
   service:
-    version: 1.0.0
+    version: 1.0
 
 # Dubbo Config properties
 dubbo:

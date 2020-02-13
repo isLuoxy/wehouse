@@ -12,6 +12,7 @@
         <module>wehouse-utils</module>
         <module>wehouse-redis</module>
         <module>wehouse-map</module>
+        <module>wehouse-mail</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

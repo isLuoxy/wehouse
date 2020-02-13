@@ -11,25 +11,29 @@ spring:
 spring:
   profiles: dev
   redis:
-    host: 121.36.29.50
-    port: 6666
+    host: 127.0.0.1
+    port: 6379
+  mail:
+    host: a1048733180@163.com
+    port: 25
+    password: 1sluoxy
 
 # service version
 wehouse:
   service:
-    version: 1.0.0
+    version: 1.0.dev
 
 # Dubbo Config properties
 dubbo:
   application:
-    id: wehouse-web
-    name: wehouse-web
+    id: wehouse-web-dev
+    name: wehouse-web-dev
   registry:
     protocol: zookeeper
     address: 121.36.29.50:2181
   protocol:
     name: dubbo
-    port: 20880
+    port: 20881
 # web port
 server:
   port: 9999
@@ -44,7 +48,7 @@ spring:
 # service version
 wehouse:
   service:
-    version: 1.0.0
+    version: 1.0
 
 # Dubbo Config properties
 dubbo:

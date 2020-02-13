@@ -1,6 +1,7 @@
 package cn.l99.wehouse.controller;
 
 import cn.l99.wehouse.pojo.Collection;
+import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.UserVo;
 import cn.l99.wehouse.service.IUserService;
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class UserController {
 
-    @Reference(version = "1.0")
+    @Reference(version = "${wehouse.service.version}",timeout = 50000)
     IUserService userService;
 
     @PostMapping("/login")
@@ -41,20 +42,33 @@ public class UserController {
 
     @GetMapping("/i")
     public Object personalCenter(HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("userId");
+        String userId = String.valueOf(request.getSession().getAttribute("userId"));
         return userService.getPersonalCenterByUserId(userId);
     }
 
     @GetMapping("/i/collection")
     public Object getPersonalCollection(HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("userId");
+        String userId = String.valueOf(request.getSession().getAttribute("userId"));
         return userService.getPersonalCollectionByUserId(userId);
     }
 
     @PostMapping("/i/collection")
     public Object postPersonalCollection(HttpServletRequest request, @RequestBody Collection collection) {
-        String userId = (String) request.getSession().getAttribute("userId");
+        String userId = String.valueOf(request.getSession().getAttribute("userId"));
         collection.setUserId(Integer.valueOf(userId));
         return userService.postPersonalCollection(collection);
+    }
+
+    @PostMapping("/i/stuAuth/mail/{address}")
+    public Object postSendStuAuthMail(HttpServletRequest request, @PathVariable String address) {
+        String userId = String.valueOf(request.getSession().getAttribute("userId"));
+        CommonResult commonResult = userService.sendStuAuthEmail(userId, address);
+        return commonResult;
+    }
+
+    @GetMapping("/verifyEmailByUrl/uid/{uid}/email/{email}/token/{token}")
+    public Object updateUserStudentAuthentication(@PathVariable String uid, @PathVariable String email, @PathVariable String token) {
+        CommonResult commonResult = userService.updateUserStudentAuthentication(uid, email, token);
+        return commonResult;
     }
 }

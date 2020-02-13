@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan("cn.l99.wehouse.redis")
+@ComponentScan({"cn.l99.wehouse.redis", "cn.l99.wehouse.mail","cn.l99.wehouse.utils"})
 @MapperScan("cn.l99.wehouse.dao")
 @EnableDubbo
 @Slf4j

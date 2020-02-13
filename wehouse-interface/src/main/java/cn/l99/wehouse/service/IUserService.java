@@ -28,4 +28,8 @@ public interface IUserService {
     CommonResult getPersonalCollectionByUserId(String userId);
 
     CommonResult postPersonalCollection(Collection collection);
+
+    CommonResult sendStuAuthEmail(String userId, String address);
+
+    CommonResult updateUserStudentAuthentication(String uid, String email, String token);
 }

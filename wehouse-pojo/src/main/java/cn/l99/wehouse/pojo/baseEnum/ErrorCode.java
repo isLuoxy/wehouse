@@ -34,8 +34,24 @@ public enum ErrorCode {
     // 收藏失败
     COLLECTION_FAILED(4201, "收藏失败"),
 
+    // 学生验证成功
+    STU_AUTH_SUCCESS(4401, "学生验证通过，自动跳转首页"),
+
+    // 学生验证失败
+    STU_AUTH_FAILED(4402, "学生验证失败，自动跳转首页"),
+
+    // 邮件发送失败
+    EMAIL_SEND_FAILED(4403, "验证邮件发送失败"),
+
+    // 房源信息不存在
+    HOUSE_NOT_EXIST(4301, "房源信息不存在"),
+
+    // 该房源已出租
+    HOUSE_RENTED(4302, "房源已出租"),
+
     // 编码错误
-    CODING_ERROR(5000,"编码错误");
+    CODING_ERROR(5000, "编码出错");
+
     /**
      * 错误码
      */

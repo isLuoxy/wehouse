@@ -3,9 +3,13 @@ package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.CollectionDao;
 import cn.l99.wehouse.dao.UserDao;
+import cn.l99.wehouse.mail.Mail;
+import cn.l99.wehouse.mail.MailTemplate;
+import cn.l99.wehouse.mail.StudentCertificationMailTemplate;
 import cn.l99.wehouse.pojo.Collection;
 import cn.l99.wehouse.pojo.HouseCollection;
 import cn.l99.wehouse.pojo.User;
+import cn.l99.wehouse.pojo.baseEnum.CommonType;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
 import cn.l99.wehouse.pojo.dto.CollectionDto;
 import cn.l99.wehouse.pojo.dto.UserDto;
@@ -13,9 +17,12 @@ import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.UserVo;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IUserService;
+import cn.l99.wehouse.utils.EnvironmentProfiles;
+import cn.l99.wehouse.utils.ProfilesEnum;
 import cn.l99.wehouse.utils.SmsUtils;
 import cn.l99.wehouse.utils.UserUtils;
 import com.alibaba.dubbo.config.annotation.Service;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -29,8 +36,9 @@ import java.util.regex.Pattern;
  *
  * @author L99
  */
-@Service(version = "1.0")
+@Service(version = "${wehouse.service.version}")
 @Component
+@Slf4j
 public class UserServiceImpl implements IUserService {
 
     @Autowired
@@ -41,6 +49,12 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     RedisUtils redisUtils;
+
+    @Autowired
+    Mail mail;
+
+    @Autowired
+    EnvironmentProfiles environment;
 
     @Override
     public CommonResult checkUserPhone(String userPhone) {
@@ -56,6 +70,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public CommonResult register(UserVo userVo) {
+        log.info("userName:{},code:{},userPhone:{}",userVo.getUserName(),userVo.getCode(),userVo.getUserPhone());
         // 判断验证码是否正确
         String code = userVo.getCode();
         if (StringUtils.isEmpty(code) || !code.equals(redisUtils.get(userVo.getUserPhone()))) {
@@ -92,7 +107,7 @@ public class UserServiceImpl implements IUserService {
         }
         String token = UserUtils.generateToken(userVo.getUserName(), userVo.getUserPassword());
         // 过期时间30分钟
-        redisUtils.set(token, user.getId(), 3600);
+        redisUtils.set(token, String.valueOf(user.getId()), 3600);
         Map<String, String> map = new HashMap<>(2);
         map.put("token", token);
         return CommonResult.success(map);
@@ -110,6 +125,7 @@ public class UserServiceImpl implements IUserService {
             // 手机号存在的话直接返回
             return CommonResult.failure(ErrorCode.DUPLICATE_PHONE);
         }
+        // 生成6位数字
         int code = (int) ((Math.random() * 9 + 1) * 100000);
         // 调用短信平台 api 发送短信
         boolean result = SmsUtils.sendCode(phone, code);
@@ -117,7 +133,7 @@ public class UserServiceImpl implements IUserService {
             return CommonResult.failure(ErrorCode.CODE_SEND_FAILED);
         }
         // 将验证码存到 redis 中，并设置过期时间 10分钟
-        redisUtils.set(phone, code, 600);
+        redisUtils.set(phone, String.valueOf(code), 600);
         return CommonResult.success();
     }
 
@@ -178,4 +194,54 @@ public class UserServiceImpl implements IUserService {
             return CommonResult.failure(ErrorCode.COLLECTION_FAILED);
         }
     }
+
+    /**
+     * 发送学生认证邮件
+     *
+     * @param userId  用户 id
+     * @param address 用户邮箱地址
+     * @return
+     */
+    @Override
+    public CommonResult sendStuAuthEmail(String userId, String address) {
+        MailTemplate mailTemplate = new StudentCertificationMailTemplate();
+        System.out.println(environment);
+        System.out.println(environment.getActive());
+        Map<String, String> map = UserUtils.generatorCertificationLink(userId, address, ProfilesEnum.DEV);
+        String content = mailTemplate.generatorMailContent(map.get("link"));
+        boolean result = mail.sendMail(address, "wehouse 用户学生身份邮箱验证", content);
+        if (result) {
+            // 将验证信息存入 redis 中，并设置对应的过期时间(48小时)
+            redisUtils.set(map.get("token"), map.get("uid"), 48 * 60 * 60);
+            return CommonResult.success();
+        }
+        return CommonResult.failure(ErrorCode.EMAIL_SEND_FAILED);
+    }
+
+    /**
+     * 学生认证验证
+     *
+     * @return
+     */
+    @Override
+    public CommonResult updateUserStudentAuthentication(String uid, String email, String token) {
+        return verifyStuAtu(uid, email, token);
+    }
+
+    private CommonResult verifyStuAtu(String uid, String email, String token) {
+        String uidTemp = (String) redisUtils.get(token);
+        if (uidTemp == null || !uid.equals(uidTemp)) {
+            return CommonResult.failure(ErrorCode.STU_AUTH_FAILED);
+        }
+        String userId = UserUtils.parseCertificationLinkToken(uid, email, token);
+        boolean result = userDao.updateUserStudentAuthentication(userId, CommonType.Y);
+        if (result) {
+            // 删除之前存储的的 uid 和 验证token
+            redisUtils.del(token);
+            return CommonResult.success(ErrorCode.STU_AUTH_SUCCESS);
+        }
+        return CommonResult.failure(ErrorCode.STU_AUTH_FAILED);
+    }
+
+
 }

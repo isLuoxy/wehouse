@@ -1,6 +1,9 @@
 package cn.l99.wehouse.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -12,13 +15,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * redis 工具类
- *
  */
 @Component
 public class RedisUtils {
 
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 指定缓存失效时间
@@ -562,6 +564,16 @@ public class RedisUtils {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public void pipelineSet(Map<String, Object> map) {
+        redisTemplate.executePipelined(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection connection) throws DataAccessException {
+                map.forEach((key, value) -> connection.set(key.getBytes(), ((String) value).getBytes()));
+                return null;
+            }
+        });
     }
 
 }

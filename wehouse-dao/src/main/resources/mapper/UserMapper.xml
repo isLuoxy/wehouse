@@ -51,7 +51,7 @@
     </select>
 
     <select id="selectHouseAndCollectionByUserId" resultMap="houseCollectionMap">
-        select <include refid="cn.l99.wehouse.dao.HouseDao.House_Column_List"/>,
+        select<include refid="cn.l99.wehouse.dao.HouseDao.House_Column_List"/>,
         <include refid="cn.l99.wehouse.dao.CollectionDao.Collection_Column_List"/>
         from house h,collection c where c.house_id = h.id and c.user_id = #{userId}
     </select>
@@ -59,4 +59,7 @@
     <insert id="insertUser" parameterType="cn.l99.wehouse.pojo.User">
         insert into user(user_name,user_nickname,user_password,user_phone,create_time) values(#{userName},#{userNickname},#{userPassword},#{userPhone},#{createTime})
     </insert>
+    <update id="updateUserStudentAuthentication" >
+        update user set student_authentication = #{commonType} where id = #{userId}
+    </update>
 </mapper>

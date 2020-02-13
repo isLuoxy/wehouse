@@ -21,11 +21,15 @@ public class RegionDto implements Serializable {
     // 区域中文名称
     private String regionCnName;
 
-    @JSONField(serialize=false)
+    // 区域id
+    private String regionId;
+
+    @JSONField(serialize = false)
     // 区域英文名称（一般为拼音）
     private String regionEnName;
 
     public void convertToRegionDtoFromRegion(Region region) {
+        this.regionId = region.getId();
         this.regionCnName = region.getRegionName();
     }
 }

@@ -19,7 +19,7 @@ import java.net.URLDecoder;
 @RestController
 public class CommonController {
 
-    @Reference(version = "1.0")
+    @Reference(version = "${wehouse.service.version}")
     ICommonService commonService;
 
     @GetMapping("/citys")

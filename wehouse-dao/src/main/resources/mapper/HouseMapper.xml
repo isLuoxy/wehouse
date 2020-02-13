@@ -56,10 +56,31 @@
         he.id as house_ext_pri_id,house_id,television,fridge,`washing-machine`,`air-conditioning`,heater,bed,broadband,wardrobe,subway_line_id,subway_station_id,description
     </sql>
 
-    <select id="getHouseByCityPyName" resultMap="HouseResultMap" parameterType="String">
+    <select id="getHouseByCityPyNameAndCondition" resultMap="HouseResultMap" parameterType="String">
         select
         <include refid="House_Column_List"/>
-        from house h where h.city_cn_name = (select cn_name from subway_citys where pre = #{cityName})
+        from house h,subway_citys sc,house_ext he where h.city_cn_name = sc.cn_name and sc.pre = #{cityName}
+        <if test="houseCondition != null and houseCondition.regionCnName != null and houseCondition.regionCnName != ''">
+            and region_cn_name = #{houseCondition.regionCnName}
+        </if>
+        <if test="houseCondition != null and houseCondition.subwayLineId != null and houseCondition.subwayLineId != ''">
+            and h.id = he.house_id and he.subway_line_id = #{houseCondition.subwayLineId}
+        </if>
+        <if test="houseCondition != null and houseCondition.houseType != null and houseCondition.houseType != ''">
+            and h.house_type = #{houseCondition.houseType}
+        </if>
+        <if test="houseCondition != null and houseCondition.orientation != null and houseCondition.orientation != ''">
+            and h.orientation = #{houseCondition.orientation}
+        </if>
+        <if test="houseCondition != null and houseCondition.rentLessThan != null and houseCondition.rentLessThan != ''">
+            and h.price &lt; #{houseCondition.rentLessThan}
+        </if>
+        <if test="houseCondition != null and houseCondition.rentGreaterThanOrEqual != null and houseCondition.rentGreaterThanOrEqual != ''">
+            and h.price &gt;= #{houseCondition.rentGreaterThanOrEqual}
+        </if>
+        <if test="houseCondition != null and houseCondition.pageStart != null and houseCondition.pageStart != ''">
+            limit ${houseCondition.pageStart},${houseCondition.pageSize}
+        </if>
     </select>
 
 

@@ -2,6 +2,7 @@ package cn.l99.wehouse.dao;
 
 import cn.l99.wehouse.pojo.HouseCollection;
 import cn.l99.wehouse.pojo.User;
+import cn.l99.wehouse.pojo.baseEnum.CommonType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface UserDao {
     User selectUserByUserId(String userId);
 
     List<HouseCollection> selectHouseAndCollectionByUserId(String userId);
+
+    boolean updateUserStudentAuthentication(String userId, CommonType commonType);
 
 }

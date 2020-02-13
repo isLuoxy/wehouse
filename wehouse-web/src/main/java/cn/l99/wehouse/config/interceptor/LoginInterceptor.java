@@ -6,8 +6,6 @@ import cn.l99.wehouse.service.IUserService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.Cookie;
@@ -24,7 +22,7 @@ import java.io.PrintWriter;
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
 
-    @Reference(version = "1.0")
+    @Reference(version = "${wehouse.service.version}")
     IUserService userService;
 
     @Override

@@ -13,11 +13,17 @@ public enum CommonType {
 
     private String value;
 
+    //private String name;
+
     private CommonType(String value) {
         this.value = value;
     }
 
-    public String getValue(){
+    public String getValue() {
         return value;
     }
+//
+//    public String getName() {
+//        return this.name();
+//    }
 }
