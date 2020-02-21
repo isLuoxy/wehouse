@@ -2,7 +2,6 @@ package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.CityDao;
 import cn.l99.wehouse.map.utils.DistrictUtil;
-import cn.l99.wehouse.pojo.Collection;
 import cn.l99.wehouse.pojo.dto.CityDto;
 import cn.l99.wehouse.pojo.dto.RegionDto;
 import cn.l99.wehouse.pojo.dto.SubwayLineDto;
@@ -14,10 +13,8 @@ import cn.l99.wehouse.utils.SubwayUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.management.ObjectName;
 import java.util.*;
 import java.util.stream.Collectors;
 

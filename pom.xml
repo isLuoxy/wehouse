@@ -13,6 +13,7 @@
         <module>wehouse-redis</module>
         <module>wehouse-map</module>
         <module>wehouse-mail</module>
+        <module>wehouse-elasticsearch</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -37,6 +38,7 @@
         <fastjson.version>1.2.62</fastjson.version>
         <dubbo-starter.version>0.2.0</dubbo-starter.version>
         <curator-framework.version>2.12.0</curator-framework.version>
+        <es.version>2.2.4.RELEASE</es.version>
     </properties>
 
     <dependencyManagement>
@@ -98,7 +100,15 @@
                 <artifactId>zhenzisms</artifactId>
                 <version>1.0.4</version>
             </dependency>
+
+            <!-- ES SpringBoot-Starter 版本-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+                <version>${es.version}</version>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
 
     <dependencies>
@@ -122,6 +132,7 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
 </project>

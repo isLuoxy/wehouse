@@ -21,7 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class CollectionDto implements Serializable {
 
-    private int id;
+    private String id;
 
     private String name;
 

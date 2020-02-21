@@ -33,7 +33,6 @@
             <groupId>cn.l99</groupId>
             <artifactId>wehouse-redis</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>cn.l99</groupId>
@@ -51,6 +50,11 @@
             <artifactId>wehouse-mail</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.l99</groupId>
+            <artifactId>wehouse-elasticsearch</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

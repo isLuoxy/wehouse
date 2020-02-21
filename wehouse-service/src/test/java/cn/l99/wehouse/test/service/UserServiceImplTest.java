@@ -10,9 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest(classes = WeHouseApplication.class)
+@SpringBootTest(classes = {WeHouseApplication.class, BashTest.class})
 @RunWith(SpringRunner.class)
 @Slf4j
 public class UserServiceImplTest {
@@ -35,12 +36,12 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void insertUser(){
+    public void insertUser() {
         UserVo userVo = new UserVo();
         userVo.setUserName("l99");
         userVo.setUserPhone("13104884636");
         userVo.setUserPassword("root");
         CommonResult commonResult = userService.register(userVo);
-        log.info("{}",JSONObject.toJSONString(commonResult));
+        log.info("{}", JSONObject.toJSONString(commonResult));
     }
 }

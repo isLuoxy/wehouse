@@ -4,6 +4,10 @@ import cn.l99.wehouse.pojo.baseEnum.CommonType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 
@@ -15,31 +19,47 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(indexName = "house",type = "house_ext",shards = 1, replicas = 0)
 public class HouseExt implements Serializable {
 
-    private int id;
+    @Id
+    private String id;
 
-    private int houseId;
+    @Field(type = FieldType.Keyword)
+    private String houseId;
 
+    @Field(type = FieldType.Keyword)
     private CommonType television;
 
+    @Field(type = FieldType.Keyword)
     private CommonType fridge;
 
+    @Field(type = FieldType.Keyword)
     private CommonType washingMachine;
 
+    @Field(type = FieldType.Keyword)
     private CommonType airConditioning;
 
+    @Field(type = FieldType.Keyword)
     private CommonType heater;
 
+    @Field(type = FieldType.Keyword)
     private CommonType bed;
 
+    @Field(type = FieldType.Keyword)
     private CommonType broadband;
 
+    @Field(type = FieldType.Keyword)
     private CommonType wardrobe;
 
-    private int subwayLineId;
+    @Field(type = FieldType.Keyword)
+    private String subwayLineId;
 
-    private int subwayStationId;
+    @Field(type = FieldType.Keyword)
+    private String subwayStationId;
 
+    @Field(type = FieldType.Keyword)
     private String description;
+
+
 }

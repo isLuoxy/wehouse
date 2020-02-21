@@ -17,7 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleHouseDto implements Serializable {
-    private int id;
+    private String id;
     private String name;
     private String rentalType;
     private String orientation;
