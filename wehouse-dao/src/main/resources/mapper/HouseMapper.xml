@@ -22,7 +22,7 @@
         <result property="address" column="address"/>
         <result property="houseStatus" column="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         <result property="distanceToSubway" column="distance_to_subway"/>
-        <result property="ownerId" column="ownerId"/>
+        <result property="ownerId" column="owner_id"/>
         <result property="pictureUrl" column="picture_url"/>
     </resultMap>
 
@@ -59,7 +59,7 @@
     <select id="getHouseByCityPyNameAndCondition" resultMap="HouseResultMap" parameterType="String">
         select
         <include refid="House_Column_List"/>
-        from house h,subway_citys sc,house_ext he where h.city_cn_name = sc.cn_name and sc.pre = #{cityName}
+        from house h,house_area ha,house_ext he where h.city_cn_name = ha.name and ha.en_name_abbreviation = #{cityPyName}
         <if test="houseCondition != null and houseCondition.regionCnName != null and houseCondition.regionCnName != ''">
             and region_cn_name = #{houseCondition.regionCnName}
         </if>

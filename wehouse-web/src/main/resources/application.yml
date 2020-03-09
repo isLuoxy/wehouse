@@ -10,9 +10,6 @@ spring:
 ---
 spring:
   profiles: dev
-  redis:
-    host: 127.0.0.1
-    port: 6379
   mail:
     host: a1048733180@163.com
     port: 25
@@ -41,9 +38,7 @@ server:
 ---
 spring:
   profiles: uat
-  redis:
-    host: 127.0.0.1
-    port: 6666
+
 
 # service version
 wehouse:

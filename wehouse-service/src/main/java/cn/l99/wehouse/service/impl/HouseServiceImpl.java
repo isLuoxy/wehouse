@@ -5,6 +5,7 @@ import cn.l99.wehouse.dao.HouseDao;
 import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
+import cn.l99.wehouse.pojo.dto.SimpleHouseDto;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IHouseService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +48,13 @@ public class HouseServiceImpl implements IHouseService {
             houseCondition.setRegionCnName(regionCnName);
         }
         List<House> houseByCityName = houseDao.getHouseByCityPyNameAndCondition(cityPyName, houseCondition);
-        return CommonResult.success(houseByCityName);
+        List<SimpleHouseDto> simpleHouseDtoList = new ArrayList<>(houseByCityName.size());
+        houseByCityName.stream().forEach(house -> {
+            SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
+            simpleHouseDto.convertToSimpleHouseDtoFromHouse(house);
+            simpleHouseDtoList.add(simpleHouseDto);
+        });
+        return CommonResult.success(simpleHouseDtoList);
     }
 
     @Override

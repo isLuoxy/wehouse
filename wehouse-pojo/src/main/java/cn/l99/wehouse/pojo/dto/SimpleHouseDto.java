@@ -18,11 +18,25 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SimpleHouseDto implements Serializable {
     private String id;
+
     private String name;
+
     private String rentalType;
+
     private String orientation;
+
+    private String regionCnName;
+
+    private String placeCnName;
+
+    private String village;
+
+    private String floor;
+
     private String area;
+
     private String price;
+
     private String pictureUrl;
 
     public void convertToSimpleHouseDtoFromHouse(House house) {
@@ -30,6 +44,10 @@ public class SimpleHouseDto implements Serializable {
         this.name = house.getName();
         this.rentalType = house.getRentalType().getValue();
         this.orientation = house.getOrientation().getValue();
+        this.regionCnName = house.getRegionCnName();
+        this.placeCnName = house.getPlaceCnName();
+        this.village = house.getVillage();
+        this.floor = house.getFloor();
         this.area = house.getArea() + BaseUnitUtils.SQUARE_METER;
         this.price = house.getPrice() + BaseUnitUtils.PER_MONTH;
         this.pictureUrl = house.getPictureUrl();

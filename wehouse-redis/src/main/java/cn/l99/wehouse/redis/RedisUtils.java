@@ -566,11 +566,11 @@ public class RedisUtils {
         }
     }
 
-    public void pipelineSet(Map<String, Object> map) {
+    public void pipelineSetNX(Map<String, Object> map) {
         redisTemplate.executePipelined(new RedisCallback<String>() {
             @Override
             public String doInRedis(RedisConnection connection) throws DataAccessException {
-                map.forEach((key, value) -> connection.set(key.getBytes(), ((String) value).getBytes()));
+                map.forEach((key, value) -> connection.setNX(key.getBytes(), ((String) value).getBytes()));
                 return null;
             }
         });

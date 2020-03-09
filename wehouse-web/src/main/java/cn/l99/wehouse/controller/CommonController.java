@@ -4,6 +4,7 @@ import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.service.ICommonService;
 import com.alibaba.dubbo.config.annotation.Reference;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import java.net.URLDecoder;
  * @author L99
  */
 @RestController
+@Slf4j
 public class CommonController {
 
     @Reference(version = "${wehouse.service.version}")
@@ -29,17 +31,18 @@ public class CommonController {
 
     @GetMapping("/region/{city}")
     public Object getRegions(@PathVariable String city) {
-        try {
-            city = URLDecoder.decode(city, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return CommonResult.failure(ErrorCode.CODING_ERROR);
-        }
+        log.info("{}", city);
+//        try {
+//            city = URLDecoder.decode(city, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            return CommonResult.failure(ErrorCode.CODING_ERROR);
+//        }
         return commonService.getResions(city);
     }
 
-    @GetMapping("/subwayline/{city}")
-    public Object getCity(@PathVariable String city) {
-        return commonService.getSubwayline(city);
+    @GetMapping("/subwayline/{cityId}")
+    public Object getCity(@PathVariable String cityId) {
+        return commonService.getSubwayline(cityId);
     }
 
     @GetMapping("/subwaystation/{id}")

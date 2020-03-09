@@ -26,7 +26,4 @@ public class CityDto implements Serializable {
     // 城市拼音缩写
     private String cityPyName;
 
-    public void convertToCityDtoFromCity(City city) {
-        this.cityCnName = city.getCityName();
-    }
 }

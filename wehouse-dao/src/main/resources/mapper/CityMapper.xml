@@ -4,16 +4,16 @@
 <mapper namespace="cn.l99.wehouse.dao.CityDao">
 
     <resultMap id="CityResultMap" type="cn.l99.wehouse.pojo.dto.CityDto">
-        <result property="cityId" column="city_id" />
-        <result property="cityCnName" column="city_cn_name" />
-        <result property="cityPyName" column="city_py_name" />
+        <result property="cityId" column="city_id"/>
+        <result property="cityCnName" column="city_cn_name"/>
+        <result property="cityPyName" column="city_py_name"/>
     </resultMap>
 
-    <select id="getAllCitys" resultMap="CityResultMap" >
-        select distinct h.city_cn_name, city.id as city_id, city.pre as city_py_name from house h,subway_citys city where h.city_cn_name = city.cn_name;
+    <select id="getAllCitys" resultMap="CityResultMap">
+        select name as city_cn_name, adcode as city_id ,en_name_abbreviation as city_py_name from house_area where level = 'C';
     </select>
 
-    <select id="getSubwayLinesByCityId"  resultMap="cn.l99.wehouse.dao.common.SubwayLinesResultMap">
+    <select id="getSubwayLinesByCityId" resultMap="cn.l99.wehouse.dao.common.SubwayLinesResultMap">
         select name as line_name,id as line_id from subway_lines where city_id = #{cityId}
     </select>
 

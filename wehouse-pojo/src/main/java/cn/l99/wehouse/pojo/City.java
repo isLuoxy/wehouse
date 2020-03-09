@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Deprecated
 public class City implements Serializable {
 
     private String id;

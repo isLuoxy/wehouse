@@ -9,6 +9,13 @@ spring:
     host: smtp.163.com
     username: a1048733180@163.com
     password: 1swehouse
+  data:
+    elasticsearch:
+      cluster-name: wehouse
+      cluster-nodes: 47.113.91.20:9300
+  redis:
+    host: 47.113.91.20
+    port: 6379
 
 ---
 spring:
@@ -31,9 +38,6 @@ spring:
         stat:
           log-slow-sql: true
           slow-sql-millis: 1
-  redis:
-    host: 127.0.0.1
-    port: 6379
 
 # service version
 wehouse:
@@ -51,6 +55,8 @@ dubbo:
   protocol:
     name: dubbo
     port: 20881
+  provider:
+    timeout: 300000
 # web port
 server:
   port: 8888
@@ -76,9 +82,6 @@ spring:
         stat:
           log-slow-sql: true
           slow-sql-millis: 1
-  redis:
-    host: 127.0.0.1
-    port: 6666
 
 # service version
 wehouse:
@@ -96,6 +99,8 @@ dubbo:
   protocol:
     name: dubbo
     port: 20880
+  provider:
+    timeout: 5000
 # web port
 server:
   port: 8888

@@ -8,4 +8,5 @@ import java.util.List;
 public interface ESHouseRepository extends ElasticsearchRepository<House, String> {
 
     List<House> findByNameLike(String houseName);
+
 }

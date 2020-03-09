@@ -22,7 +22,7 @@ public interface HouseDao {
      * @param houseCondition
      * @return
      */
-    List<House> getHouseByCityPyNameAndCondition(@Param("cityName") String cityPyName, @Param("houseCondition") HouseCondition houseCondition);
+    List<House> getHouseByCityPyNameAndCondition(@Param("cityPyName") String cityPyName, @Param("houseCondition") HouseCondition houseCondition);
 
     /**
      * 获取房源详情信息

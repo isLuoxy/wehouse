@@ -15,8 +15,8 @@ public interface ICommonService {
     // 获取城市下的区域
     CommonResult getResions(String keyword);
 
-    // 根据城市名获取地铁线路
-    CommonResult getSubwayline(String city);
+    // 根据城市id获取地铁线路
+    CommonResult getSubwayline(String cityId);
 
     // 根据地铁线路id获取具体站台
     CommonResult getSubwayStation(String subwaylineId);

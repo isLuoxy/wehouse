@@ -14,10 +14,10 @@ public class HouseCondition {
     private String subwayLineId;
 
     // 页面开始
-    private String pageStart;
+    private String pageStart = "0";
 
     // 页面大小
-    private String pageSize;
+    private String pageSize = "30";
 
     // 房屋类型
     private String houseType;
@@ -75,6 +75,15 @@ public class HouseCondition {
         this.orientation = orientation;
     }
 
+
+    public String getRentGreaterThanOrEqual() {
+        return rentGreaterThanOrEqual;
+    }
+
+    public void setRentGreaterThanOrEqual(String rentGreaterThanOrEqual) {
+        this.rentGreaterThanOrEqual = rentGreaterThanOrEqual;
+    }
+
     public String getPageStart() {
         return pageStart;
     }
@@ -89,13 +98,5 @@ public class HouseCondition {
 
     public void setPageSize(String pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public String getRentGreaterThanOrEqual() {
-        return rentGreaterThanOrEqual;
-    }
-
-    public void setRentGreaterThanOrEqual(String rentGreaterThanOrEqual) {
-        this.rentGreaterThanOrEqual = rentGreaterThanOrEqual;
     }
 }
