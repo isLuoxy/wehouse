@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.HouseExtDao">
+
+
+    <resultMap id="HouseAreaResultMap" type="cn.l99.wehouse.pojo.HouseArea">
+        <id property="id" column="id"/>
+        <result property="adcode" column="adcode"/>
+        <result property="name" column="name"/>
+        <result property="level" column="level" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="belong" column="belong"/>
+        <result property="enNameAbbreviation" column="en_name_abbreviation"/>
+    </resultMap>
+
+    <select id="getRegionByCityName" resultMap="HouseAreaResultMap">
+        SELECT
+	a.id,
+	a.adcode,
+	a.name,
+	a.en_name_abbreviation,
+	a.level,
+	a.belong
+FROM
+	house_area a,
+	house_area b
+WHERE
+	a.belong = b.adcode
+	AND a.NAME = #{cityName};
+    </select>
+
+    <insert id="insertCity">
+        insert into
+        house_area(adcode,name,en_name_abbreviation,level,belong) values
+        <foreach collection="list" separator="," item="houseArea">
+            ({houseArea.adcode,houseArea.name,houseArea.enNameAbbreviation,houseArea.level,houseArea.belong})
+        </foreach>
+    </insert>
+</mapper>
