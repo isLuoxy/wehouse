@@ -6,7 +6,7 @@ import cn.l99.wehouse.dao.UserDao;
 import cn.l99.wehouse.mail.Mail;
 import cn.l99.wehouse.mail.MailTemplate;
 import cn.l99.wehouse.mail.StudentCertificationMailTemplate;
-import cn.l99.wehouse.pojo.Collection;
+import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.HouseCollection;
 import cn.l99.wehouse.pojo.User;
 import cn.l99.wehouse.pojo.baseEnum.CommonType;
@@ -185,9 +185,9 @@ public class UserServiceImpl implements IUserService {
      * @return
      */
     @Override
-    public CommonResult postPersonalCollection(Collection collection) {
-        collection.setCollectionTime(new Date());
-        boolean result = collectionDao.insertCollection(collection);
+    public CommonResult postPersonalCollection(UserCollection userCollection) {
+        userCollection.setCollectionTime(new Date());
+        boolean result = collectionDao.insertCollection(userCollection);
         if (result) {
             return CommonResult.success();
         } else {
