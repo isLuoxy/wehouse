@@ -19,7 +19,7 @@
     <resultMap id="houseCollectionMap" type="cn.l99.wehouse.pojo.HouseCollection">
         <association property="house" javaType="cn.l99.wehouse.pojo.House"
                      resultMap="cn.l99.wehouse.dao.HouseDao.HouseResultMap"/>
-        <association property="collection" javaType="cn.l99.wehouse.pojo.Collection"
+        <association property="userCollection" javaType="cn.l99.wehouse.pojo.UserCollection"
                      resultMap="cn.l99.wehouse.dao.CollectionDao.CollectionResultMap"/>
     </resultMap>
 
@@ -53,7 +53,7 @@
     <select id="selectHouseAndCollectionByUserId" resultMap="houseCollectionMap">
         select<include refid="cn.l99.wehouse.dao.HouseDao.House_Column_List"/>,
         <include refid="cn.l99.wehouse.dao.CollectionDao.Collection_Column_List"/>
-        from house h,collection c where c.house_id = h.id and c.user_id = #{userId}
+        from house h,user_collection c where c.house_id = h.id and c.user_id = #{userId}
     </select>
 
     <insert id="insertUser" parameterType="cn.l99.wehouse.pojo.User">

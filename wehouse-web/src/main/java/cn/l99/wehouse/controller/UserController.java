@@ -1,6 +1,6 @@
 package cn.l99.wehouse.controller;
 
-import cn.l99.wehouse.pojo.Collection;
+import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.UserVo;
 import cn.l99.wehouse.service.IUserService;
@@ -53,10 +53,10 @@ public class UserController {
     }
 
     @PostMapping("/i/collection")
-    public Object postPersonalCollection(HttpServletRequest request, @RequestBody Collection collection) {
+    public Object postPersonalCollection(HttpServletRequest request, @RequestBody UserCollection userCollection) {
         String userId = String.valueOf(request.getSession().getAttribute("userId"));
-        collection.setUserId(Integer.valueOf(userId));
-        return userService.postPersonalCollection(collection);
+        userCollection.setUserId(Integer.valueOf(userId));
+        return userService.postPersonalCollection(userCollection);
     }
 
     @PostMapping("/i/stuAuth/mail/{address}")
