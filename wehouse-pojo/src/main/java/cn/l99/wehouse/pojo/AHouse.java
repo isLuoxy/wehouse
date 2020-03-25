@@ -16,6 +16,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class AHouse implements Serializable {
 
+
+    private static final long serialVersionUID = 5295786311150742134L;
+
     private House house;
 
     private HouseExt houseExt;

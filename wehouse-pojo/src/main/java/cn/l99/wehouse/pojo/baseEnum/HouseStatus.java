@@ -19,7 +19,7 @@ public enum HouseStatus {
 
     private String value;
 
-    private HouseStatus(String value) {
+    HouseStatus(String value) {
         this.value = value;
     }
 

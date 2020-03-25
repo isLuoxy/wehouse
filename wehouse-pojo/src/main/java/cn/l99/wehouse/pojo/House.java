@@ -26,6 +26,7 @@ import java.util.Date;
 @Document(indexName = "house", type = "house", shards = 1, replicas = 0)
 public class House implements Serializable {
 
+    private static final long serialVersionUID = 3890824795794279398L;
     @Id
     private String id;
 

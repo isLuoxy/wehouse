@@ -14,7 +14,7 @@ public enum HouseSubscribeStatus {
 
     private String value;
 
-    private HouseSubscribeStatus(String value) {
+     HouseSubscribeStatus(String value) {
         this.value = value;
     }
 

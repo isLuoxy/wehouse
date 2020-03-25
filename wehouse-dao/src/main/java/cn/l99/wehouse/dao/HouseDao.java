@@ -16,7 +16,7 @@ public interface HouseDao {
 
 
     /**
-     * 根据城市和房屋条件筛选房屋
+     * 根据城市和房屋条件筛选房屋(数据库层面)
      *
      * @param cityPyName
      * @param houseCondition
@@ -31,4 +31,12 @@ public interface HouseDao {
      * @return
      */
     AHouse getAHouseByHouseId(String houseId);
+
+    /**
+     * 新增房源
+     *
+     * @param house {@link House}
+     * @return 返回结果
+     */
+    boolean inseartHouse(House house);
 }

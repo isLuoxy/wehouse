@@ -1,14 +1,13 @@
 package cn.l99.wehouse.controller;
 
 import cn.l99.wehouse.pojo.response.CommonResult;
+import cn.l99.wehouse.pojo.vo.HouseVo;
 import cn.l99.wehouse.service.IHouseService;
 import cn.l99.wehouse.service.elasticsearch.ESIHouseService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,13 +40,24 @@ public class HouseController {
                                   @PathVariable(value = "param", required = false) String param,
                                   @PathVariable(value = "search", required = false) String search) {
         CommonResult house;
-        if (!StringUtils.isEmpty(search)) {
-            // 如果不为空，可知有关键词查询
-            log.info("{}", search);
-            house = esHouseService.findHouseByCondition(cityPyName, param, search);
-        } else {
-            house = houseService.getHouseByCityName(cityPyName, param);
-        }
+        // 如果不为空，可知有关键词查询
+        log.info("{}", search);
+        house = esHouseService.findHouseByCondition(cityPyName, param, search);
+
+        // TODO: 暂不使用数据库的索引
+        //house = houseService.getHouseByCityName(cityPyName, param);
         return house;
+    }
+
+    /**
+     * 新增房源
+     *
+     * @param houseVo 通用房源请求对象
+     * @return
+     */
+    @PostMapping("/zufang/house")
+    public Object addHouse(@RequestBody HouseVo houseVo) {
+        houseService.addHouse();
+        return null;
     }
 }

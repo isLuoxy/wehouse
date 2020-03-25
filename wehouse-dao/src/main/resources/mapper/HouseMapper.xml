@@ -59,7 +59,8 @@
     <select id="getHouseByCityPyNameAndCondition" resultMap="HouseResultMap" parameterType="String">
         select
         <include refid="House_Column_List"/>
-        from house h,house_area ha,house_ext he where h.city_cn_name = ha.name and ha.en_name_abbreviation = #{cityPyName}
+        from house h,house_area ha,house_ext he where h.city_cn_name = ha.name and ha.en_name_abbreviation =
+        #{cityPyName}
         <if test="houseCondition != null and houseCondition.regionCnName != null and houseCondition.regionCnName != ''">
             and region_cn_name = #{houseCondition.regionCnName}
         </if>
@@ -90,4 +91,9 @@
         <include refid="House_Ext_Column_List"/>
         from house h,house_ext he where h.id = he.house_id and h.id = #{houseId}
     </select>
+
+    <insert id="insertHouse" parameterType="cn.l99.wehouse.pojo.House">
+        insert into house values(#{id},#{name},#{rentalType},#{orientation},#{area},#{floor},#{price},#{checkInTime},#{elevator},#{houseType},#{provinceCnName},#{cityCnName},#{regionCnName},#{placeCnName},#{village},#{address},
+        #{houseStatus},#{distanceToSubway},#{ownerId},#{pictureUrl})
+    </insert>
 </mapper>
