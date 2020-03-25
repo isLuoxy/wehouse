@@ -16,7 +16,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Owner implements Serializable  {
 
-    private int id;
+    private static final long serialVersionUID = 5541657115316019756L;
+
+    private Integer id;
 
     private String ownerName;
 

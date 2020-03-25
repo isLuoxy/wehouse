@@ -2,6 +2,7 @@ package cn.l99.wehouse.pojo;
 
 import cn.l99.wehouse.pojo.baseEnum.CommonType;
 import cn.l99.wehouse.pojo.baseEnum.UserStatus;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class User implements Serializable {
 
-    private int id;
+    private Integer id;
 
     private String userName;
 
@@ -33,8 +34,10 @@ public class User implements Serializable {
 
     private UserStatus userStatus;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTime;
 
     private String userHead;

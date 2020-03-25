@@ -17,6 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserDto implements Serializable {
 
+    private static final long serialVersionUID = 8595089482609184237L;
     private String userHead;
     private String userName;
     private String userPhone;
@@ -24,12 +25,13 @@ public class UserDto implements Serializable {
 
     /**
      * 将 user 转换成 userDTO
+     *
      * @param user
      */
     public void userConvertToUserDto(User user) {
         this.userHead = user.getUserHead();
         this.userName = user.getUserName();
         this.userPhone = user.getUserPhone();
-        this.studentAuthentication = user.getStudentAuthentication().getValue();
+        this.studentAuthentication = user.getStudentAuthentication().toString();
     }
 }

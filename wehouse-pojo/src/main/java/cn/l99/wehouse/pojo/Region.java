@@ -15,9 +15,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Region implements Serializable {
-    private String id;
+
+    private static final long serialVersionUID = -8423267559248191281L;
+
+    private Integer id;
 
     private String regionName;
 
-    private String cityId;
+    private Integer cityId;
 }

@@ -1,9 +1,10 @@
 package cn.l99.wehouse.pojo.dto;
 
-import cn.l99.wehouse.pojo.Collection;
+import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.HouseCollection;
 import cn.l99.wehouse.utils.BaseUnitUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class CollectionDto implements Serializable {
 
-    private String id;
+    private static final long serialVersionUID = 2108463470169074849L;
+
+    private Long houseId;
 
     private String name;
 
@@ -33,6 +36,7 @@ public class CollectionDto implements Serializable {
 
     private String price;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date collectionTime;
 
     private String regionCnName;
@@ -45,14 +49,14 @@ public class CollectionDto implements Serializable {
 
     public void ConvertToCollectionDto(HouseCollection houseCollection) {
         House house = houseCollection.getHouse();
-        Collection collection = houseCollection.getCollection();
-        this.id = house.getId();
+        UserCollection userCollection = houseCollection.getUserCollection();
+        this.houseId = house.getId();
         this.name = house.getName();
         this.rentalTpye = house.getRentalType().getValue();
         this.floor = house.getFloor();
         this.area = house.getArea() + BaseUnitUtils.SQUARE_METER;
         this.price = house.getPrice() + BaseUnitUtils.PER_MONTH;
-        this.collectionTime = collection.getCollectionTime();
+        this.collectionTime = userCollection.getCollectionTime();
         this.regionCnName = house.getRegionCnName();
         this.placeCnName = house.getPlaceCnName();
         this.pictureUrl = house.getPictureUrl();

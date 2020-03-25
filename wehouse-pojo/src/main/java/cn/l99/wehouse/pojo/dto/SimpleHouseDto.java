@@ -17,7 +17,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleHouseDto implements Serializable {
-    private String id;
+    private static final long serialVersionUID = -983183819204453244L;
+
+    private Long id;
 
     private String name;
 

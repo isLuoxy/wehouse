@@ -18,11 +18,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class RegionDto implements Serializable {
 
+    private static final long serialVersionUID = 4644437530137341369L;
     // 区域中文名称
     private String regionCnName;
 
     // 区域id
-    private String regionId;
+    private Integer regionId;
 
     @JSONField(serialize = false)
     // 区域英文名称（一般为拼音）

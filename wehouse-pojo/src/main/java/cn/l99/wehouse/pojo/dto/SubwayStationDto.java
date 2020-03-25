@@ -16,8 +16,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SubwayStationDto implements Serializable {
 
+    private static final long serialVersionUID = -5157609022867527343L;
     // 地铁站台 id
-    private String stationId;
+    private Integer stationId;
     // 地铁站台中文名称
     private String stationCnName;
 }

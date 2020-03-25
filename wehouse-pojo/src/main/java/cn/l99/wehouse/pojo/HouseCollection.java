@@ -16,5 +16,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class HouseCollection implements Serializable {
     private House house;
-    private Collection collection;
+    private UserCollection userCollection;
 }

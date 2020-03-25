@@ -17,6 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CityDto implements Serializable {
 
+    private static final long serialVersionUID = -4339411447380683587L;
     // 城市 id
     private String cityId;
 

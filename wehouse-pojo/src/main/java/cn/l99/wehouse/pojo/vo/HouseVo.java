@@ -2,9 +2,16 @@ package cn.l99.wehouse.pojo.vo;
 
 import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.HouseExt;
+import cn.l99.wehouse.pojo.baseEnum.CommonType;
+import cn.l99.wehouse.pojo.baseEnum.HouseStatus;
+import cn.l99.wehouse.pojo.baseEnum.Orientation;
+import cn.l99.wehouse.pojo.baseEnum.RentalType;
+import cn.l99.wehouse.utils.id.IdGenerator;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,6 +38,7 @@ public class HouseVo implements Serializable {
 
     private Integer price;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date checkInTime;
 
     private String elevator;
@@ -49,7 +57,7 @@ public class HouseVo implements Serializable {
 
     private String address;
 
-    private String ownerId;
+    private Integer ownerId;
 
     private String television;
 
@@ -67,15 +75,56 @@ public class HouseVo implements Serializable {
 
     private String wardrobe;
 
-    private String subwayLineId;
+    private Integer subwayLineId;
 
-    private String subwayStationId;
+    private Integer subwayStationId;
 
     private String description;
 
 
-    private House convertToHouse() {
+    /**
+     * 将请求对象转换成 {@link House} 对象
+     *
+     * @return
+     */
+    public House convertToHouse() {
         House house = new House();
+        house.setId(IdGenerator.nextId());
+        house.setName(this.name);
+        house.setRentalType(RentalType.get(this.rentalType));
+        house.setOrientation(Orientation.get(this.orientation));
+        house.setArea(Double.valueOf(this.area));
+        house.setFloor(this.floor);
+        house.setPrice(Integer.valueOf(this.price));
+        house.setCheckInTime(this.checkInTime);
+        house.setElevator(CommonType.valueOf(this.elevator));
+        house.setHouseType(this.getHouseType());
+        house.setProvinceCnName(this.getProvinceCnName());
+        house.setCityCnName(this.getCityCnName());
+        house.setRegionCnName(this.getRegionCnName());
+        house.setPlaceCnName(this.placeCnName);
+        house.setVillage(this.village);
+        house.setAddress(this.address);
+        house.setHouseStatus(HouseStatus.U);
+        house.setDistanceToSubway(-1);
+        house.setOwnerId(this.ownerId);
+        house.setPictureUrl(null);
+
+        HouseExt houseExt = new HouseExt();
+        houseExt.setHouseId(house.getId());
+        houseExt.setTelevision(CommonType.valueOf(this.elevator));
+        houseExt.setFridge(CommonType.valueOf(this.fridge));
+        houseExt.setWashingMachine(CommonType.valueOf(this.washingMachine));
+        houseExt.setAirConditioning(CommonType.valueOf(this.airConditioning));
+        houseExt.setHeater(CommonType.valueOf(this.heater));
+        houseExt.setBed(CommonType.valueOf(this.bed));
+        houseExt.setBroadband(CommonType.valueOf(this.broadband));
+        houseExt.setWardrobe(CommonType.valueOf(this.wardrobe));
+        houseExt.setSubwayLineId(this.subwayLineId);
+        houseExt.setSubwayStationId(this.subwayStationId);
+        houseExt.setDescription(this.description);
+
+        house.setHouseExt(houseExt);
         return house;
     }
 

@@ -4,6 +4,7 @@ import cn.l99.wehouse.pojo.baseEnum.CommonType;
 import cn.l99.wehouse.pojo.baseEnum.HouseStatus;
 import cn.l99.wehouse.pojo.baseEnum.Orientation;
 import cn.l99.wehouse.pojo.baseEnum.RentalType;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ public class House implements Serializable {
 
     private static final long serialVersionUID = 3890824795794279398L;
     @Id
-    private String id;
+    private Long id;
 
     /**
      * text：存储数据时候，会自动分词，并生成索引
@@ -50,9 +51,10 @@ public class House implements Serializable {
     private String floor;
 
     @Field(type = FieldType.Integer)
-    private int price;
+    private Integer price;
 
     @Field(type = FieldType.Date)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date checkInTime;
 
     @Field(type = FieldType.Keyword)
@@ -83,10 +85,10 @@ public class House implements Serializable {
     private HouseStatus houseStatus;
 
     @Field(type = FieldType.Integer)
-    private int distanceToSubway;
+    private Integer distanceToSubway;
 
-    @Field(type = FieldType.Keyword)
-    private String ownerId;
+    @Field(type = FieldType.Integer)
+    private Integer ownerId;
 
     @Field(type = FieldType.Keyword)
     private String pictureUrl;

@@ -16,7 +16,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Province implements Serializable {
 
-    private String id;
+    private static final long serialVersionUID = 4393466665329384805L;
+
+    private Integer id;
 
     private String provinceName;
 }

@@ -19,14 +19,14 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "house",type = "house_ext",shards = 1, replicas = 0)
+@Document(indexName = "house", type = "house_ext", shards = 1, replicas = 0)
 public class HouseExt implements Serializable {
 
     @Id
-    private String id;
+    private Long id;
 
-    @Field(type = FieldType.Keyword)
-    private String houseId;
+    @Field(type = FieldType.Long)
+    private Long houseId;
 
     @Field(type = FieldType.Keyword)
     private CommonType television;
@@ -52,14 +52,13 @@ public class HouseExt implements Serializable {
     @Field(type = FieldType.Keyword)
     private CommonType wardrobe;
 
-    @Field(type = FieldType.Keyword)
-    private String subwayLineId;
+    @Field(type = FieldType.Integer)
+    private Integer subwayLineId;
 
-    @Field(type = FieldType.Keyword)
-    private String subwayStationId;
+    @Field(type = FieldType.Integer)
+    private Integer subwayStationId;
 
     @Field(type = FieldType.Keyword)
     private String description;
-
 
 }

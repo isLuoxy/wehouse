@@ -18,6 +18,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CommonResult implements Serializable {
 
+    private static final long serialVersionUID = 2745260992031618742L;
     /**
      * 错误码 正确返回 200
      */

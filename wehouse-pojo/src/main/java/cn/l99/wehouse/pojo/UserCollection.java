@@ -1,7 +1,7 @@
 package cn.l99.wehouse.pojo;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,13 +17,16 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Collection implements Serializable {
+public class UserCollection implements Serializable {
 
-    private int id;
+    private static final long serialVersionUID = 377910918410271086L;
 
-    private int userId;
+    private Integer id;
 
-    private int houseId;
+    private Integer userId;
 
+    private Long houseId;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date collectionTime;
 }

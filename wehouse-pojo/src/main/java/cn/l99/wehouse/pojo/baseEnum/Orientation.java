@@ -39,7 +39,7 @@ public enum Orientation {
         return value;
     }
 
-    public Orientation get(String value) {
+    public static Orientation get(String value) {
         return lookup.get(value);
     }
 }

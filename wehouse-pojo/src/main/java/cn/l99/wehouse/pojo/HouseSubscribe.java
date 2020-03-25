@@ -1,6 +1,7 @@
 package cn.l99.wehouse.pojo;
 
 import cn.l99.wehouse.pojo.baseEnum.HouseSubscribeStatus;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,27 +19,34 @@ import java.util.Date;
 @NoArgsConstructor
 public class HouseSubscribe implements Serializable {
 
-    private int id;
+    private static final long serialVersionUID = -4137258040887736585L;
 
-    private int houseId;
+    private Integer id;
 
-    private int userId;
+    private Long houseId;
+
+    private Integer userId;
 
     /**
      * 数据创建时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private HouseSubscribeStatus houseSubscribeStatus;
+
     /**
      * 记录更新时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateTime;
 
     /**
      * 预约时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
+
     /**
      * 联系电话
      */

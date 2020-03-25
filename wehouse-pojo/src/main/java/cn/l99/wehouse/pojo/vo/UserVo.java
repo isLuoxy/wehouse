@@ -16,6 +16,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class UserVo implements Serializable {
 
+    private static final long serialVersionUID = -7569324818296262194L;
+
     private String userPhone;
 
     private String userName;

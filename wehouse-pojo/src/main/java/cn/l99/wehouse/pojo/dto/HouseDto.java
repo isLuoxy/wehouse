@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Deprecated
 public class HouseDto implements Serializable {
 
-    private String id;
+    private Long id;
 
     private String name;
 

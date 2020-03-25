@@ -1,5 +1,6 @@
 package cn.l99.wehouse.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class SubwayLines implements Serializable {
 
-    private int id;
+    private static final long serialVersionUID = -7954872276282547614L;
+
+    private Integer id;
 
     private String name;
 
@@ -25,9 +28,11 @@ public class SubwayLines implements Serializable {
 
     private String pairUid;
 
-    private int cityId;
+    private Integer cityId;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updatedAt;
 }
