@@ -10,6 +10,7 @@ import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseVo;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IHouseService;
+import cn.l99.wehouse.service.elasticsearch.ESIHouseService;
 import cn.l99.wehouse.utils.HouseUtils;
 import cn.l99.wehouse.utils.condition.HouseCondition;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -35,10 +36,13 @@ public class HouseServiceImpl implements IHouseService {
 
     final RedisUtils redisUtils;
 
+    final ESIHouseService houseService;
+
     @Autowired
-    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils) {
+    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils, ESIHouseService houseService) {
         this.houseDao = houseDao;
         this.redisUtils = redisUtils;
+        this.houseService = houseService;
     }
 
     @Override
@@ -75,8 +79,12 @@ public class HouseServiceImpl implements IHouseService {
     @Override
     public CommonResult addHouse(HouseVo houseVo) {
         // 添加数据库 ->  添加 es 集群  -> 上传 LBS 云
+        House house = houseVo.convertToHouse();
 
-        //houseDao.inseartHouse();
+        houseDao.inseartHouse(house);
+        houseService.addHouseToEs(house);
+
+        // TODO: 添加房源到 LBS
         return null;
     }
 

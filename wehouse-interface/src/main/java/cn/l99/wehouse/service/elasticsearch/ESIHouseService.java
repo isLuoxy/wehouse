@@ -9,7 +9,7 @@ import cn.l99.wehouse.pojo.response.CommonResult;
  */
 public interface ESIHouseService {
 
-    CommonResult addHouse(House house);
+    CommonResult addHouseToEs(House house);
 
     CommonResult findHouseByCondition(String cityPyName, String condition, String search);
 }

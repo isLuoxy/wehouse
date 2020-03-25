@@ -93,7 +93,10 @@
     </select>
 
     <insert id="insertHouse" parameterType="cn.l99.wehouse.pojo.House">
-        insert into house values(#{id},#{name},#{rentalType},#{orientation},#{area},#{floor},#{price},#{checkInTime},#{elevator},#{houseType},#{provinceCnName},#{cityCnName},#{regionCnName},#{placeCnName},#{village},#{address},
+        insert into house (id, name, rental_type, orientation, area, floor, price, "check-in-time", elevator, house_type, province_cn_name, city_cn_name, region_cn_name, place_cn_name, village, address, status, distance_to_subway, owner_id, picture_url)
+        values(#{id},#{name},#{rentalType},#{orientation},#{area},#{floor},#{price},#{checkInTime},#{elevator},#{houseType},#{provinceCnName},#{cityCnName},#{regionCnName},#{placeCnName},#{village},#{address},
         #{houseStatus},#{distanceToSubway},#{ownerId},#{pictureUrl})
     </insert>
+
+
 </mapper>

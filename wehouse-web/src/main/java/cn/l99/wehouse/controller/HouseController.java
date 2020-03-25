@@ -57,7 +57,7 @@ public class HouseController {
      */
     @PostMapping("/zufang/house")
     public Object addHouse(@RequestBody HouseVo houseVo) {
-        houseService.addHouse();
+        houseService.addHouse(houseVo);
         return null;
     }
 }

@@ -34,7 +34,7 @@ public class ESHouseServiceImpl implements ESIHouseService {
     RedisUtils redisUtils;
 
     @Override
-    public CommonResult addHouse(House house) {
+    public CommonResult addHouseToEs(House house) {
         ESHouseRepository.save(house);
         return CommonResult.success();
     }
