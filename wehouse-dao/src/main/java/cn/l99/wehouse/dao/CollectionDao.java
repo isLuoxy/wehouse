@@ -1,6 +1,6 @@
 package cn.l99.wehouse.dao;
 
-import cn.l99.wehouse.pojo.Collection;
+import cn.l99.wehouse.pojo.UserCollection;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface CollectionDao {
 
 
-    boolean insertCollection(Collection collection);
+    boolean insertCollection(UserCollection userCollection);
 
 }
