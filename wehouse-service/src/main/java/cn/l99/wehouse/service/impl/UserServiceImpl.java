@@ -41,20 +41,24 @@ import java.util.regex.Pattern;
 @Slf4j
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    UserDao userDao;
+    final UserDao userDao;
+
+    final CollectionDao collectionDao;
+
+    final RedisUtils redisUtils;
+
+    final Mail mail;
+
+    final EnvironmentProfiles environment;
 
     @Autowired
-    CollectionDao collectionDao;
-
-    @Autowired
-    RedisUtils redisUtils;
-
-    @Autowired
-    Mail mail;
-
-    @Autowired
-    EnvironmentProfiles environment;
+    public UserServiceImpl(UserDao userDao, CollectionDao collectionDao, RedisUtils redisUtils, Mail mail, EnvironmentProfiles environment) {
+        this.userDao = userDao;
+        this.collectionDao = collectionDao;
+        this.redisUtils = redisUtils;
+        this.mail = mail;
+        this.environment = environment;
+    }
 
     @Override
     public CommonResult checkUserPhone(String userPhone) {
@@ -70,7 +74,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public CommonResult register(UserVo userVo) {
-        log.info("userName:{},code:{},userPhone:{}",userVo.getUserName(),userVo.getCode(),userVo.getUserPhone());
+        log.info("userName:{},code:{},userPhone:{}", userVo.getUserName(), userVo.getCode(), userVo.getUserPhone());
         // 判断验证码是否正确
         String code = userVo.getCode();
         if (StringUtils.isEmpty(code) || !code.equals(redisUtils.get(userVo.getUserPhone()))) {
@@ -84,14 +88,14 @@ public class UserServiceImpl implements IUserService {
     /**
      * 用户登陆
      *
-     * @param userVo
-     * @return
+     * @param userVo {@link UserVo}
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult login(UserVo userVo) {
         // 判断用户名类型，是手机号还是用户名
         boolean usePhone = Pattern.matches(UserUtils.PHONE_PATTERN, userVo.getUserName());
-        User user = null;
+        User user;
         if (usePhone) {
             // 验证手机号是否存在
             user = userDao.selectUserByUserPhone(userVo.getUserName());
@@ -117,7 +121,7 @@ public class UserServiceImpl implements IUserService {
      * 发送手机验证码，这里还对手机号做了一个重复验证，如果手机号已存在的话则不发送验证码
      *
      * @param phone 手机号
-     * @return
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult sendCode(String phone) {
@@ -149,8 +153,8 @@ public class UserServiceImpl implements IUserService {
     /**
      * 判断 redis 中的 key 是否存在，如果存在则返回对应的值，不存在则返回null
      *
-     * @param key
-     * @return
+     * @param key redis 中的 key 值
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult getValueIfExist(String key) {
@@ -164,8 +168,8 @@ public class UserServiceImpl implements IUserService {
     /**
      * 个人中心收藏
      *
-     * @param userId
-     * @return
+     * @param userId 用户的 id
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult getPersonalCollectionByUserId(String userId) {
@@ -182,7 +186,7 @@ public class UserServiceImpl implements IUserService {
     /**
      * 房源收藏
      *
-     * @return
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult postPersonalCollection(UserCollection userCollection) {
@@ -200,7 +204,7 @@ public class UserServiceImpl implements IUserService {
      *
      * @param userId  用户 id
      * @param address 用户邮箱地址
-     * @return
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult sendStuAuthEmail(String userId, String address) {
@@ -221,7 +225,7 @@ public class UserServiceImpl implements IUserService {
     /**
      * 学生认证验证
      *
-     * @return
+     * @return {@link CommonResult} 通用结果封装
      */
     @Override
     public CommonResult updateUserStudentAuthentication(String uid, String email, String token) {
@@ -230,7 +234,7 @@ public class UserServiceImpl implements IUserService {
 
     private CommonResult verifyStuAtu(String uid, String email, String token) {
         String uidTemp = (String) redisUtils.get(token);
-        if (uidTemp == null || !uid.equals(uidTemp)) {
+        if (uidTemp == null || !uidTemp.equals(uid)) {
             return CommonResult.failure(ErrorCode.STU_AUTH_FAILED);
         }
         String userId = UserUtils.parseCertificationLinkToken(uid, email, token);

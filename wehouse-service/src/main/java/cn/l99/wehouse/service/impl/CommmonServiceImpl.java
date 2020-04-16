@@ -2,7 +2,6 @@ package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.CityDao;
 import cn.l99.wehouse.dao.HouseAreaDao;
-import cn.l99.wehouse.map.utils.DistrictUtil;
 import cn.l99.wehouse.pojo.HouseArea;
 import cn.l99.wehouse.pojo.dto.CityDto;
 import cn.l99.wehouse.pojo.dto.RegionDto;
@@ -32,14 +31,18 @@ import java.util.stream.Collectors;
 @Component
 public class CommmonServiceImpl implements ICommonService {
 
-    @Autowired
-    RedisUtils redisUtils;
+    final RedisUtils redisUtils;
+
+    final CityDao cityDao;
+
+    final HouseAreaDao houseAreaDao;
 
     @Autowired
-    CityDao cityDao;
-
-    @Autowired
-    HouseAreaDao houseAreaDao;
+    public CommmonServiceImpl(RedisUtils redisUtils, CityDao cityDao, HouseAreaDao houseAreaDao) {
+        this.redisUtils = redisUtils;
+        this.cityDao = cityDao;
+        this.houseAreaDao = houseAreaDao;
+    }
 
     @Override
     public CommonResult getCitys() {
@@ -62,7 +65,7 @@ public class CommmonServiceImpl implements ICommonService {
      * 获取特定城市下的行政区域
      *
      * @param keyword 城市名
-     * @return
+     * @return {@link CommonResult} 通用返回对象封装
      */
     @Override
     public CommonResult getResions(String keyword) {
@@ -78,11 +81,11 @@ public class CommmonServiceImpl implements ICommonService {
             redisUtils.hmset(keyword, regionMapTmp);
             redisUtils.pipelineSetNX(regionMapTmp);
             String jsonString = JSONObject.toJSONString(regionMapTmp);
-            regionMap = JSONObject.parseObject(jsonString, Map.class);
+            regionMap = Collections.unmodifiableMap(JSONObject.parseObject(jsonString, Map.class));
         }
         List<RegionDto> result = regionMap.entrySet().stream().map(e -> {
             RegionDto regionDto = new RegionDto();
-            regionDto.setRegionId((String) e.getKey());
+            regionDto.setRegionId((Integer) e.getKey());
             regionDto.setRegionCnName((String) e.getValue());
             return regionDto;
         }).collect(Collectors.toList());

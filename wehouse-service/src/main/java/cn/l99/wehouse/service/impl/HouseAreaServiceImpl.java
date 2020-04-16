@@ -1,8 +1,8 @@
 package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.HouseAreaDao;
-import cn.l99.wehouse.map.lbs.District;
-import cn.l99.wehouse.map.utils.DistrictUtil;
+import cn.l99.wehouse.map.entity.District;
+import cn.l99.wehouse.map.utils.DistrictUtils;
 import cn.l99.wehouse.pojo.HouseArea;
 import cn.l99.wehouse.pojo.baseEnum.HouseAreaLevel;
 import cn.l99.wehouse.pojo.response.CommonResult;
@@ -29,7 +29,7 @@ public class HouseAreaServiceImpl implements IHouseAreaService {
     @Override
     public CommonResult insertCity(String cityName, String cityPyName) {
 
-        District district = DistrictUtil.getRegionName(cityName);
+        District district = DistrictUtils.getRegionName(cityName);
 
         List<HouseArea> houseAreaList = new ArrayList<>();
         HouseArea houseArea = new HouseArea();
