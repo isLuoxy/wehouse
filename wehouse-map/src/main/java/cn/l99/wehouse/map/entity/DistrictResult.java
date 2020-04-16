@@ -1,4 +1,4 @@
-package cn.l99.wehouse.map.lbs;
+package cn.l99.wehouse.map.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

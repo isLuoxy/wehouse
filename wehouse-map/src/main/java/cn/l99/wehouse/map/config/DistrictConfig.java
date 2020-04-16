@@ -1,24 +1,22 @@
 package cn.l99.wehouse.map.config;
 
-import cn.l99.wehouse.map.lbs.District;
-import cn.l99.wehouse.map.lbs.DistrictResult;
+import cn.l99.wehouse.map.entity.District;
+import cn.l99.wehouse.map.entity.DistrictResult;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * 高德地图配置
+ * 行政区域配置类
  *
  * @author L99
  */
-public class LbsConfig {
+public class DistrictConfig extends Config {
 
-    // 后端 key
-    public static final String key = "7668ac031f27c9e69b559940dcf0f96d";
-
+    //
     public static final String url = "https://restapi.amap.com/v3/config/district?keywords=%s&subdistrict=%d&key=%s&extensions=%s";
 
-     public enum extensions {
+    public enum extensions {
         BASE("base"),
         ALL("all");
         private String value;

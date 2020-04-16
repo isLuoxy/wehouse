@@ -10,6 +10,8 @@ import org.springframework.web.client.RestTemplate;
  */
 public class WebClient {
 
+    static RestTemplate restTemplate;
+
     public static RestTemplate getClient() {
         return new RestTemplateBuilder().build();
     }

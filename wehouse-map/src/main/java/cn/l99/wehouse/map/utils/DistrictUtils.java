@@ -1,22 +1,18 @@
 package cn.l99.wehouse.map.utils;
 
-import cn.l99.wehouse.map.config.LbsConfig;
-import cn.l99.wehouse.map.lbs.District;
-import cn.l99.wehouse.map.lbs.DistrictResult;
+import cn.l99.wehouse.map.config.DistrictConfig;
+import cn.l99.wehouse.map.entity.District;
+import cn.l99.wehouse.map.entity.DistrictResult;
 import cn.l99.wehouse.map.web.WebClient;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
- * 高德地图行政区域查询
+ * 高德地图行政区域查询工具类
  *
  * @author L99
  */
-public class DistrictUtil {
+public class DistrictUtils {
 
     /**
      * 通过关键词返回对应的下级区域名称
@@ -25,7 +21,7 @@ public class DistrictUtil {
      * @return
      */
     public static District getRegionName(String keywords) {
-        return getRegionName(keywords, 1, LbsConfig.extensions.BASE.getValue());
+        return getRegionName(keywords, 1, DistrictConfig.extensions.BASE.getValue());
     }
 
     /**
@@ -54,14 +50,9 @@ public class DistrictUtil {
      */
     public static District getRegionName(String keywords, int subdistrict, String extensions) {
         RestTemplate restTemplate = WebClient.getClient();
-        String url = String.format(LbsConfig.url, keywords, subdistrict, LbsConfig.key, extensions);
+        String url = String.format(DistrictConfig.url, keywords, subdistrict, DistrictConfig.key, extensions);
         DistrictResult districtResult = JSONObject.parseObject(restTemplate.getForObject(url, String.class), DistrictResult.class);
         District district = districtResult.getDistricts().get(0);
-//        Map<String, Object> result = new LinkedHashMap<>();
-//        district.getDistricts().forEach(district1 -> {
-//            // 区域编号为 key ，区域名称为 value
-//            result.put(district1.getAdcode(), district1.getName());
-//        });
         return district;
     }
 
