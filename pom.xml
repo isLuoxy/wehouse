@@ -14,6 +14,7 @@
         <module>wehouse-map</module>
         <module>wehouse-mail</module>
         <module>wehouse-elasticsearch</module>
+        <module>wehouse-recommendation-service</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
