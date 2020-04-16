@@ -12,6 +12,16 @@
     <artifactId>wehouse-recommendation-service</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>cn.l99</groupId>
+            <artifactId>wehouse-interface</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 </project>

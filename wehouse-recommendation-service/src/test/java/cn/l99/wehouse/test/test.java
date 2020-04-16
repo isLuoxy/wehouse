@@ -22,7 +22,7 @@ public class test {
 //        Set<WordEntry> wordEntrySet = word2VEC.wordsNearest("毛泽东", 10);
 //        System.out.println(wordEntrySet);
         long l = System.currentTimeMillis();
-        for (long i = 0; i < 100000000000L; i++) {
+        for (long i = 0; i < Long.MAX_VALUE ; i++) {
             long j = i;
         }
         long e = System.currentTimeMillis();

@@ -32,6 +32,10 @@ public class Word2VEC {
     // specifies the number of features in the word vector
     private int layerSize;
 
+    public int getLayerSize() {
+        return layerSize;
+    }
+
     // 上下文窗口大小
     private int window;
 
@@ -240,6 +244,8 @@ public class Word2VEC {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            wordMap.clear();
         }
     }
 
@@ -285,11 +291,14 @@ public class Word2VEC {
      * @param topNSize
      * @return
      */
-    public Set<WordEntry> wordsNearest(String queryWord, int topNSize) {
+    public List<String> wordsNearest(String queryWord, int topNSize) {
+
+        // 在查找过程中没排除自身，因此要加上自身
+        topNSize += 1;
 
         float[] center = wordVecMap.get(queryWord);
         if (center == null) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
         int resultSize = wordVecMap.size() < topNSize ? wordVecMap.size() : topNSize;
@@ -314,8 +323,29 @@ public class Word2VEC {
         }
         result.pollFirst();
 
-        return result;
+        List<String> list = new ArrayList<>(result.size());
+        while (result.size() > 0) {
+            list.add(result.pollFirst().value);
+        }
+        return list;
     }
 
+    /**
+     * 得到词向量
+     *
+     * @param word
+     * @return
+     */
+    public float[] getWordVector(String word) {
+        return wordVecMap.get(word);
+    }
 
+    /**
+     * 设置向量到内存中
+     * @param key
+     * @param value
+     */
+    public void setWordVecMap(String key, float[] value) {
+        wordVecMap.put(key, value);
+    }
 }
