@@ -26,7 +26,7 @@ FROM
 	house_area b
 WHERE
 	a.belong = b.adcode
-	AND a.NAME = #{cityName};
+	AND b.NAME = #{cityName};
     </select>
 
     <insert id="insertCity">
