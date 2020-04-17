@@ -1,0 +1,31 @@
+dubbo:
+  application:
+    id: wehouse-recommendation-dev
+    name: wehouse-recommendation-dev
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
+  protocol:
+    name: dubbo
+    port: 20881
+  provider:
+    timeout: 300000
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: dev
+
+wehouse:
+  service:
+    version: 1.0.dev
+
+---
+spring:
+  profiles: uat
+
+wehouse:
+  service:
+    version: 1.0
