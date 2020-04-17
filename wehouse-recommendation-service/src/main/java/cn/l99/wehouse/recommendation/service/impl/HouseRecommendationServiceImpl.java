@@ -17,7 +17,7 @@ import java.util.TreeSet;
  *
  * @author L99
  */
-@Service
+@Service(version = "${wehouse.service.version}")
 @Slf4j
 public class HouseRecommendationServiceImpl implements IHouseRecommendationService {
 
