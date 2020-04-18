@@ -16,8 +16,8 @@
     </sql>
 
     <insert id="insertUserOperation" parameterType="cn.l99.wehouse.pojo.UserOperation">
-        insert into user_operation(id, user_id, house_id, operation_type, operation_time)
-        VALUES (#{id}, #{userId}, #{houseId}, #{operationType}, #{operationTime})
+        insert into user_operation(user_id, house_id, operation_type, operation_time)
+        VALUES (#{userId}, #{houseId}, #{operationType}, #{operationTime})
     </insert>
 
     <select id="findUserOperationByUserIdAndOperationTime" resultMap="userOperationResultMap">

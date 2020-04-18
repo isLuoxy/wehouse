@@ -1,7 +1,7 @@
-package cn.l99.wehouse.recommendation.utils;
+package cn.l99.wehouse.recommendation.word2vec.utils;
 
-import cn.l99.wehouse.recommendation.pojo.HiddenNeuron;
-import cn.l99.wehouse.recommendation.pojo.Neuron;
+import cn.l99.wehouse.recommendation.word2vec.pojo.HiddenNeuron;
+import cn.l99.wehouse.recommendation.word2vec.pojo.Neuron;
 
 import java.util.Collection;
 import java.util.TreeSet;

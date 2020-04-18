@@ -5,6 +5,7 @@ import cn.l99.wehouse.pojo.UserOperation;
 import cn.l99.wehouse.pojo.baseEnum.OperationType;
 import cn.l99.wehouse.service.IUserOperationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,5 +27,11 @@ public class UserOperationServiceImpl implements IUserOperationService {
 
         List<UserOperation> userOperations = userOperationDao.findUserOperationByUserIdAndOperationTime(userId, operationTime);
         return userOperations;
+    }
+
+    @Override
+    @Async
+    public void addUserOperation(UserOperation userOperation) {
+        userOperationDao.insertUserOperation(userOperation);
     }
 }

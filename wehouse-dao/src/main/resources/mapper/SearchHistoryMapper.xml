@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.SearchHistoryDao">
+
+    <resultMap id="searchHistoryResultMap" type="cn.l99.wehouse.pojo.SearchHistory">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="condition" column="condition"/>
+        <result property="keyWords" column="key_words" />
+        <result property="searchTime" column="search_time"/>
+    </resultMap>
+
+    <sql id="SearchHistory_Column_List">
+        id,user_id,`condition`,key_words,search_time
+    </sql>
+
+    <insert id="addSearchHistory" parameterType="cn.l99.wehouse.pojo.SearchHistory">
+        insert into search_history(`user_id`, `condition`, key_words,search_time)
+        values (#{user_id}, #{condition}, #{keyWords},#{searchTime})
+    </insert>
+</mapper>

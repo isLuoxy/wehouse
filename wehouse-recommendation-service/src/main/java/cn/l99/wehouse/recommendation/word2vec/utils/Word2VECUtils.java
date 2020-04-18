@@ -1,4 +1,4 @@
-package cn.l99.wehouse.recommendation.utils;
+package cn.l99.wehouse.recommendation.word2vec.utils;
 
 /**
  * 词向量工具

@@ -33,8 +33,9 @@ public class HouseController {
 
 
     @GetMapping("/zufang/{city}/f/{id}")
-    public Object getAHouse(@PathVariable("city") String cityPyName, @PathVariable("id") String houseId) {
+    public Object getAHouse(@PathVariable("city") String cityPyName, @PathVariable("id") String houseId,HttpServletRequest request,HttpServletResponse response) {
         // 这里的城市拼音暂不使用
+        String userId = LoginUtils.hasLoginAndReturnString(request, response, redisService);
 
         CommonResult aHouseByHouseId = houseService.getAHouseByHouseId(houseId);
         return aHouseByHouseId;

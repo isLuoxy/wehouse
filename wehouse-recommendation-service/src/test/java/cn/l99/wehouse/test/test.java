@@ -1,11 +1,6 @@
 package cn.l99.wehouse.test;
 
-import cn.l99.wehouse.recommendation.Word2VEC;
-import cn.l99.wehouse.recommendation.pojo.WordEntry;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 public class test {
 

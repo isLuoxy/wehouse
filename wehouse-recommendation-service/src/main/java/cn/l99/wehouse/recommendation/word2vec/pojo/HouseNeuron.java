@@ -1,4 +1,4 @@
-package cn.l99.wehouse.recommendation.pojo;
+package cn.l99.wehouse.recommendation.word2vec.pojo;
 
 import java.util.Collections;
 import java.util.LinkedList;

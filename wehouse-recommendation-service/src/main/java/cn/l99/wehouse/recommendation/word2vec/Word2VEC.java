@@ -1,8 +1,8 @@
-package cn.l99.wehouse.recommendation;
+package cn.l99.wehouse.recommendation.word2vec;
 
-import cn.l99.wehouse.recommendation.pojo.*;
-import cn.l99.wehouse.recommendation.utils.Haffman;
-import cn.l99.wehouse.recommendation.utils.MapCount;
+import cn.l99.wehouse.recommendation.word2vec.pojo.*;
+import cn.l99.wehouse.recommendation.word2vec.utils.Haffman;
+import cn.l99.wehouse.recommendation.word2vec.utils.MapCount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

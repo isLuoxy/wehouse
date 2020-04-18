@@ -25,6 +25,10 @@ public class DateUtils {
         return localDateTime2Date(localDateTime.plusDays(dayToAdd));
     }
 
+    public static Date now() {
+        return new Date();
+    }
+
     /**
      * 回退特定天数
      *

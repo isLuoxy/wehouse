@@ -22,7 +22,7 @@ public interface IHouseService {
     /**
      * 获取某个房源的详情信息
      */
-    CommonResult getAHouseByHouseId(String houseId);
+    CommonResult getAHouseByHouseId(String houseId,String userId);
 
     /**
      * 新增房源

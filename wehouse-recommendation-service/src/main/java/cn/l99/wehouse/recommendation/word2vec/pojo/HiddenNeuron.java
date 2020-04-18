@@ -1,4 +1,4 @@
-package cn.l99.wehouse.recommendation.pojo;
+package cn.l99.wehouse.recommendation.word2vec.pojo;
 
 /**
  * 哈夫曼树的非叶子节点

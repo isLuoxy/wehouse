@@ -1,4 +1,4 @@
-package cn.l99.wehouse.recommendation;
+package cn.l99.wehouse.recommendation.word2vec;
 
 
 public class Word2VecFactory {

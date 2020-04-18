@@ -1,9 +1,9 @@
 package cn.l99.wehouse.recommendation.service.impl;
 
-import cn.l99.wehouse.recommendation.Word2VEC;
-import cn.l99.wehouse.recommendation.Word2VecFactory;
-import cn.l99.wehouse.recommendation.pojo.WordEntry;
-import cn.l99.wehouse.recommendation.utils.Word2VECUtils;
+import cn.l99.wehouse.recommendation.word2vec.Word2VEC;
+import cn.l99.wehouse.recommendation.word2vec.Word2VecFactory;
+import cn.l99.wehouse.recommendation.word2vec.pojo.WordEntry;
+import cn.l99.wehouse.recommendation.word2vec.utils.Word2VECUtils;
 import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;

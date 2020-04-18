@@ -1,4 +1,4 @@
-package cn.l99.wehouse.recommendation.utils;
+package cn.l99.wehouse.recommendation.word2vec.utils;
 
 import java.util.HashMap;
 import java.util.Iterator;

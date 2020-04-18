@@ -1,6 +1,6 @@
-package cn.l99.wehouse.recommendation.pojo;
+package cn.l99.wehouse.recommendation.word2vec.pojo;
 
-import cn.l99.wehouse.recommendation.utils.TrainingUtils;
+import cn.l99.wehouse.recommendation.word2vec.utils.TrainingUtils;
 
 import java.util.List;
 

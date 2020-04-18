@@ -3,13 +3,16 @@ package cn.l99.wehouse.service.impl;
 import cn.l99.wehouse.dao.HouseDao;
 import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
+import cn.l99.wehouse.pojo.SearchHistory;
 import cn.l99.wehouse.pojo.UserOperation;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
+import cn.l99.wehouse.pojo.baseEnum.OperationType;
 import cn.l99.wehouse.pojo.dto.SimpleHouseDto;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseVo;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IHouseService;
+import cn.l99.wehouse.service.ISearchHistoryService;
 import cn.l99.wehouse.service.IUserOperationService;
 import cn.l99.wehouse.service.elasticsearch.ESIHouseService;
 import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
@@ -49,12 +52,15 @@ public class HouseServiceImpl implements IHouseService {
 
     final IUserOperationService userOperationService;
 
+    final ISearchHistoryService searchHistoryService;
+
     @Autowired
-    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils, ESIHouseService esHouseService, IUserOperationService userOperationService) {
+    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils, ESIHouseService esHouseService, IUserOperationService userOperationService, ISearchHistoryService searchHistoryService) {
         this.houseDao = houseDao;
         this.redisUtils = redisUtils;
         this.esHouseService = esHouseService;
         this.userOperationService = userOperationService;
+        this.searchHistoryService = searchHistoryService;
     }
 
     @Reference(version = "${wehouse.service.version}")
@@ -82,10 +88,14 @@ public class HouseServiceImpl implements IHouseService {
     }
 
     @Override
-    public CommonResult getAHouseByHouseId(String houseId) {
+    public CommonResult getAHouseByHouseId(String houseId, String userId) {
         AHouse aHouseByHouseId = houseDao.getAHouseByHouseId(houseId);
         if (aHouseByHouseId == null) {
             return CommonResult.failure(ErrorCode.HOUSE_NOT_EXIST);
+        }
+        if (!StringUtils.isEmpty(userId)) {
+            UserOperation userOperation = constructUserOperation(userId, houseId, OperationType.C);
+            userOperationService.addUserOperation(userOperation);
         }
         return CommonResult.success(aHouseByHouseId);
     }
@@ -117,10 +127,13 @@ public class HouseServiceImpl implements IHouseService {
     }
 
     @Override
-    public CommonResult findHouseByCondition(String cityPyName, String condition, String searchWord, String userId) {
-        CommonResult result = esHouseService.findHouseByCondition(cityPyName, condition, searchWord);
+    public CommonResult findHouseByCondition(String cityPyName, String condition, String searchWords, String userId) {
+        CommonResult result = esHouseService.findHouseByCondition(cityPyName, condition, searchWords);
 
         if (!StringUtils.isEmpty(userId)) {
+            // 异步添加房源搜索记录
+            searchHistoryService.addSearchHistory(constructSearchHistory(userId, condition, searchWords));
+
             // 对查找的房源进行个性化排序
             // 候选房源
             List<SimpleHouseDto> candidateList = (List<SimpleHouseDto>) result.getData();
@@ -182,6 +195,24 @@ public class HouseServiceImpl implements IHouseService {
 
     private static String extractHouseIdFromUserOperationAndConvertTypeToString(UserOperation userOperation) {
         return String.valueOf(userOperation.getId());
+    }
+
+    private static UserOperation constructUserOperation(String userId, String houseId, OperationType operationType) {
+        UserOperation userOperation = new UserOperation();
+        userOperation.setUserId(Integer.valueOf(userId));
+        userOperation.setHouseId(Long.valueOf(houseId));
+        userOperation.setOperationType(operationType);
+        userOperation.setOperationTime(DateUtils.now());
+        return userOperation;
+    }
+
+    private static SearchHistory constructSearchHistory(String userId, String condition, String keyWords) {
+        SearchHistory searchHistory = new SearchHistory();
+        searchHistory.setUserId(Integer.valueOf(userId));
+        searchHistory.setCondition(condition);
+        searchHistory.setKeyWords(keyWords);
+        searchHistory.setSearchTime(DateUtils.now());
+        return searchHistory;
     }
 
 }

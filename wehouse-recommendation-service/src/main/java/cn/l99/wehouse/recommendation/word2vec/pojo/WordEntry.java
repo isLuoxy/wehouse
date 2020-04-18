@@ -1,4 +1,4 @@
-package cn.l99.wehouse.recommendation.pojo;
+package cn.l99.wehouse.recommendation.word2vec.pojo;
 
 /**
  * 用于获取某个词语最近的词语时，构建最大堆使用，其中score为两个词语词向量的余弦相似度
