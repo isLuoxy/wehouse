@@ -46,7 +46,7 @@ public class HouseDto implements Serializable {
         this.rentalType = house.getRentalType().getValue();
         this.orientation = house.getOrientation().getValue();
         this.regionCnName = house.getRegionCnName();
-        this.placeCnName = house.getPlaceCnName();
+        this.placeCnName = house.getStreetCnName();
         this.village = house.getVillage();
     }
 }

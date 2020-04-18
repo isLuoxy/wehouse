@@ -31,7 +31,6 @@ public class HouseCondition {
     // 朝向
     private String orientation;
 
-
     public String getRegionCnName() {
         return regionCnName;
     }

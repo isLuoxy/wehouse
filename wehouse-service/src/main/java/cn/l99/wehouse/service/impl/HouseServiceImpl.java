@@ -1,18 +1,23 @@
 package cn.l99.wehouse.service.impl;
 
-
 import cn.l99.wehouse.dao.HouseDao;
 import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
+import cn.l99.wehouse.pojo.UserOperation;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
 import cn.l99.wehouse.pojo.dto.SimpleHouseDto;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseVo;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IHouseService;
+import cn.l99.wehouse.service.IUserOperationService;
 import cn.l99.wehouse.service.elasticsearch.ESIHouseService;
+import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
+import cn.l99.wehouse.utils.DateUtils;
 import cn.l99.wehouse.utils.HouseUtils;
 import cn.l99.wehouse.utils.condition.HouseCondition;
+import cn.l99.wehouse.utils.condition.recommendation.HouseRecommendationCondition;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +25,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 房屋服务层接口实现类
@@ -36,17 +45,23 @@ public class HouseServiceImpl implements IHouseService {
 
     final RedisUtils redisUtils;
 
-    final ESIHouseService houseService;
+    final ESIHouseService esHouseService;
+
+    final IUserOperationService userOperationService;
 
     @Autowired
-    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils, ESIHouseService houseService) {
+    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils, ESIHouseService esHouseService, IUserOperationService userOperationService) {
         this.houseDao = houseDao;
         this.redisUtils = redisUtils;
-        this.houseService = houseService;
+        this.esHouseService = esHouseService;
+        this.userOperationService = userOperationService;
     }
 
+    @Reference(version = "${wehouse.service.version}")
+    IHouseRecommendationService houseRecommendationService;
+
     @Override
-    public CommonResult getHouseByCityName(String cityPyName, String condition) {
+    public CommonResult getHouseByCondition(String cityPyName, String condition) {
         HouseCondition houseCondition = HouseUtils.acqConditions(condition);
         if (houseCondition == null) {
             log.info("获取房源时没有条件");
@@ -78,14 +93,95 @@ public class HouseServiceImpl implements IHouseService {
 
     @Override
     public CommonResult addHouse(HouseVo houseVo) {
-        // 添加数据库 ->  添加 es 集群  -> 上传 LBS 云
+        // 添加数据库 ->  添加 es 集群
         House house = houseVo.convertToHouse();
 
         houseDao.inseartHouse(house);
-        houseService.addHouseToEs(house);
 
-        // TODO: 添加房源到 LBS
-        return null;
+
+        // == 异步为新房源添加房源向量 ==
+        // 1、获取相似房源
+        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
+        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
+        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
+        // 2、新增房源向量
+        houseRecommendationService.addHouseVector(String.valueOf(house.getId()),
+                similarHouses
+                        .stream()
+                        .map(HouseServiceImpl::extractHouseIdFromHouseAndConvertTypeToString)
+                        .collect(Collectors.toList()));
+
+        // 添加房源到 es
+        esHouseService.addHouseToEs(house);
+        return CommonResult.success();
+    }
+
+    @Override
+    public CommonResult findHouseByCondition(String cityPyName, String condition, String searchWord, String userId) {
+        CommonResult result = esHouseService.findHouseByCondition(cityPyName, condition, searchWord);
+
+        if (!StringUtils.isEmpty(userId)) {
+            // 对查找的房源进行个性化排序
+            // 候选房源
+            List<SimpleHouseDto> candidateList = (List<SimpleHouseDto>) result.getData();
+
+            // 获取用户过去15天的操作记录
+            Date start = DateUtils.minusDays(DateUtils.get0Am(), 15);
+            // 参考房源
+            List<UserOperation> referenceList = userOperationService.findUserOperationByUserIdAndGtOperationTime(userId, start);
+
+            // 对房源列表进行个性化排序
+            List<String> sortHouseList = houseRecommendationService.sortHouse(
+                    referenceList.stream()
+                            .map(HouseServiceImpl::extractHouseIdFromUserOperationAndConvertTypeToString)
+                            .collect(Collectors.toList()),
+                    candidateList.stream()
+                            .map(HouseServiceImpl::extractHouseIdFromSimpleHouseDtoAndConvertTypeToString)
+                            .collect(Collectors.toList())
+            );
+
+            // 对原本的候选房源根据排序后的房源列表进行排序
+            Map<String, SimpleHouseDto> tmpMap = candidateList.stream().collect(Collectors.toMap(HouseServiceImpl::extractHouseIdFromSimpleHouseDtoAndConvertTypeToString, Function.identity()));
+            for (int i = 0; i < sortHouseList.size(); i++) {
+                String houseId = sortHouseList.get(i);
+                SimpleHouseDto simpleHouseDto = tmpMap.get(houseId);
+                candidateList.set(i, simpleHouseDto);
+            }
+        }
+        return result;
+    }
+
+    private HouseRecommendationCondition acqHouseRecommendationCondition(House house) {
+        HouseRecommendationCondition houseRecommendationCondition = new HouseRecommendationCondition();
+        houseRecommendationCondition.setRentalType(house.getRentalType().name());
+        houseRecommendationCondition.setHouseType(house.getHouseType());
+        HouseUtils.Rent rent = HouseUtils.Rent.judgingRangeByRent(house.getPrice());
+        if (rent != null) {
+            houseRecommendationCondition.setRentGreaterThanOrEqual(rent.getRentGreaterThanOrEqual());
+            houseRecommendationCondition.setRentLessThan(rent.getRentLessThan());
+        }
+        houseRecommendationCondition.setAddress(house.getAddress());
+        houseRecommendationCondition.setSize(0);
+        houseRecommendationCondition.setSize(100);
+        return houseRecommendationCondition;
+    }
+
+    /**
+     * 用于进行列表转换时，获取房源id并进行格式化
+     *
+     * @param house
+     * @return
+     */
+    private static String extractHouseIdFromHouseAndConvertTypeToString(House house) {
+        return String.valueOf(house.getId());
+    }
+
+    private static String extractHouseIdFromSimpleHouseDtoAndConvertTypeToString(SimpleHouseDto simpleHouseDto) {
+        return String.valueOf(simpleHouseDto.getId());
+    }
+
+    private static String extractHouseIdFromUserOperationAndConvertTypeToString(UserOperation userOperation) {
+        return String.valueOf(userOperation.getId());
     }
 
 }

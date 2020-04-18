@@ -17,7 +17,7 @@ public interface IHouseService {
      * @param cityPinyinName
      * @return
      */
-    CommonResult getHouseByCityName(String cityPinyinName, String condition);
+    CommonResult getHouseByCondition(String cityPinyinName, String condition);
 
     /**
      * 获取某个房源的详情信息
@@ -31,4 +31,16 @@ public interface IHouseService {
      * @return
      */
     CommonResult addHouse(HouseVo houseVo);
+
+    /**
+     * 通过条件查找房源
+     * 如果用户Id为空，说明当前用户并未登录，则无需对房源进行个性化排序和记录用户操作历史
+     *
+     * @param cityPyName
+     * @param condition
+     * @param searchWord 关键词
+     * @param userId     用户Id
+     * @return
+     */
+    CommonResult findHouseByCondition(String cityPyName, String condition, String searchWord, String userId);
 }

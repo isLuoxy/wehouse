@@ -39,7 +39,7 @@ public class ESHouseServiceImplTest {
         house.setArea(40d);
         house.setName("夜半湾花园");
         house.setRegionCnName("宝安区");
-        house.setPlaceCnName("翻身");
+        house.setStreetCnName("翻身");
         HouseExt houseExt = new HouseExt();
         houseExt.setHouseId(house.getId());
         houseExt.setBed(CommonType.Y);

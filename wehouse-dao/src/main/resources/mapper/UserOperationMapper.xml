@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.UserOperationDao">
+
+    <resultMap id="userOperationResultMap" type="cn.l99.wehouse.pojo.UserOperation">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="houseId" column="house_id"/>
+        <result property="operationType" column="operation_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="operationTime" column="operation_time"/>
+    </resultMap>
+
+    <sql id="UserOperation_Column_List">
+        id,user_id,house_id,operation_type,operation_time
+    </sql>
+
+    <insert id="insertUserOperation" parameterType="cn.l99.wehouse.pojo.UserOperation">
+        insert into user_operation(id, user_id, house_id, operation_type, operation_time)
+        VALUES (#{id}, #{userId}, #{houseId}, #{operationType}, #{operationTime})
+    </insert>
+
+    <select id="findUserOperationByUserIdAndOperationTime" resultMap="userOperationResultMap">
+        select
+        <include refid="UserOperation_Column_List"/>
+        from user_operation where user_id = #{userId} and operation_time > #{data}
+    </select>
+</mapper>

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 简单房屋信息响应类
@@ -47,11 +48,11 @@ public class SimpleHouseDto implements Serializable {
         this.rentalType = house.getRentalType().getValue();
         this.orientation = house.getOrientation().getValue();
         this.regionCnName = house.getRegionCnName();
-        this.placeCnName = house.getPlaceCnName();
+        this.placeCnName = house.getStreetCnName();
         this.village = house.getVillage();
         this.floor = house.getFloor();
         this.area = house.getArea() + BaseUnitUtils.SQUARE_METER;
-        this.price = house.getPrice() + BaseUnitUtils.PER_MONTH;
+        this.price = house.getPrice().toString() + BaseUnitUtils.PER_MONTH;
         this.pictureUrl = house.getPictureUrl();
     }
 }

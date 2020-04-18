@@ -25,7 +25,7 @@
 
 
     <sql id="User_Column_List">
-        u.id as user_pri_id,user_name,user_nickname,user_password,student_authentication,user_phone,status,create_time,last_login_time
+        u.id as user_pri_id,user_name,user_nickname,user_password,student_authentication,user_phone,`status`,create_time,last_login_time
     </sql>
 
     <sql id="Base_User_Column_List">

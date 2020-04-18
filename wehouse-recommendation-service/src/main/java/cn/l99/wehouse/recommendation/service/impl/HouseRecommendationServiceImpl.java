@@ -7,6 +7,7 @@ import cn.l99.wehouse.recommendation.utils.Word2VECUtils;
 import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
     }
 
     @Override
+    @Async(value = "taskExecutor")
     public void addHouseVector(String houseId, List<String> referenceHouse) {
         // 查找参照房源的向量
         List<float[]> referenceHouseVector = new ArrayList<>();
@@ -53,11 +55,12 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
             result[i] /= referenceHouseVector.size();
         }
 
+        log.info("新房源id:{}的词向量为:{}", houseId, result);
         word2VEC.setWordVecMap(houseId, result);
     }
 
     @Override
-    public List<String> sortByVector(List<String> reference, List<String> candidate) {
+    public List<String> sortHouse(List<String> reference, List<String> candidate) {
 
         List<float[]> referenceVector = new ArrayList<>();
 

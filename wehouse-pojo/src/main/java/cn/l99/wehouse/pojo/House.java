@@ -1,9 +1,6 @@
 package cn.l99.wehouse.pojo;
 
-import cn.l99.wehouse.pojo.baseEnum.CommonType;
-import cn.l99.wehouse.pojo.baseEnum.HouseStatus;
-import cn.l99.wehouse.pojo.baseEnum.Orientation;
-import cn.l99.wehouse.pojo.baseEnum.RentalType;
+import cn.l99.wehouse.pojo.baseEnum.*;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -50,8 +48,8 @@ public class House implements Serializable {
     @Field(type = FieldType.Keyword)
     private String floor;
 
-    @Field(type = FieldType.Integer)
-    private Integer price;
+    @Field(type = FieldType.Double)
+    private BigDecimal price;
 
     @Field(type = FieldType.Date)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -63,6 +61,9 @@ public class House implements Serializable {
     @Field(type = FieldType.Keyword)
     private String houseType;
 
+    @Field(type = FieldType.Keyword)
+    private RentalRoom rentalRoom;
+
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String provinceCnName;
 
@@ -73,12 +74,12 @@ public class House implements Serializable {
     private String regionCnName;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
-    private String placeCnName;
+    private String streetCnName;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String village;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String address;
 
     @Field(type = FieldType.Keyword)
@@ -96,4 +97,12 @@ public class House implements Serializable {
     // 该属性用于 es,不用于 mysql
     @Field(type = FieldType.Nested, includeInParent = true)
     private HouseExt houseExt;
+
+    // 经度
+    @Field(type = FieldType.Keyword)
+    private String longitude;
+
+    // 维度
+    @Field(type = FieldType.Keyword)
+    private String latitude;
 }

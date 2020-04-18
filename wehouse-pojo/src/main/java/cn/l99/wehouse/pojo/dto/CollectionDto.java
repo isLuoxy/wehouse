@@ -55,10 +55,10 @@ public class CollectionDto implements Serializable {
         this.rentalTpye = house.getRentalType().getValue();
         this.floor = house.getFloor();
         this.area = house.getArea() + BaseUnitUtils.SQUARE_METER;
-        this.price = house.getPrice() + BaseUnitUtils.PER_MONTH;
+        this.price = house.getPrice().toString() + BaseUnitUtils.PER_MONTH;
         this.collectionTime = userCollection.getCollectionTime();
         this.regionCnName = house.getRegionCnName();
-        this.placeCnName = house.getPlaceCnName();
+        this.placeCnName = house.getStreetCnName();
         this.pictureUrl = house.getPictureUrl();
         this.houseType = house.getHouseType();
     }

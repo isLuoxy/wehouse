@@ -14,16 +14,19 @@
         <result property="checkInTime" column="check-in-time"/>
         <result property="elevator" column="elevator" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         <result property="houseType" column="house_type"/>
+        <result property="rentalRoom" column="rental_room" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         <result property="provinceCnName" column="province_cn_name"/>
         <result property="cityCnName" column="city_cn_name"/>
         <result property="regionCnName" column="region_cn_name"/>
-        <result property="placeCnName" column="place_cn_name"/>
+        <result property="streetCnName" column="street_cn_name"/>
         <result property="village" column="village"/>
         <result property="address" column="address"/>
         <result property="houseStatus" column="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         <result property="distanceToSubway" column="distance_to_subway"/>
         <result property="ownerId" column="owner_id"/>
         <result property="pictureUrl" column="picture_url"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
     </resultMap>
 
     <!--    <resultMap id="HouseExtResultMap" type="cn.l99.wehouse.pojo.HouseExt">-->
@@ -48,8 +51,8 @@
     </resultMap>
 
     <sql id="House_Column_List">
-        h.id as house_pri_id,name as house_name,rental_type,orientation,area,floor,price,`check-in-time`,elevator,house_type,province_cn_name,city_cn_name,region_cn_name,place_cn_name,
-        village,address,status,distance_to_subway,owner_id,picture_url
+        h.id as house_pri_id,name as house_name,rental_type,orientation,area,floor,price,`check-in-time`,elevator,house_type,rental_room,province_cn_name,city_cn_name,region_cn_name,street_cn_name,
+        village,address,status,distance_to_subway,owner_id,picture_url,longitude,latitude
     </sql>
 
     <sql id="House_Ext_Column_List">
@@ -93,9 +96,9 @@
     </select>
 
     <insert id="insertHouse" parameterType="cn.l99.wehouse.pojo.House">
-        insert into house (id, name, rental_type, orientation, area, floor, price, "check-in-time", elevator, house_type, province_cn_name, city_cn_name, region_cn_name, place_cn_name, village, address, status, distance_to_subway, owner_id, picture_url)
-        values(#{id},#{name},#{rentalType},#{orientation},#{area},#{floor},#{price},#{checkInTime},#{elevator},#{houseType},#{provinceCnName},#{cityCnName},#{regionCnName},#{placeCnName},#{village},#{address},
-        #{houseStatus},#{distanceToSubway},#{ownerId},#{pictureUrl})
+        insert into house (id, name, rental_type, orientation, area, floor, price, "check-in-time", elevator, house_type, rental_room,province_cn_name, city_cn_name, region_cn_name, street_cn_name, village, address, status, distance_to_subway, owner_id, picture_url,longitude,latitude)
+        values(#{id},#{name},#{rentalType},#{orientation},#{area},#{floor},#{price},#{checkInTime},#{elevator},#{houseType},#{rentalRoom},#{provinceCnName},#{cityCnName},#{regionCnName},#{placeCnName},#{village},#{address},
+        #{houseStatus},#{distanceToSubway},#{ownerId},#{pictureUrl},#{longitude},#{latitude})
     </insert>
 
 

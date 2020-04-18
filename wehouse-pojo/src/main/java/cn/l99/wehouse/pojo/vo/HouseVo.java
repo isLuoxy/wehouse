@@ -7,13 +7,13 @@ import cn.l99.wehouse.pojo.baseEnum.HouseStatus;
 import cn.l99.wehouse.pojo.baseEnum.Orientation;
 import cn.l99.wehouse.pojo.baseEnum.RentalType;
 import cn.l99.wehouse.utils.id.IdGenerator;
-import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,7 +36,7 @@ public class HouseVo implements Serializable {
 
     private String floor;
 
-    private Integer price;
+    private BigDecimal price;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date checkInTime;
@@ -51,7 +51,7 @@ public class HouseVo implements Serializable {
 
     private String regionCnName;
 
-    private String placeCnName;
+    private String streetCnName;
 
     private String village;
 
@@ -81,6 +81,9 @@ public class HouseVo implements Serializable {
 
     private String description;
 
+    private String longitude;
+
+    private String latitude;
 
     /**
      * 将请求对象转换成 {@link House} 对象
@@ -95,20 +98,22 @@ public class HouseVo implements Serializable {
         house.setOrientation(Orientation.get(this.orientation));
         house.setArea(Double.valueOf(this.area));
         house.setFloor(this.floor);
-        house.setPrice(Integer.valueOf(this.price));
+        house.setPrice(this.price);
         house.setCheckInTime(this.checkInTime);
         house.setElevator(CommonType.valueOf(this.elevator));
         house.setHouseType(this.getHouseType());
         house.setProvinceCnName(this.getProvinceCnName());
         house.setCityCnName(this.getCityCnName());
         house.setRegionCnName(this.getRegionCnName());
-        house.setPlaceCnName(this.placeCnName);
+        house.setStreetCnName(this.streetCnName);
         house.setVillage(this.village);
         house.setAddress(this.address);
         house.setHouseStatus(HouseStatus.U);
         house.setDistanceToSubway(-1);
         house.setOwnerId(this.ownerId);
         house.setPictureUrl(null);
+        house.setLongitude(longitude);
+        house.setLatitude(latitude);
 
         HouseExt houseExt = new HouseExt();
         houseExt.setHouseId(house.getId());
