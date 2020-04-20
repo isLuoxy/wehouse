@@ -50,7 +50,10 @@ public enum ErrorCode {
     HOUSE_RENTED(4302, "房源已出租"),
 
     // 编码错误
-    CODING_ERROR(5000, "编码出错");
+    CODING_ERROR(5000, "编码出错"),
+
+    // 数据库统一修改错误
+    UPDATE_ERROR(400, "更新错误");
 
     /**
      * 错误码

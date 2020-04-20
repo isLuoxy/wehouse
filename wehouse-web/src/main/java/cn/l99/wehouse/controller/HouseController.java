@@ -3,13 +3,12 @@ package cn.l99.wehouse.controller;
 import cn.l99.wehouse.common.LoginUtils;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseVo;
+import cn.l99.wehouse.pojo.vo.UserOperationVo;
 import cn.l99.wehouse.service.IHouseService;
-import cn.l99.wehouse.service.elasticsearch.ESIHouseService;
+import cn.l99.wehouse.service.IUserOperationService;
 import cn.l99.wehouse.service.redis.IRedisService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,13 +30,15 @@ public class HouseController {
     @Reference(version = "${wehouse.service.version}")
     IRedisService redisService;
 
+    @Reference(version = "${wehouse.service.version}")
+    IUserOperationService userOperationService;
 
     @GetMapping("/zufang/{city}/f/{id}")
-    public Object getAHouse(@PathVariable("city") String cityPyName, @PathVariable("id") String houseId,HttpServletRequest request,HttpServletResponse response) {
+    public Object getAHouse(@PathVariable("city") String cityPyName, @PathVariable("id") String houseId, HttpServletRequest request, HttpServletResponse response) {
         // 这里的城市拼音暂不使用
         String userId = LoginUtils.hasLoginAndReturnString(request, response, redisService);
 
-        CommonResult aHouseByHouseId = houseService.getAHouseByHouseId(houseId);
+        CommonResult aHouseByHouseId = houseService.getAHouseByHouseId(houseId, userId);
         return aHouseByHouseId;
     }
 
@@ -68,4 +69,13 @@ public class HouseController {
         houseService.addHouse(houseVo);
         return null;
     }
+
+    /**
+     * 房源页面关闭请求，用于记录用户在某个页面的停留时间
+     */
+    @PostMapping("/page_on_time")
+    public Object pageOnTime(@RequestBody UserOperationVo userOperationVo) {
+        return userOperationService.updateUserOperation(userOperationVo.convertToUserOperation());
+    }
+
 }

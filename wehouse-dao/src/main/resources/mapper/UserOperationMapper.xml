@@ -8,21 +8,56 @@
         <result property="userId" column="user_id"/>
         <result property="houseId" column="house_id"/>
         <result property="operationType" column="operation_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-        <result property="operationTime" column="operation_time"/>
+        <result property="operationStartTime" column="operation_start_time"/>
+        <result property="operationEndTime" column="operation_end_time"/>
+        <result property="pageOnTime" column="page_on_time"/>
     </resultMap>
 
     <sql id="UserOperation_Column_List">
-        id,user_id,house_id,operation_type,operation_time
+        id,user_id,house_id,operation_type,operation_time,page_on_time
     </sql>
 
-    <insert id="insertUserOperation" parameterType="cn.l99.wehouse.pojo.UserOperation">
-        insert into user_operation(user_id, house_id, operation_type, operation_time)
-        VALUES (#{userId}, #{houseId}, #{operationType}, #{operationTime})
+    <insert id="insertUserOperation" parameterType="cn.l99.wehouse.pojo.UserOperation" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into user_operation(user_id, house_id, operation_type, operation_start_time, operation_end_time,
+                                   page_on_time)
+        VALUES (#{userId}, #{houseId}, #{operationType}, #{operationStartTime}, #{operationEndTime} #{pageOnTime})
     </insert>
 
     <select id="findUserOperationByUserIdAndOperationTime" resultMap="userOperationResultMap">
         select
         <include refid="UserOperation_Column_List"/>
-        from user_operation where user_id = #{userId} and operation_time > #{data}
+        from user_operation where user_id = #{userId} and operation_start_time > #{date};
     </select>
+
+    <select id="findUserOperationByOperationTime" resultMap="userOperationResultMap">
+        select
+        <include refid="UserOperation_Column_List"/>
+        from user_operation where operation_start_time > #{date};
+    </select>
+
+    <update id="updateUserOperation" parameterType="cn.l99.wehouse.pojo.UserOperation">
+        update user_operation
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="houseId != null">
+                house_id = #{houseId},
+            </if>
+            <if test="operationType != null">
+                operation_type = #{operationType},
+            </if>
+            <if test="operationStartTime != null">
+                operation_start_time = #{operationStartTime},
+            </if>
+            <if test="operationEndTime != null">
+                operation_end_time = #{operationEndTime},
+            </if>
+            <if test="pageOnTime != null">
+                page_on_time = #{pageOnTime},
+            </if>
+        </set>
+        where id = #{id};
+    </update>
 </mapper>

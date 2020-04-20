@@ -1,18 +1,30 @@
-dubbo:
-  application:
-    id: wehouse-recommendation-dev
-    name: wehouse-recommendation-dev
-  registry:
-    protocol: zookeeper
-    address: 121.36.29.50:2181
-  protocol:
-    name: dubbo
-    port: 20881
-  provider:
-    timeout: 300000
 spring:
   profiles:
     active: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
+    username: root
+    password:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 3
+      min-idle: 3
+      max-active: 10
+      max-wait: 6000
+      stat-view-servlet:
+        login-username: root
+        login-password: wehouse
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1
+server:
+  port: 7000
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
 ---
 spring:
@@ -22,6 +34,18 @@ wehouse:
   service:
     version: 1.0.dev
 
+dubbo:
+  application:
+    id: wehouse-recommendation-dev
+    name: wehouse-recommendation-dev
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
+  protocol:
+    name: dubbo
+    port: 20880
+  provider:
+    timeout: 300000
 ---
 spring:
   profiles: uat
@@ -29,3 +53,16 @@ spring:
 wehouse:
   service:
     version: 1.0
+
+dubbo:
+  application:
+    id: wehouse-recommendation
+    name: wehouse-recommendation
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
+  protocol:
+    name: dubbo
+    port: 20885
+  provider:
+    timeout: 300000

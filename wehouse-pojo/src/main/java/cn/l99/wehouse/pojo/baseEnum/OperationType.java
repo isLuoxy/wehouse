@@ -6,11 +6,13 @@ package cn.l99.wehouse.pojo.baseEnum;
  * <h1>
  * Click：点击
  * Favorite：收藏
+ * Reservation：预约
  * </h1>
  *
  * @author L99
  */
 public enum OperationType {
     C,
-    F
+    F,
+    R
 }

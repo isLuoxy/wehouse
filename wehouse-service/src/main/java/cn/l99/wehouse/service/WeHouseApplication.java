@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan({"cn.l99.wehouse.redis","cn.l99.wehouse.mail","cn.l99.wehouse.utils"})
+@ComponentScan({"cn.l99.wehouse.redis","cn.l99.wehouse.mail","cn.l99.wehouse.utils","cn.l99.wehouse.service.impl"})
 @MapperScan("cn.l99.wehouse.dao")
 @EnableDubbo
 @EnableElasticsearchRepositories(basePackages = "cn.l99.wehouse.elasticsearch")

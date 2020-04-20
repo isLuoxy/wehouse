@@ -16,6 +16,7 @@ spring:
   redis:
     host: 47.113.91.20
     port: 6379
+    password: wehouse
 
 ---
 spring:
@@ -98,7 +99,7 @@ dubbo:
     address: 127.0.0.1:2181
   protocol:
     name: dubbo
-    port: 20880
+    port: 20886
   provider:
     timeout: 5000
 # web port

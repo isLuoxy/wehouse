@@ -5,6 +5,7 @@ import cn.l99.wehouse.recommendation.word2vec.utils.Haffman;
 import cn.l99.wehouse.recommendation.word2vec.utils.MapCount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.util.*;
@@ -117,7 +118,7 @@ public class Word2VEC {
         logger.info("=== start ===");
         long startTime = System.currentTimeMillis();
 
-        readVocab(file);
+        readVocabByFile(file);
         long loadDataEndTime = System.currentTimeMillis();
         logger.info("load data cost time:{}ms", loadDataEndTime - startTime);
 
@@ -129,10 +130,40 @@ public class Word2VEC {
         long constructHaffmanEndTime = System.currentTimeMillis();
         logger.info("construct haffman cost time:{}ms", constructHaffmanEndTime - loadDataEndTime);
 
-        trainModel(file);
+        trainModelByFile(file);
         long trainnningEndTime = System.currentTimeMillis();
         logger.info("trainning model cost time:{}ms", trainnningEndTime - constructHaffmanEndTime);
         logger.info("costTime: {}ms", trainnningEndTime - startTime);
+        logger.info("=== end ===");
+    }
+
+    /**
+     * 根据集合学习
+     *
+     * @throws IOException
+     */
+    public void learnList(List<String> list) {
+        logger.info("=== start ===");
+        long startTime = System.currentTimeMillis();
+
+        readVocabByList(list);
+        long loadDataEndTime = System.currentTimeMillis();
+        logger.info("load data cost time:{}ms", loadDataEndTime - startTime);
+
+        new Haffman(layerSize).construct(wordMap.values());
+        // 查找每个神经元
+        for (Neuron neuron : wordMap.values()) {
+            ((HouseNeuron) neuron).makeNeurons();
+        }
+        long constructHaffmanEndTime = System.currentTimeMillis();
+        logger.info("construct haffman cost time:{}ms", constructHaffmanEndTime - loadDataEndTime);
+
+        trainModelByList(list);
+        long trainnningEndTime = System.currentTimeMillis();
+        logger.info("trainning model cost time:{}ms", trainnningEndTime - constructHaffmanEndTime);
+        logger.info("costTime: {}ms", trainnningEndTime - startTime);
+        logger.info("collect vector to memory");
+        collectVectorsToMemory();
         logger.info("=== end ===");
     }
 
@@ -142,7 +173,7 @@ public class Word2VEC {
      * @param file
      * @throws IOException
      */
-    private void readVocab(File file) throws IOException {
+    private void readVocabByFile(File file) throws IOException {
         logger.info("Load & Vectorize data....");
         MapCount<String> mc = new MapCount<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -157,9 +188,28 @@ public class Word2VEC {
             }
         }
         for (Map.Entry<String, Integer> element : mc.get().entrySet()) {
-
             wordMap.put(element.getKey(), new HouseNeuron(element.getKey(),
                     (double) element.getValue() / mc.size(), layerSize));
+        }
+    }
+
+    private void readVocabByList(List<String> list) {
+        logger.info("Load & Vectorize data....");
+        MapCount<String> mc = new MapCount<>();
+        for (String line : list) {
+            String temp = line;
+            if (!StringUtils.isEmpty(temp)) {
+                String[] split = temp.split(" ");
+                trainWordsCount += split.length;
+                for (String string : split) {
+                    mc.add(string);
+                }
+            }
+
+            for (Map.Entry<String, Integer> element : mc.get().entrySet()) {
+                wordMap.put(element.getKey(), new HouseNeuron(element.getKey(),
+                        (double) element.getValue() / mc.size(), layerSize));
+            }
         }
     }
 
@@ -168,18 +218,18 @@ public class Word2VEC {
      *
      * @throws IOException
      */
-    private void trainModel(File file) throws IOException {
+    private void trainModelByFile(File file) throws IOException {
         logger.info("start train model....");
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(file)))) {
             String temp = null;
-            long nextRandom = 5;
+            long nextRandom = getNextRandom();
             int wordCount = 0;
             int lastWordCount = 0;
             int wordCountActual = 0;
             while ((temp = br.readLine()) != null) {
                 if (wordCount - lastWordCount > 10000) {
-                    logger.info("alpha:{} Progress:{}%", alpha, (int) (wordCountActual / (double) (trainWordsCount + 1) * 100));
+                    logger.info(getS(), alpha, (int) (wordCountActual / (double) (trainWordsCount + 1) * 100));
                     wordCountActual += wordCount - lastWordCount;
                     lastWordCount = wordCount;
                     alpha = startingAlpha
@@ -225,6 +275,71 @@ public class Word2VEC {
             logger.info("Success train over!");
         }
     }
+
+    private String getS() {
+        return "alpha:{} Progress:{}%";
+    }
+
+    private void trainModelByList(List<String> list) {
+        logger.info("start train model....");
+        String temp = null;
+        for (String line : list) {
+            temp = line;
+            long nextRandom = getNextRandom();
+            int wordCount = 0;
+            int lastWordCount = 0;
+            int wordCountActual = 0;
+            if (wordCount - lastWordCount > 10000) {
+                logger.info(getS(), alpha, (int) (wordCountActual / (double) (trainWordsCount + 1) * 100));
+                wordCountActual += wordCount - lastWordCount;
+                lastWordCount = wordCount;
+                alpha = startingAlpha
+                        * (1 - wordCountActual / (double) (trainWordsCount + 1));
+                if (alpha < startingAlpha * 0.0001) {
+                    alpha = startingAlpha * 0.0001;
+                }
+            }
+            String[] strs = temp.split(" ");
+            wordCount += strs.length;
+            List<HouseNeuron> sentence = new ArrayList<>();
+            // 对于每一行数据，都会将每个词进行
+            for (int i = 0; i < strs.length; i++) {
+                Neuron entry = wordMap.get(strs[i]);
+                if (entry == null) {
+                    continue;
+                }
+                // The subsampling randomly discards frequent words while keeping the
+                // ranking same
+                if (sample > 0) {
+                    // freq = 单词出现的次数/不重复的所有单词
+                    // trainWordsCount -- 所有单词总和（包括重复）
+                    double ran = (Math.sqrt(entry.getFreq() / (sample * trainWordsCount)) + 1)
+                            * (sample * trainWordsCount) / entry.getFreq();
+                    nextRandom = nextRandom * 25214903917L + 11;
+                    if (ran < (nextRandom & 0xFFFF) / (double) 65536) {
+                        continue;
+                    }
+                }
+                sentence.add((HouseNeuron) entry);
+            }
+
+            Model model = isCbow ? new CbowGramModel() : new SkipGramModel();
+
+            for (int index = 0; index < sentence.size(); index++) {
+                nextRandom = nextRandom * 25214903917L + 11;
+                model.training(sentence, index, window, (int) nextRandom % window, layerSize, alpha);
+            }
+
+        }
+        logger.info("Vocab size: {}", wordMap.size());
+        logger.info("Words in train file: {}", trainWordsCount);
+        logger.info("Success train over!");
+    }
+
+    private int getNextRandom() {
+        return 5;
+    }
+
 
     /**
      * 保存模型
@@ -342,10 +457,26 @@ public class Word2VEC {
 
     /**
      * 设置向量到内存中
+     *
      * @param key
      * @param value
      */
     public void setWordVecMap(String key, float[] value) {
         wordVecMap.put(key, value);
+    }
+
+    /**
+     * 读取词向量到内存中
+     */
+    private void collectVectorsToMemory() {
+        for (Map.Entry<String, Neuron> element : wordMap.entrySet()) {
+            float[] vec = new float[wordMap.size()];
+            double[] syn0 = ((HouseNeuron) element.getValue()).getSyn0();
+            for (int i = 0; i < syn0.length; i++) {
+                vec[i] = ((Double) syn0[i]).floatValue();
+            }
+            wordVecMap.put(element.getKey(), vec);
+        }
+        wordMap.clear();
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service(version = "${wehouse.service.version}")
 public class HouseAreaServiceImpl implements IHouseAreaService {
 
     @Autowired

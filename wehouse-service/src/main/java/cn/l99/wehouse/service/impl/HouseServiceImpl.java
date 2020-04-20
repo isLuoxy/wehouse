@@ -44,24 +44,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HouseServiceImpl implements IHouseService {
 
-    final HouseDao houseDao;
-
-    final RedisUtils redisUtils;
-
-    final ESIHouseService esHouseService;
-
-    final IUserOperationService userOperationService;
-
-    final ISearchHistoryService searchHistoryService;
+    @Autowired
+    private HouseDao houseDao;
 
     @Autowired
-    public HouseServiceImpl(HouseDao houseDao, RedisUtils redisUtils, ESIHouseService esHouseService, IUserOperationService userOperationService, ISearchHistoryService searchHistoryService) {
-        this.houseDao = houseDao;
-        this.redisUtils = redisUtils;
-        this.esHouseService = esHouseService;
-        this.userOperationService = userOperationService;
-        this.searchHistoryService = searchHistoryService;
-    }
+    private RedisUtils redisUtils;
+
+    @Autowired
+    private ESIHouseService esHouseService;
+
+    @Autowired
+    private IUserOperationService userOperationService;
+
+    @Autowired
+    private ISearchHistoryService searchHistoryService;
+
 
     @Reference(version = "${wehouse.service.version}")
     IHouseRecommendationService houseRecommendationService;
@@ -94,8 +91,10 @@ public class HouseServiceImpl implements IHouseService {
             return CommonResult.failure(ErrorCode.HOUSE_NOT_EXIST);
         }
         if (!StringUtils.isEmpty(userId)) {
+            // 当用户登录后，需要进行页面埋点，记录用户在页面的停留时间
             UserOperation userOperation = constructUserOperation(userId, houseId, OperationType.C);
-            userOperationService.addUserOperation(userOperation);
+            int id = userOperationService.addUserOperation(userOperation);
+            aHouseByHouseId.setUsId(id);
         }
         return CommonResult.success(aHouseByHouseId);
     }
@@ -202,7 +201,6 @@ public class HouseServiceImpl implements IHouseService {
         userOperation.setUserId(Integer.valueOf(userId));
         userOperation.setHouseId(Long.valueOf(houseId));
         userOperation.setOperationType(operationType);
-        userOperation.setOperationTime(DateUtils.now());
         return userOperation;
     }
 

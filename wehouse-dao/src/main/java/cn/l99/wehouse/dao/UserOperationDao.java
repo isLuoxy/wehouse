@@ -15,7 +15,11 @@ import java.util.List;
 @Repository
 public interface UserOperationDao {
 
-    boolean insertUserOperation(UserOperation userOperation);
+    int insertUserOperation(UserOperation userOperation);
 
-    List<UserOperation> findUserOperationByUserIdAndOperationTime(@Param("userId") String userId, @Param("data") Date date);
+    List<UserOperation> findUserOperationByUserIdAndOperationTime(@Param("userId") String userId, @Param("date") Date date);
+
+    List<UserOperation> findUserOperationByOperationTime(@Param("date") Date date);
+
+    int updateUserOperation(UserOperation userOperation);
 }

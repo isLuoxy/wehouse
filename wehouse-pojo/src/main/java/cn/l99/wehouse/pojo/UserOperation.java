@@ -4,6 +4,7 @@ import cn.l99.wehouse.pojo.baseEnum.OperationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,16 +13,21 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserOperation implements Serializable {
-    
+
     private static final long serialVersionUID = -5244043896342383526L;
 
-    private int id;
+    private Integer id;
 
-    private int userId;
+    private Integer userId;
 
-    private long houseId;
+    private Long houseId;
 
     private OperationType operationType;
 
-    private Date operationTime;
+    private Date operationStartTime;
+
+    private Date operationEndTime;
+
+    private Integer pageOnTime;
+
 }
