@@ -11,6 +11,9 @@ import cn.l99.wehouse.utils.HouseUtils;
 import cn.l99.wehouse.utils.condition.HouseCondition;
 import cn.l99.wehouse.utils.condition.recommendation.HouseRecommendationCondition;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service(version = "${wehouse.service.version}")
+@Slf4j
 public class ESHouseServiceImpl implements ESIHouseService {
 
     @Autowired
@@ -34,7 +38,6 @@ public class ESHouseServiceImpl implements ESIHouseService {
 
     @Autowired
     RedisUtils redisUtils;
-
 
 
     @Override
@@ -45,8 +48,10 @@ public class ESHouseServiceImpl implements ESIHouseService {
 
     @Override
     public CommonResult findSimilarHouseByCondition(HouseRecommendationCondition houseRecommendationCondition) {
+        log.info("查找相似房源");
         Page<House> houseList = ESHouseRepository.search(constructSearchQuery(houseRecommendationCondition));
         List<House> content = houseList.getContent();
+        log.info("相似房源:{}", JSONArray.toJSONString(content));
         return CommonResult.success(content);
     }
 
@@ -57,7 +62,7 @@ public class ESHouseServiceImpl implements ESIHouseService {
         String cityCnName = (String) redisUtils.get(cityPyName);
         HouseCondition houseCondition = HouseUtils.acqConditions(condition);
         // 如果处理条件中 regionName 不为空，那么此时的值为 regionID，需要改为 regionName
-        if (!StringUtils.isEmpty(houseCondition.getRegionCnName())) {
+        if (houseCondition != null && !StringUtils.isEmpty(houseCondition.getRegionCnName())) {
             String regionCnName = (String) redisUtils.get(houseCondition.getRegionCnName());
             houseCondition.setRegionCnName(regionCnName);
         }
@@ -91,6 +96,9 @@ public class ESHouseServiceImpl implements ESIHouseService {
         UseSearchStringConstructQueryBuilder(boolQueryBuilder, search);
 
         // 设置分页
+        if(houseCondition == null){
+            houseCondition = new HouseCondition();
+        }
         Pageable pageable = PageRequest.of(Integer.parseInt(houseCondition.getPageStart()), Integer.parseInt(houseCondition.getPageSize()));
 
         //构建查询
@@ -199,7 +207,8 @@ public class ESHouseServiceImpl implements ESIHouseService {
 
         // 地区查找,如果有满足条件的一并查出
         if (houseRecommendationCondition.getAddress() != null) {
-            boolQueryBuilder.must(boolQueryBuilder.should(QueryBuilders.matchQuery("address", houseRecommendationCondition.getAddress())));
+            // TODO
+            boolQueryBuilder.must(QueryBuilders.matchQuery("address", houseRecommendationCondition.getAddress()));
         }
     }
 

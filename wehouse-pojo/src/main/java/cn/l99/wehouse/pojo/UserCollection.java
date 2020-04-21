@@ -25,7 +25,7 @@ public class UserCollection implements Serializable {
 
     private Integer userId;
 
-    private Long houseId;
+    private String houseId;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date collectionTime;

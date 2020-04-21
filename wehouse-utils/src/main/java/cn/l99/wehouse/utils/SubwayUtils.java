@@ -10,10 +10,11 @@ public class SubwayUtils {
     /**
      * 地铁名格式化
      * <code>
-     *     String name = 地铁1号线(堰桥-长广溪);
-     *     String newName = SubwayUtils.SubwayNameFormat(name);
+     * String name = 地铁1号线(堰桥-长广溪);
+     * String newName = SubwayUtils.SubwayNameFormat(name);
      * </code>
-     *  这个时候 newName = 地铁1号线
+     * 这个时候 newName = 地铁1号线
+     *
      * @param oldName 原本名称
      * @return 格式化后的名称
      */

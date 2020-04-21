@@ -26,8 +26,9 @@ import java.util.Date;
 public class House implements Serializable {
 
     private static final long serialVersionUID = 3890824795794279398L;
+
     @Id
-    private Long id;
+    private String id;
 
     /**
      * text：存储数据时候，会自动分词，并生成索引
@@ -49,7 +50,7 @@ public class House implements Serializable {
     private String floor;
 
     @Field(type = FieldType.Double)
-    private BigDecimal price;
+    private Double price;
 
     @Field(type = FieldType.Date)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")

@@ -1,16 +1,17 @@
 package cn.l99.wehouse.pojo.dto;
 
 import cn.l99.wehouse.pojo.House;
+import cn.l99.wehouse.pojo.baseEnum.RentalRoom;
+import cn.l99.wehouse.pojo.baseEnum.RentalType;
 import cn.l99.wehouse.utils.BaseUnitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
- * 简单房屋信息响应类
+ * 一级房屋基础信息响应
  *
  * @author L99
  */
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
 public class SimpleHouseDto implements Serializable {
     private static final long serialVersionUID = -983183819204453244L;
 
-    private Long id;
+    private String id;
 
     private String name;
 
@@ -30,7 +31,7 @@ public class SimpleHouseDto implements Serializable {
 
     private String regionCnName;
 
-    private String placeCnName;
+    private String streetCnName;
 
     private String village;
 
@@ -44,11 +45,15 @@ public class SimpleHouseDto implements Serializable {
 
     public void convertToSimpleHouseDtoFromHouse(House house) {
         this.id = house.getId();
-        this.name = house.getName();
+        if (house.getRentalType().equals(RentalType.H)) {
+            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom().getValue();
+        } else {
+            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType();
+        }
         this.rentalType = house.getRentalType().getValue();
         this.orientation = house.getOrientation().getValue();
         this.regionCnName = house.getRegionCnName();
-        this.placeCnName = house.getStreetCnName();
+        this.streetCnName = house.getStreetCnName();
         this.village = house.getVillage();
         this.floor = house.getFloor();
         this.area = house.getArea() + BaseUnitUtils.SQUARE_METER;

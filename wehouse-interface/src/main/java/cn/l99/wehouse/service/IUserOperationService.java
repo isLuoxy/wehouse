@@ -28,7 +28,7 @@ public interface IUserOperationService {
      * @param userOperation {@link UserOperation}
      * @return 数据库生成的主键值
      */
-    int addUserOperation(UserOperation userOperation);
+    void addUserOperation(UserOperation userOperation);
 
     /**
      * 更新用户操作记录

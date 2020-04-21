@@ -35,4 +35,5 @@ public enum RentalType {
     public static RentalType get(String value) {
         return lookup.get(value);
     }
+
 }

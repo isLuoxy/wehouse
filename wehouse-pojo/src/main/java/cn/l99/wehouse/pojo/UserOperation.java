@@ -20,7 +20,7 @@ public class UserOperation implements Serializable {
 
     private Integer userId;
 
-    private Long houseId;
+    private String houseId;
 
     private OperationType operationType;
 

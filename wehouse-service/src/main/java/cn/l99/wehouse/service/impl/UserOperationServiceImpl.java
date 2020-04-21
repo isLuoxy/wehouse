@@ -34,9 +34,8 @@ public class UserOperationServiceImpl implements IUserOperationService {
 
     @Override
     @Async
-    public int addUserOperation(UserOperation userOperation) {
+    public void addUserOperation(UserOperation userOperation) {
         userOperationDao.insertUserOperation(userOperation);
-        return userOperation.getId();
     }
 
     @Override

@@ -16,6 +16,6 @@
     </sql>
 
     <insert id="insertCollection" parameterType="cn.l99.wehouse.pojo.UserCollection" >
-        insert into userCollection(user_id,house_id,collection_time) values (#{userId},#{houseId},#{collectionTime})
+        insert into user_collection(user_id,house_id,collection_time) values (#{userId},#{houseId},#{collectionTime})
     </insert>
 </mapper>

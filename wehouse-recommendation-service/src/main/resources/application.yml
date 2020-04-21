@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
     username: root
-    password:
+    password: root
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 3
@@ -14,7 +14,7 @@ spring:
       max-wait: 6000
       stat-view-servlet:
         login-username: root
-        login-password: wehouse
+        login-password:
       filter:
         stat:
           log-slow-sql: true

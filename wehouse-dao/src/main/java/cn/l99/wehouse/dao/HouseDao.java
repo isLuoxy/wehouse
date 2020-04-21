@@ -38,5 +38,5 @@ public interface HouseDao {
      * @param house {@link House}
      * @return 返回结果
      */
-    boolean inseartHouse(House house);
+    boolean insertHouse(House house);
 }

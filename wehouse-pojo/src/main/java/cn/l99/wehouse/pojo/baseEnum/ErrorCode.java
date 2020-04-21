@@ -53,7 +53,10 @@ public enum ErrorCode {
     CODING_ERROR(5000, "编码出错"),
 
     // 数据库统一修改错误
-    UPDATE_ERROR(400, "更新错误");
+    UPDATE_ERROR(400, "更新错误"),
+
+    // 邮箱和学校不匹配
+    EMAIL_NO_MATCH_SCHOOL(6000, "学校和邮箱不匹配");
 
     /**
      * 错误码

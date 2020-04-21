@@ -32,7 +32,7 @@ public class ESHouseServiceImplTest {
     @Test
     public void addHouse() {
         House house = new House();
-        house.setId(198199L);
+        house.setId("198199");
         house.setHouseStatus(HouseStatus.A);
         house.setOrientation(Orientation.N);
         house.setCityCnName("深圳");

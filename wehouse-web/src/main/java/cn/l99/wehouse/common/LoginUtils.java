@@ -19,7 +19,7 @@ public class LoginUtils {
 
     public static boolean hasLoginAndReturnBool(HttpServletRequest request, HttpServletResponse response, IRedisService redisService) {
         String s = hasLoginAndReturnString(request, response, redisService);
-        if(StringUtils.isEmpty(s)){
+        if (StringUtils.isEmpty(s)) {
             return false;
         }
         return true;
@@ -30,6 +30,7 @@ public class LoginUtils {
         // 会话中获取登录标识
         Object loginStatus = session.getAttribute(token);
         if (!StringUtils.isEmpty(loginStatus)) {
+            // 这里不安全,可能被获取token进行重放
             return true;
         }
         CommonResult redisResult = redisService.getValueIfExist(token);
@@ -50,7 +51,7 @@ public class LoginUtils {
         // 小于10分钟时进行续期
         if (currAge.intValue() < 600) {
             // 进行续期
-            log.info("对用户id{}进行续期", cookieValue);
+            log.info("对用户token{}进行续期", cookieValue);
             CookieUtils.setMaxAge(request, response, cookieName, cookieValue, 1800);
             redisService.expire(cookieValue, 1800);
         }
@@ -58,6 +59,7 @@ public class LoginUtils {
 
     /**
      * 判断是否登录并返回用户标识，这里的用户标识为用户id
+     *
      * @param request
      * @param response
      * @param redisService
@@ -74,8 +76,21 @@ public class LoginUtils {
         if (correctLogin) {
             // 判断是否需要续期并自动续期
             renew(request, response, "token", token, redisService);
-            return token;
+            return getUserId(request);
         }
         return null;
     }
+
+    /**
+     * 返回用户表示，只有经过拦截器的类能直接调用，
+     * @param request
+     * @return
+     */
+    public static String getUserId(HttpServletRequest request) {
+        String token = CookieUtils.getCookieValue(request, "token");
+        HttpSession session = request.getSession();
+        Object attribute = session.getAttribute(token);
+        return attribute == null ? null : (String) attribute;
+    }
+
 }

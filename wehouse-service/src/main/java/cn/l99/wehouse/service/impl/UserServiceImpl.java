@@ -3,25 +3,26 @@ package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.CollectionDao;
 import cn.l99.wehouse.dao.UserDao;
+import cn.l99.wehouse.dao.UserStudentAuthenticationDao;
 import cn.l99.wehouse.mail.Mail;
 import cn.l99.wehouse.mail.MailTemplate;
 import cn.l99.wehouse.mail.StudentCertificationMailTemplate;
 import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.HouseCollection;
 import cn.l99.wehouse.pojo.User;
+import cn.l99.wehouse.pojo.UserStudentAuthentication;
 import cn.l99.wehouse.pojo.baseEnum.CommonType;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
 import cn.l99.wehouse.pojo.dto.CollectionDto;
 import cn.l99.wehouse.pojo.dto.UserDto;
 import cn.l99.wehouse.pojo.response.CommonResult;
+import cn.l99.wehouse.pojo.vo.UserStudentAuthenticationVo;
 import cn.l99.wehouse.pojo.vo.UserVo;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IUserService;
-import cn.l99.wehouse.utils.EnvironmentProfiles;
-import cn.l99.wehouse.utils.ProfilesEnum;
-import cn.l99.wehouse.utils.SmsUtils;
-import cn.l99.wehouse.utils.UserUtils;
+import cn.l99.wehouse.utils.*;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,13 +52,16 @@ public class UserServiceImpl implements IUserService {
 
     final EnvironmentProfiles environment;
 
+    final UserStudentAuthenticationDao userStudentAuthenticationDao;
+
     @Autowired
-    public UserServiceImpl(UserDao userDao, CollectionDao collectionDao, RedisUtils redisUtils, Mail mail, EnvironmentProfiles environment) {
+    public UserServiceImpl(UserDao userDao, CollectionDao collectionDao, RedisUtils redisUtils, Mail mail, EnvironmentProfiles environment, UserStudentAuthenticationDao userStudentAuthenticationDao) {
         this.userDao = userDao;
         this.collectionDao = collectionDao;
         this.redisUtils = redisUtils;
         this.mail = mail;
         this.environment = environment;
+        this.userStudentAuthenticationDao = userStudentAuthenticationDao;
     }
 
     @Override
@@ -144,6 +148,9 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public CommonResult getPersonalCenterByUserId(String userId) {
+        if (StringUtils.isEmpty(userId)) {
+            return CommonResult.failure(ErrorCode.NOT_LOGIN);
+        }
         User user = userDao.selectUserByUserId(userId);
         UserDto userDto = new UserDto();
         userDto.userConvertToUserDto(user);
@@ -173,7 +180,13 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public CommonResult getPersonalCollectionByUserId(String userId) {
+        if (StringUtils.isEmpty(userId)) {
+            return CommonResult.failure(ErrorCode.NOT_LOGIN);
+        }
         List<HouseCollection> houseCollections = userDao.selectHouseAndCollectionByUserId(userId);
+        if (houseCollections == null) {
+            return CommonResult.success();
+        }
         List<CollectionDto> collectionDtoList = new ArrayList<>(houseCollections.size());
         houseCollections.forEach(houseCollection -> {
             CollectionDto collectionDto = new CollectionDto();
@@ -190,7 +203,7 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public CommonResult postPersonalCollection(UserCollection userCollection) {
-        userCollection.setCollectionTime(new Date());
+        userCollection.setCollectionTime(DateUtils.now());
         boolean result = collectionDao.insertCollection(userCollection);
         if (result) {
             return CommonResult.success();
@@ -202,24 +215,34 @@ public class UserServiceImpl implements IUserService {
     /**
      * 发送学生认证邮件
      *
-     * @param userId  用户 id
-     * @param address 用户邮箱地址
+     * @param userId                      用户 id
+     * @param userStudentAuthenticationVo
      * @return {@link CommonResult} 通用结果封装
      */
     @Override
-    public CommonResult sendStuAuthEmail(String userId, String address) {
+    public CommonResult sendStuAuthEmail(String userId, UserStudentAuthenticationVo userStudentAuthenticationVo) {
+        // 验证学校和邮箱是否匹配
+        if (!verifyEmailAndSchool(userStudentAuthenticationVo)) {
+            return CommonResult.failure(ErrorCode.EMAIL_NO_MATCH_SCHOOL);
+        }
         MailTemplate mailTemplate = new StudentCertificationMailTemplate();
-        System.out.println(environment);
-        System.out.println(environment.getActive());
-        Map<String, String> map = UserUtils.generatorCertificationLink(userId, address, ProfilesEnum.DEV);
+        String address = userStudentAuthenticationVo.getSchoolEmail();
+        log.info("当前发送短信的环境为：{}", environment.getActive());
+        Map<String, String> map = UserUtils.generatorCertificationLink(userId, address, ProfilesEnum.get(environment.getActive()));
         String content = mailTemplate.generatorMailContent(map.get("link"));
         boolean result = mail.sendMail(address, "wehouse 用户学生身份邮箱验证", content);
         if (result) {
+            userStudentAuthenticationVo.setUid(map.get("uid"));
+            String redisValue = JSONObject.toJSONString(userStudentAuthenticationVo);
             // 将验证信息存入 redis 中，并设置对应的过期时间(48小时)
-            redisUtils.set(map.get("token"), map.get("uid"), 48 * 60 * 60);
+            redisUtils.set(map.get("token"), redisValue, 48 * 60 * 60);
             return CommonResult.success();
         }
         return CommonResult.failure(ErrorCode.EMAIL_SEND_FAILED);
+    }
+
+    private boolean verifyEmailAndSchool(UserStudentAuthenticationVo userStudentAuthenticationVo) {
+        return true;
     }
 
     /**
@@ -233,13 +256,20 @@ public class UserServiceImpl implements IUserService {
     }
 
     private CommonResult verifyStuAtu(String uid, String email, String token) {
-        String uidTemp = (String) redisUtils.get(token);
+        String userStudentAuthenticationVoJsonString = (String) redisUtils.get(token);
+        UserStudentAuthenticationVo userStudentAuthenticationVo = JSONObject.parseObject(userStudentAuthenticationVoJsonString, UserStudentAuthenticationVo.class);
+        log.info("学生邮箱验证基础信息：{}", userStudentAuthenticationVo);
+        String uidTemp = userStudentAuthenticationVo.getUid();
         if (uidTemp == null || !uidTemp.equals(uid)) {
+            // 用户传进来跟之前存储的进行比较
             return CommonResult.failure(ErrorCode.STU_AUTH_FAILED);
         }
         String userId = UserUtils.parseCertificationLinkToken(uid, email, token);
-        boolean result = userDao.updateUserStudentAuthentication(userId, CommonType.Y);
-        if (result) {
+        UserStudentAuthentication userStudentAuthentication = userStudentAuthenticationVo.conver2UserStudentAuthentication();
+        userStudentAuthentication.setUserId(Integer.valueOf(userId));
+        boolean result1 = userStudentAuthenticationDao.insertUserStudentAuthentication(userStudentAuthentication);
+        boolean result2 = userDao.updateUserStudentAuthentication(userId, CommonType.Y);
+        if (result1 && result2) {
             // 删除之前存储的的 uid 和 验证token
             redisUtils.del(token);
             return CommonResult.success(ErrorCode.STU_AUTH_SUCCESS);

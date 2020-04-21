@@ -2,6 +2,7 @@ package cn.l99.wehouse.service;
 
 import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.response.CommonResult;
+import cn.l99.wehouse.pojo.vo.UserStudentAuthenticationVo;
 import cn.l99.wehouse.pojo.vo.UserVo;
 
 /**
@@ -29,7 +30,7 @@ public interface IUserService {
 
     CommonResult postPersonalCollection(UserCollection userCollection);
 
-    CommonResult sendStuAuthEmail(String userId, String address);
+    CommonResult sendStuAuthEmail(String userId, UserStudentAuthenticationVo userStudentAuthenticationVo);
 
     CommonResult updateUserStudentAuthentication(String uid, String email, String token);
 }

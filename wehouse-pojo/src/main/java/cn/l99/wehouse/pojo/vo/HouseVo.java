@@ -2,11 +2,9 @@ package cn.l99.wehouse.pojo.vo;
 
 import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.HouseExt;
-import cn.l99.wehouse.pojo.baseEnum.CommonType;
-import cn.l99.wehouse.pojo.baseEnum.HouseStatus;
-import cn.l99.wehouse.pojo.baseEnum.Orientation;
-import cn.l99.wehouse.pojo.baseEnum.RentalType;
+import cn.l99.wehouse.pojo.baseEnum.*;
 import cn.l99.wehouse.utils.id.IdGenerator;
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +34,7 @@ public class HouseVo implements Serializable {
 
     private String floor;
 
-    private BigDecimal price;
+    private Double price;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date checkInTime;
@@ -44,6 +42,8 @@ public class HouseVo implements Serializable {
     private String elevator;
 
     private String houseType;
+
+    private String rentalRoom;
 
     private String provinceCnName;
 
@@ -92,7 +92,7 @@ public class HouseVo implements Serializable {
      */
     public House convertToHouse() {
         House house = new House();
-        house.setId(IdGenerator.nextId());
+        house.setId(String.valueOf(IdGenerator.nextId()));
         house.setName(this.name);
         house.setRentalType(RentalType.get(this.rentalType));
         house.setOrientation(Orientation.get(this.orientation));
@@ -102,6 +102,7 @@ public class HouseVo implements Serializable {
         house.setCheckInTime(this.checkInTime);
         house.setElevator(CommonType.valueOf(this.elevator));
         house.setHouseType(this.getHouseType());
+        house.setRentalRoom(RentalRoom.get(this.rentalRoom));
         house.setProvinceCnName(this.getProvinceCnName());
         house.setCityCnName(this.getCityCnName());
         house.setRegionCnName(this.getRegionCnName());

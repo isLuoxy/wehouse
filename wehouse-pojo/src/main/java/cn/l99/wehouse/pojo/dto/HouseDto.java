@@ -1,52 +1,51 @@
 package cn.l99.wehouse.pojo.dto;
 
+import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
+import cn.l99.wehouse.pojo.HouseExt;
+import cn.l99.wehouse.pojo.baseEnum.*;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
- * 房屋一级简略展示封装数据
+ * 房屋二级展示封装数据
  *
  * @author L99
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Deprecated
 public class HouseDto implements Serializable {
 
-    private Long id;
+    private SecondHouseDto house;
 
-    private String name;
+    private SecondHouseExtDto houseExt;
 
-    private String rentalType;
+    // 记录用户页面停留时间的埋点，如果不为空，说明需要记录用户离开页面的时间，此时前端可以根据该标识发送用户离开页面时间；为空则不需要
+    private Integer usId;
 
-    private String orientation;
+    /**
+     * 组装响应数据
+     *
+     * @param ahouse
+     */
+    public void convertByAHouse(AHouse ahouse) {
+        if (house == null) {
+            house = new SecondHouseDto();
+        }
+        house.convert2SecondHouseDtoByHouse(ahouse.getHouse());
 
-    private String regionCnName;
-
-    private String placeCnName;
-
-    private String village;
-
-    private String floor;
-
-    private String area;
-
-    private String price;
-
-    private String pictureUrl;
-
-    public void convertByHouse(House house) {
-        this.id = house.getId();
-        this.name = house.getName();
-        this.rentalType = house.getRentalType().getValue();
-        this.orientation = house.getOrientation().getValue();
-        this.regionCnName = house.getRegionCnName();
-        this.placeCnName = house.getStreetCnName();
-        this.village = house.getVillage();
+        if (houseExt == null) {
+            houseExt = new SecondHouseExtDto();
+        }
+        houseExt.convert2SecondHouseExtDtoByAHouse(ahouse);
     }
 }

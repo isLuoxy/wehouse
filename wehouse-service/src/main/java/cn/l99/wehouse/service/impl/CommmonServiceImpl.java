@@ -85,7 +85,7 @@ public class CommmonServiceImpl implements ICommonService {
         }
         List<RegionDto> result = regionMap.entrySet().stream().map(e -> {
             RegionDto regionDto = new RegionDto();
-            regionDto.setRegionId((Integer) e.getKey());
+            regionDto.setRegionId(Integer.valueOf((String) e.getKey()));
             regionDto.setRegionCnName((String) e.getValue());
             return regionDto;
         }).collect(Collectors.toList());

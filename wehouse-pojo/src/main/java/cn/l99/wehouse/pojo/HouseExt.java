@@ -23,10 +23,10 @@ import java.io.Serializable;
 public class HouseExt implements Serializable {
 
     @Id
-    private Long id;
+    private String id;
 
-    @Field(type = FieldType.Long)
-    private Long houseId;
+    @Field(type = FieldType.Keyword)
+    private String houseId;
 
     @Field(type = FieldType.Keyword)
     private CommonType television;
@@ -60,5 +60,4 @@ public class HouseExt implements Serializable {
 
     @Field(type = FieldType.Keyword)
     private String description;
-
 }

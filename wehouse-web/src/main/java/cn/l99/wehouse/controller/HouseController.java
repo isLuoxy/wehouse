@@ -66,6 +66,7 @@ public class HouseController {
      */
     @PostMapping("/zufang/house")
     public Object addHouse(@RequestBody HouseVo houseVo) {
+        log.info("houseVo:{}", houseVo);
         houseService.addHouse(houseVo);
         return null;
     }

@@ -19,7 +19,7 @@ public class HouseDaoTest extends AbstractTest {
     @Test
     public void getAHouseByHouseId() {
         HouseDao houseDao = session.getMapper(HouseDao.class);
-        AHouse aHouseByHouseId = houseDao.getAHouseByHouseId("198198");
+        AHouse aHouseByHouseId = houseDao.getAHouseByHouseId("2147483647");
         log.info("{}", JSONObject.toJSONString(aHouseByHouseId));
     }
 

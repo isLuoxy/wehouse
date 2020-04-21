@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.UserStudentAuthenticationDao">
+
+    <resultMap id="userStudentAuthenticationResultMap" type="cn.l99.wehouse.pojo.UserStudentAuthentication">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+
+    </resultMap>
+
+    <sql id="UserStudentAuthentication_Column_List">
+        id,user_id,school,school_email,certification_time
+    </sql>
+
+    <insert id="insertUserStudentAuthentication" parameterType="cn.l99.wehouse.pojo.UserStudentAuthentication">
+        insert into user_student_authentication(user_id, school, school_email, certification_time)
+        values (#{userId}, #{school}, #{schoolEmail}, #{certificationTime})
+    </insert>
+</mapper>

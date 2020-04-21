@@ -1,12 +1,14 @@
 package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.HouseDao;
+import cn.l99.wehouse.dao.HouseExtDao;
 import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.SearchHistory;
 import cn.l99.wehouse.pojo.UserOperation;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
 import cn.l99.wehouse.pojo.baseEnum.OperationType;
+import cn.l99.wehouse.pojo.dto.HouseDto;
 import cn.l99.wehouse.pojo.dto.SimpleHouseDto;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseVo;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +49,9 @@ public class HouseServiceImpl implements IHouseService {
 
     @Autowired
     private HouseDao houseDao;
+
+    @Autowired
+    private HouseExtDao houseExtDao;
 
     @Autowired
     private RedisUtils redisUtils;
@@ -87,16 +93,20 @@ public class HouseServiceImpl implements IHouseService {
     @Override
     public CommonResult getAHouseByHouseId(String houseId, String userId) {
         AHouse aHouseByHouseId = houseDao.getAHouseByHouseId(houseId);
+        log.info("Ahouse:{}", aHouseByHouseId);
         if (aHouseByHouseId == null) {
             return CommonResult.failure(ErrorCode.HOUSE_NOT_EXIST);
         }
+        HouseDto houseDto = new HouseDto();
+        houseDto.convertByAHouse(aHouseByHouseId);
+
         if (!StringUtils.isEmpty(userId)) {
             // 当用户登录后，需要进行页面埋点，记录用户在页面的停留时间
             UserOperation userOperation = constructUserOperation(userId, houseId, OperationType.C);
-            int id = userOperationService.addUserOperation(userOperation);
-            aHouseByHouseId.setUsId(id);
+            userOperationService.addUserOperation(userOperation);
+            houseDto.setUsId(userOperation.getId());
         }
-        return CommonResult.success(aHouseByHouseId);
+        return CommonResult.success(houseDto);
     }
 
 
@@ -105,21 +115,23 @@ public class HouseServiceImpl implements IHouseService {
         // 添加数据库 ->  添加 es 集群
         House house = houseVo.convertToHouse();
 
-        houseDao.inseartHouse(house);
-
+        houseDao.insertHouse(house);
+        houseExtDao.insertHouseExt(house.getHouseExt());
 
         // == 异步为新房源添加房源向量 ==
         // 1、获取相似房源
+        log.info("添加房源向量");
         HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
         CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
         List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
         // 2、新增房源向量
-        houseRecommendationService.addHouseVector(String.valueOf(house.getId()),
+        houseRecommendationService.addHouseVector(house.getId(),
                 similarHouses
                         .stream()
-                        .map(HouseServiceImpl::extractHouseIdFromHouseAndConvertTypeToString)
+                        .map(House::getId)
                         .collect(Collectors.toList()));
 
+        log.info("新增房源到es");
         // 添加房源到 es
         esHouseService.addHouseToEs(house);
         return CommonResult.success();
@@ -167,26 +179,26 @@ public class HouseServiceImpl implements IHouseService {
         HouseRecommendationCondition houseRecommendationCondition = new HouseRecommendationCondition();
         houseRecommendationCondition.setRentalType(house.getRentalType().name());
         houseRecommendationCondition.setHouseType(house.getHouseType());
-        HouseUtils.Rent rent = HouseUtils.Rent.judgingRangeByRent(house.getPrice());
+        HouseUtils.Rent rent = HouseUtils.Rent.judgingRangeByRent(BigDecimal.valueOf(house.getPrice()));
         if (rent != null) {
-            houseRecommendationCondition.setRentGreaterThanOrEqual(rent.getRentGreaterThanOrEqual());
-            houseRecommendationCondition.setRentLessThan(rent.getRentLessThan());
+            houseRecommendationCondition.setRentGreaterThanOrEqual(rent.getRentGreaterThanOrEqual().doubleValue());
+            houseRecommendationCondition.setRentLessThan(rent.getRentLessThan().doubleValue());
         }
         houseRecommendationCondition.setAddress(house.getAddress());
-        houseRecommendationCondition.setSize(0);
+        houseRecommendationCondition.setStart(0);
         houseRecommendationCondition.setSize(100);
         return houseRecommendationCondition;
     }
 
-    /**
-     * 用于进行列表转换时，获取房源id并进行格式化
-     *
-     * @param house
-     * @return
-     */
-    private static String extractHouseIdFromHouseAndConvertTypeToString(House house) {
-        return String.valueOf(house.getId());
-    }
+//    /**
+//     * 用于进行列表转换时，获取房源id并进行格式化
+//     *
+//     * @param house
+//     * @return
+//     */
+//    private static String extractHouseIdFromHouseAndConvertTypeToString(House house) {
+//        return String.valueOf(house.getId());
+//    }
 
     private static String extractHouseIdFromSimpleHouseDtoAndConvertTypeToString(SimpleHouseDto simpleHouseDto) {
         return String.valueOf(simpleHouseDto.getId());
@@ -199,7 +211,7 @@ public class HouseServiceImpl implements IHouseService {
     private static UserOperation constructUserOperation(String userId, String houseId, OperationType operationType) {
         UserOperation userOperation = new UserOperation();
         userOperation.setUserId(Integer.valueOf(userId));
-        userOperation.setHouseId(Long.valueOf(houseId));
+        userOperation.setHouseId(houseId);
         userOperation.setOperationType(operationType);
         return userOperation;
     }

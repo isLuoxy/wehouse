@@ -14,14 +14,14 @@
     </resultMap>
 
     <sql id="UserOperation_Column_List">
-        id,user_id,house_id,operation_type,operation_time,page_on_time
+        id,user_id,house_id,operation_type,operation_start_time,operation_end_time,page_on_time
     </sql>
 
     <insert id="insertUserOperation" parameterType="cn.l99.wehouse.pojo.UserOperation" keyProperty="id"
             useGeneratedKeys="true">
         insert into user_operation(user_id, house_id, operation_type, operation_start_time, operation_end_time,
                                    page_on_time)
-        VALUES (#{userId}, #{houseId}, #{operationType}, #{operationStartTime}, #{operationEndTime} #{pageOnTime})
+        VALUES (#{userId}, #{houseId}, #{operationType}, #{operationStartTime}, #{operationEndTime}, #{pageOnTime})
     </insert>
 
     <select id="findUserOperationByUserIdAndOperationTime" resultMap="userOperationResultMap">

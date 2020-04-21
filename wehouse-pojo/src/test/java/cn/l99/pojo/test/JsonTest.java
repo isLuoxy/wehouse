@@ -13,7 +13,7 @@ import java.util.List;
 public class JsonTest {
     public static void main(String[] args) {
         House house = new House();
-        house.setId(123l);
+        house.setId("123");
         house.setCheckInTime(new Date());
         house.setOrientation(Orientation.N);
         house.setHouseStatus(HouseStatus.A);

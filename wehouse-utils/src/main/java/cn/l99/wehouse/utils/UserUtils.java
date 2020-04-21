@@ -36,6 +36,7 @@ public class UserUtils {
         for (String str : strings) {
             stringBuilder.append(str);
         }
+        stringBuilder.append(System.currentTimeMillis());
         return DigestUtils.md5DigestAsHex(stringBuilder.toString().getBytes());
     }
 

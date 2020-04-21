@@ -24,7 +24,7 @@ public class CollectionDto implements Serializable {
 
     private static final long serialVersionUID = 2108463470169074849L;
 
-    private Long houseId;
+    private String houseId;
 
     private String name;
 

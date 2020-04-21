@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 public class HouseRecommendationCondition {
 
     // 租金 <
-    private BigDecimal rentLessThan;
+    private Double rentLessThan;
 
     // 租金 >=
-    private BigDecimal rentGreaterThanOrEqual;
+    private Double rentGreaterThanOrEqual;
 
     // 出租方式
     private String rentalType;
@@ -55,19 +55,19 @@ public class HouseRecommendationCondition {
         this.address = address;
     }
 
-    public BigDecimal getRentLessThan() {
+    public Double getRentLessThan() {
         return rentLessThan;
     }
 
-    public void setRentLessThan(BigDecimal rentLessThan) {
+    public void setRentLessThan(Double rentLessThan) {
         this.rentLessThan = rentLessThan;
     }
 
-    public BigDecimal getRentGreaterThanOrEqual() {
+    public Double getRentGreaterThanOrEqual() {
         return rentGreaterThanOrEqual;
     }
 
-    public void setRentGreaterThanOrEqual(BigDecimal rentGreaterThanOrEqual) {
+    public void setRentGreaterThanOrEqual(Double rentGreaterThanOrEqual) {
         this.rentGreaterThanOrEqual = rentGreaterThanOrEqual;
     }
 
