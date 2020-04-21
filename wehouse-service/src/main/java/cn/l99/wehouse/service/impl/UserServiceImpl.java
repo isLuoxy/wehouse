@@ -89,6 +89,13 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+    @Override
+    public CommonResult logout() {
+        // TODO：将用户登出时间进行记录
+        return null;
+    }
+
+
     /**
      * 用户登陆
      *

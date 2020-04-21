@@ -42,8 +42,6 @@ public class LoginInterceptor implements HandlerInterceptor {
          * 2、客户端token不存在，此时没有查询session和redis，此时需要重新登录，那么清空对应session和 redis的 token值
          */
         // 由于重新登录是新的会话了，所以直接注销session,而 redis 中有过期机制，会自动过期
-        HttpSession session = request.getSession();
-        session.invalidate();
         useJsonResponse(response, CommonResult.failure(ErrorCode.NOT_LOGIN));
         return false;
     }

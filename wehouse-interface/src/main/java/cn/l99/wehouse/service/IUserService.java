@@ -20,6 +20,8 @@ public interface IUserService {
 
     CommonResult login(UserVo userVo);
 
+    CommonResult logout();
+
     CommonResult sendCode(String phone);
 
     CommonResult getPersonalCenterByUserId(String userId);

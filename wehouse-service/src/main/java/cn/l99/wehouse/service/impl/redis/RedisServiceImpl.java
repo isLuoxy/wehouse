@@ -45,4 +45,10 @@ public class RedisServiceImpl implements IRedisService {
         boolean expire = redisUtils.expire(key, time);
         return expire ? CommonResult.success() : null;
     }
+
+    @Override
+    public CommonResult delete(String key) {
+        redisUtils.del(key);
+        return CommonResult.success();
+    }
 }

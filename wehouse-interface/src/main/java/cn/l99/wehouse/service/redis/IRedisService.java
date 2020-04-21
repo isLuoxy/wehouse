@@ -12,4 +12,6 @@ public interface IRedisService {
     CommonResult getValueIfExist(String key);
 
     CommonResult expire(String key, long time);
+
+    CommonResult delete(String key);
 }

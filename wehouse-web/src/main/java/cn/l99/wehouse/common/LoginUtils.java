@@ -25,19 +25,9 @@ public class LoginUtils {
         return true;
     }
 
-    private static boolean correctLogin(HttpServletRequest request, String token, IRedisService redisService) {
-        HttpSession session = request.getSession();
-        // 会话中获取登录标识
-        Object loginStatus = session.getAttribute(token);
-        if (!StringUtils.isEmpty(loginStatus)) {
-            // 这里不安全,可能被获取token进行重放
-            return true;
-        }
+    private static boolean correctLogin(String token, IRedisService redisService) {
         CommonResult redisResult = redisService.getValueIfExist(token);
         if (redisResult != null) {
-            // 说明此时 session 不存在 token，而 redis 存在 token，所以也是登录成功的，那么此时需要把 token放入 session 中 , 值为用户id
-            // 第一次登录后会进入该分支
-            session.setAttribute(token, redisResult.getData());
             return true;
         }
         return false;
@@ -72,25 +62,25 @@ public class LoginUtils {
             return null;
         }
         // 判断登录状态是否正确
-        boolean correctLogin = correctLogin(request, token, redisService);
+        boolean correctLogin = correctLogin(token, redisService);
         if (correctLogin) {
             // 判断是否需要续期并自动续期
             renew(request, response, "token", token, redisService);
-            return getUserId(request);
+            return getUserId(request,redisService);
         }
         return null;
     }
 
     /**
      * 返回用户表示，只有经过拦截器的类能直接调用，
+     *
      * @param request
      * @return
      */
-    public static String getUserId(HttpServletRequest request) {
+    public static String getUserId(HttpServletRequest request, IRedisService redisService) {
         String token = CookieUtils.getCookieValue(request, "token");
-        HttpSession session = request.getSession();
-        Object attribute = session.getAttribute(token);
-        return attribute == null ? null : (String) attribute;
+        Object data = redisService.getValueIfExist(token).getData();
+        return data == null ? null : (String) data;
     }
 
 }
