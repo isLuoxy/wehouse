@@ -1,7 +1,11 @@
 package cn.l99.wehouse.service;
 
+import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseVo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 房屋服务层接口
@@ -20,9 +24,16 @@ public interface IHouseService {
     CommonResult getHouseByCondition(String cityPinyinName, String condition);
 
     /**
+     * 获取预定房源时使用
+     *
+     * @return
+     */
+    Map<String,House> getHouseForHouseSubscribe(List<String> houseId);
+
+    /**
      * 获取某个房源的详情信息
      */
-    CommonResult getAHouseByHouseId(String houseId,String userId);
+    CommonResult getAHouseByHouseId(String houseId, String userId);
 
     /**
      * 新增房源

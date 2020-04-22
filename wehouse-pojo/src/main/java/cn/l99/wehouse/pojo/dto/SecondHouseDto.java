@@ -63,7 +63,11 @@ public class SecondHouseDto implements Serializable {
 
     public void convert2SecondHouseDtoByHouse(House house) {
         this.id = house.getId();
-        this.name = house.getName();
+        if (house.getRentalType().equals(RentalType.H)) {
+            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom().getValue();
+        } else {
+            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType();
+        }
         this.rentalType = house.getRentalType().getValue();
         this.orientation = house.getOrientation().getValue();
         this.regionCnName = house.getRegionCnName();

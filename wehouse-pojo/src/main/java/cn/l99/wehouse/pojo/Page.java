@@ -10,15 +10,20 @@ import lombok.NoArgsConstructor;
  * @author L99
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Deprecated
 public class Page {
 
     // 默认一页30条房源数据
-    private int pageSize = 30;
+    private int pageSize;
 
-    // 默认起始页为 o 页
-    private int pageStart = 0;
+    // 默认起始页为 1 页
+    private int pageNumber;
 
+    private int pageStart;
+
+    public Page(int pageSize, int pageNumber) {
+        this.pageSize = pageSize;
+        this.pageNumber = pageNumber;
+        this.pageStart = (pageNumber - 1) * pageSize;
+    }
 }

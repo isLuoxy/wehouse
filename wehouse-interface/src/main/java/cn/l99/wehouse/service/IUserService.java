@@ -1,9 +1,13 @@
 package cn.l99.wehouse.service;
 
+import cn.l99.wehouse.pojo.User;
 import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.UserStudentAuthenticationVo;
 import cn.l99.wehouse.pojo.vo.UserVo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户服务层接口
@@ -25,6 +29,8 @@ public interface IUserService {
     CommonResult sendCode(String phone);
 
     CommonResult getPersonalCenterByUserId(String userId);
+
+    Map<Integer, User> getUserForHouseSubscribe(List<Integer> userId);
 
     CommonResult getValueIfExist(String key);
 

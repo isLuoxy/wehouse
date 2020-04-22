@@ -39,4 +39,9 @@ public interface HouseDao {
      * @return 返回结果
      */
     boolean insertHouse(House house);
+
+    /**
+     * @return
+     */
+    List<House> getHouseByHouseId(@Param("houseIdList") List<String> houseId);
 }

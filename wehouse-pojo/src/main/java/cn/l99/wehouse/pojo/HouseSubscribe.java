@@ -23,7 +23,7 @@ public class HouseSubscribe implements Serializable {
 
     private Integer id;
 
-    private Long houseId;
+    private String houseId;
 
     private Integer userId;
 
@@ -33,6 +33,9 @@ public class HouseSubscribe implements Serializable {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    /**
+     * 状态
+     */
     private HouseSubscribeStatus houseSubscribeStatus;
 
     /**

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.HouseSubscribeDao">
+
+    <resultMap id="HouseSubscribeResultMap" type="cn.l99.wehouse.pojo.HouseSubscribe">
+        <id property="id" column="id"/>
+        <result property="houseId" column="house_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="houseSubscribeStatus" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="telephone" column="telephone"/>
+    </resultMap>
+
+    <sql id="HouseSubscribe_Column_List">
+        id,house_id,user_id,status,create_time,last_update_time,order_time,telephone
+    </sql>
+
+    <select id="getHouseSubscribeByUserId" resultMap="HouseSubscribeResultMap">
+        select
+        <include refid="HouseSubscribe_Column_List"/>
+        from house_subscribe where user_id = #{userId} limit #{pageStart},#{pageSize};
+    </select>
+
+    <update id="updateHouseSubscribe" parameterType="cn.l99.wehouse.pojo.HouseSubscribe">
+        update house_subscribe
+        <set>
+            <if test="telephone != null and telephone != ''">
+                telephone = #{telephone},
+            </if>
+            <if test="orderTime != null and orderTime != ''">
+                order_time = #{orderTime},
+            </if>
+            <if test="lastUpdateTime != null and lastUpdateTime != ''">
+                last_update_time = #{lastUpdateTime},
+            </if>
+            <if test="status != null and status != ''">
+                `status` = #{status}
+            </if>
+        </set>
+        where id = #{id};
+
+    </update>
+
+    <insert id="insertHouseSubscribe" parameterType="cn.l99.wehouse.pojo.HouseSubscribe">
+        insert into house_subscribe(house_id, user_id, status, create_time, last_update_time, order_time, telephone)
+        values (#{houseId}, #{userId}, #{status}, #{createTime}, #{lastUpdateTime}, #{orderTime}, #{telephone})
+    </insert>
+
+</mapper>

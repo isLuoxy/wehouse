@@ -37,10 +37,10 @@
         />
         <result property="airConditioning" column="air-conditioning"
         />
-        <result property="heater" column="heater" />
-        <result property="bed" column="bed" />
-        <result property="broadband" column="broadband" />
-        <result property="wardrobe" column="wardrobe" />
+        <result property="heater" column="heater"/>
+        <result property="bed" column="bed"/>
+        <result property="broadband" column="broadband"/>
+        <result property="wardrobe" column="wardrobe"/>
         <result property="subwayLineId" column="subway_line_id"/>
         <result property="subwayStationId" column="subway_station_id"/>
         <result property="description" column="description"/>
@@ -117,4 +117,10 @@
     </insert>
 
 
+    <select id="getHouseForHouseSubscribe" parameterType="List" resultMap="HouseResultMap">
+        select id,name,rental_type,house_type,rental_room from house where id in
+        <foreach collection="houseIdList" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

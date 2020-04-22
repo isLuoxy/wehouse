@@ -2,11 +2,18 @@ package cn.l99.wehouse.controller;
 
 import cn.l99.wehouse.common.LoginUtils;
 import cn.l99.wehouse.common.LogoutUtils;
+import cn.l99.wehouse.pojo.HouseSubscribe;
+import cn.l99.wehouse.pojo.HouseSubscribeExt;
+import cn.l99.wehouse.pojo.Page;
 import cn.l99.wehouse.pojo.UserCollection;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
+import cn.l99.wehouse.pojo.baseEnum.HouseSubscribeStatus;
+import cn.l99.wehouse.pojo.baseEnum.OperatorType;
 import cn.l99.wehouse.pojo.response.CommonResult;
+import cn.l99.wehouse.pojo.vo.HouseSubscribeVo;
 import cn.l99.wehouse.pojo.vo.UserStudentAuthenticationVo;
 import cn.l99.wehouse.pojo.vo.UserVo;
+import cn.l99.wehouse.service.IHouseSubscribeService;
 import cn.l99.wehouse.service.IUserService;
 import cn.l99.wehouse.service.redis.IRedisService;
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -30,8 +37,11 @@ public class UserController {
     @Reference(version = "${wehouse.service.version}")
     IRedisService redisService;
 
+    @Reference(version = "${wehouse.service.version}")
+    IHouseSubscribeService houseSubscribeService;
+
     @PostMapping("/login")
-    public Object login(@RequestBody UserVo userVo, HttpServletRequest request) {
+    public Object login(@RequestBody UserVo userVo) {
         return userService.login(userVo);
     }
 
@@ -40,7 +50,7 @@ public class UserController {
         return userService.register(userVo);
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/i/logout")
     public Object logout(HttpServletRequest request) {
         LogoutUtils.clearUserStatus(request, redisService);
         return CommonResult.success();
@@ -99,4 +109,50 @@ public class UserController {
         CommonResult commonResult = userService.updateUserStudentAuthentication(uid, email, token);
         return commonResult;
     }
+
+    @PostMapping("/i/house/subscribe")
+    public Object insertHouseSubscribe(HttpServletRequest request, @RequestBody HouseSubscribeVo houseSubscribeVo) {
+        String userId = LoginUtils.getUserId(request, redisService);
+        houseSubscribeVo.setUserId(userId);
+        CommonResult result = houseSubscribeService.addHouseSubscribe(houseSubscribeVo);
+        return result;
+    }
+
+    @PutMapping("/i/house/subscribe/success/{id}")
+    public Object confirmHouseSubscribe(@PathVariable("id") String id) {
+        HouseSubscribeVo houseSubscribeVo = new HouseSubscribeVo();
+        houseSubscribeVo.setId(id);
+        houseSubscribeVo.setStatus(HouseSubscribeStatus.F.getValue());
+        return houseSubscribeService.updateHouseSubscribe(houseSubscribeVo);
+    }
+
+    @DeleteMapping("/i/house/subscribe")
+    public Object cancelHouseSubscribe(HttpServletRequest request, @RequestBody HouseSubscribeVo houseSubscribeVo) {
+        String userId = LoginUtils.getUserId(request, redisService);
+        houseSubscribeVo.setUserId(userId);
+        houseSubscribeVo.setStatus(HouseSubscribeStatus.C.getValue());
+        // 房源预定扩展，存储取消原因
+        HouseSubscribeExt houseSubscribeExt = houseSubscribeVo.convert2HouseSubscribeExt();
+        houseSubscribeExt.setOperatorId(Integer.valueOf(userId));
+        houseSubscribeExt.setOperatorType(OperatorType.U);
+
+        // 将房源预定状态改成 已取消
+        houseSubscribeService.updateHouseSubscribe(houseSubscribeVo);
+        return CommonResult.success();
+    }
+
+    @PutMapping("/i/house/subscribe/")
+    public Object updateHouseSubscribe(@RequestBody HouseSubscribeVo houseSubscribeVo) {
+        CommonResult result = houseSubscribeService.updateHouseSubscribe(houseSubscribeVo);
+        return result;
+    }
+
+    @GetMapping("/i/house/subscribe")
+    public Object getHouseSubscribe(HttpServletRequest request, @RequestParam("pageSize") int pageSize, @RequestParam("pageNumber") int pageNumber) {
+        String userId = LoginUtils.getUserId(request, redisService);
+        Page page = new Page(pageSize, pageNumber);
+        CommonResult houseSubscribeByUserId = houseSubscribeService.getHouseSubscribeByUserId(userId, page);
+        return houseSubscribeByUserId;
+    }
+
 }

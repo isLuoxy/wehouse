@@ -10,7 +10,7 @@
         <result property="userPassword" column="user_password"/>
         <result property="studentAuthentication" column="student_authentication"/>
         <result property="userPhone" column="user_phone"/>
-        <result property="userStatus" column="status" />
+        <result property="status" column="status"/>
         <result property="createTime" column="create_time"/>
         <result property="lastLoginTime" column="last_login_time"/>
     </resultMap>
@@ -28,7 +28,7 @@
     </sql>
 
     <sql id="Base_User_Column_List">
-         u.id as user_pri_id,user_name ,user_nickname,user_password,student_authentication,user_phone
+        u.id as user_pri_id,user_name ,user_nickname,user_password,student_authentication,user_phone
     </sql>
 
     <select id="selectUserByUserName" resultMap="userResultMap">
@@ -56,9 +56,19 @@
     </select>
 
     <insert id="insertUser" parameterType="cn.l99.wehouse.pojo.User">
-        insert into user(user_name,user_nickname,user_password,user_phone,create_time) values(#{userName},#{userNickname},#{userPassword},#{userPhone},#{createTime})
+        insert into user(user_name, user_nickname, user_password, user_phone, create_time)
+        values (#{userName}, #{userNickname}, #{userPassword}, #{userPhone}, #{createTime})
     </insert>
-    <update id="updateUserStudentAuthentication" >
-        update user set student_authentication = #{commonType} where id = #{userId}
+    <update id="updateUserStudentAuthentication">
+        update user
+        set student_authentication = #{commonType}
+        where id = #{userId}
     </update>
+
+    <select id="getUserByUserId" parameterType="List" resultMap="userResultMap">
+        select id,user_name,user_nickname from user where id in
+        <foreach collection="userIdList" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

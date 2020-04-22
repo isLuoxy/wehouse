@@ -3,6 +3,7 @@ package cn.l99.wehouse.dao;
 import cn.l99.wehouse.pojo.HouseCollection;
 import cn.l99.wehouse.pojo.User;
 import cn.l99.wehouse.pojo.baseEnum.CommonType;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface UserDao {
     User selectUserByUserId(String userId);
 
     List<HouseCollection> selectHouseAndCollectionByUserId(String userId);
+
+    List<User> getUserByUserId(@Param("userIdList") List<Integer> userId);
 
     boolean updateUserStudentAuthentication(String userId, CommonType commonType);
 

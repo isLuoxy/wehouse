@@ -30,7 +30,9 @@ import org.springframework.util.StringUtils;
 
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务层接口实现类
@@ -136,10 +138,10 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public CommonResult sendCode(String phone) {
-        if (StringUtils.isEmpty(phone) && userDao.selectUserByUserPhone(phone) != null) {
-            // 手机号存在的话直接返回
-            return CommonResult.failure(ErrorCode.DUPLICATE_PHONE);
-        }
+//        if (StringUtils.isEmpty(phone) && userDao.selectUserByUserPhone(phone) != null) {
+//            // 手机号存在的话直接返回
+//            return CommonResult.failure(ErrorCode.DUPLICATE_PHONE);
+//        }
         // 生成6位数字
         int code = (int) ((Math.random() * 9 + 1) * 100000);
         // 调用短信平台 api 发送短信
@@ -162,6 +164,12 @@ public class UserServiceImpl implements IUserService {
         UserDto userDto = new UserDto();
         userDto.userConvertToUserDto(user);
         return CommonResult.success(userDto);
+    }
+
+    @Override
+    public Map<Integer, User> getUserForHouseSubscribe(List<Integer> userId) {
+        List<User> userByUserId = userDao.getUserByUserId(userId);
+        return userByUserId == null ? null : userByUserId.stream().collect(Collectors.toMap(User::getId, Function.identity()));
     }
 
     /**

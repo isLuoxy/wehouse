@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -173,6 +174,12 @@ public class HouseServiceImpl implements IHouseService {
             }
         }
         return result;
+    }
+
+    @Override
+    public Map<String, House> getHouseForHouseSubscribe(List<String> houseId) {
+        List<House> houseByHouseId = houseDao.getHouseByHouseId(houseId);
+        return houseByHouseId == null ? null : houseByHouseId.stream().collect(Collectors.toMap(House::getId, Function.identity()));
     }
 
     private HouseRecommendationCondition acqHouseRecommendationCondition(House house) {
