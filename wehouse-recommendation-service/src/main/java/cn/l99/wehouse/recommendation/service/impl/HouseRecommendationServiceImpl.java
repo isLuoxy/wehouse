@@ -36,10 +36,18 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
     public void addHouseVector(String houseId, List<String> referenceHouse) {
         // 查找参照房源的向量
         List<float[]> referenceHouseVector = new ArrayList<>();
+        log.info("word2VEC:{}", word2VEC);
         referenceHouse.forEach(house -> {
             float[] wordVector = word2VEC.getWordVector(house);
+            if (wordVector == null) {
+                return;
+            }
             referenceHouseVector.add(wordVector);
         });
+
+        if (referenceHouseVector.isEmpty()) {
+            return;
+        }
 
         int layerSize = word2VEC.getLayerSize();
         float[] result = new float[layerSize];

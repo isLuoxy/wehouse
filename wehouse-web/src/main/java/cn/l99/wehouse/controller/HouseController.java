@@ -48,7 +48,7 @@ public class HouseController {
                                   @PathVariable(value = "search", required = false) String search,
                                   HttpServletRequest request, HttpServletResponse response) {
         // 如果不为空，可知有关键词查询
-        log.info("{}", search);
+        log.info("关键词: {}", search);
         String userId = LoginUtils.hasLoginAndReturnString(request, response, redisService);
 
         CommonResult house = houseService.findHouseByCondition(cityPyName, param, search, userId);
