@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.l99.wehouse.dao.HouseSubscribeExtDao">
+
+    <resultMap id="HouseSubscribeExtResultMap" type="cn.l99.wehouse.pojo.HouseSubscribeExt">
+        <id property="id" column="subscribe_ext_pri_id"/>
+        <result property="houseSubscribeId" column="house_subscribe_id"/>
+        <result property="comment" column="comment"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorType" column="operator_type"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+    </resultMap>
+
+    <!--  房源预定表， house_subscribe hs  -->
+    <sql id="HouseSubscribeExt_Column_List">
+        hse.id as subscribe_ext_pri_id,house_subscribe_id,`comment`,operator_id,operator_type,last_update_time
+    </sql>
+
+    <insert id="insertHouseSubscribeExt" parameterType="cn.l99.wehouse.pojo.HouseSubscribeExt">
+        insert into house_subscribe_ext(house_subscribe_id, comment, operator_id, operator_type, last_update_time)
+        values (#{houseSubscribeId}, #{comment}, #{operatorId}, #{operatorType}, #{lastUpdateTime})
+    </insert>
+
+</mapper>
