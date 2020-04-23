@@ -1,6 +1,6 @@
 package cn.l99.wehouse.service;
 
-import cn.l99.wehouse.pojo.HouseSubscribe;
+
 import cn.l99.wehouse.pojo.Page;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseSubscribeVo;
@@ -15,4 +15,8 @@ public interface IHouseSubscribeService {
     CommonResult updateHouseSubscribe(HouseSubscribeVo houseSubscribeVo);
 
     CommonResult getHouseSubscribeByUserId(String userId, Page page);
+
+    CommonResult getHouseSubscribeByOwnerId(String OwnerId, Page page);
+
+    CommonResult getHouseSubscribeByHouseSubscribeVo(HouseSubscribeVo houseSubscribeVo, Page page);
 }

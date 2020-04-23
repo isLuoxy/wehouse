@@ -1,7 +1,10 @@
 package cn.l99.wehouse.utils;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,6 +106,18 @@ public class DateUtils {
      */
     public static Date get0Am() {
         long current = System.currentTimeMillis();
+        long zero = current - (current + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
+        return new Date(new Timestamp(zero).getTime());
+    }
+
+    /**
+     * 获取某个日期的零点
+     *
+     * @param date
+     * @return
+     */
+    public static Date get0Am(Date date) {
+        long current = date.getTime();
         long zero = current - (current + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
         return new Date(new Timestamp(zero).getTime());
     }

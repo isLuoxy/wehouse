@@ -1,6 +1,7 @@
 package cn.l99.wehouse.pojo.vo;
 
 import cn.l99.wehouse.pojo.User;
+import cn.l99.wehouse.pojo.baseEnum.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ public class UserVo implements Serializable {
         user.setUserPhone(userPhone);
         user.setUserPassword(userPassword);
         user.setCreateTime(new Date());
+        user.setStatus(Status.N);
         return user;
     }
 }

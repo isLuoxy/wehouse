@@ -1,8 +1,9 @@
 package cn.l99.wehouse.pojo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * 分页情况
@@ -11,8 +12,9 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class Page {
+public class Page implements Serializable {
 
+    private static final long serialVersionUID = 3356074732500082159L;
     // 默认一页30条房源数据
     private int pageSize;
 

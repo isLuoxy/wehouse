@@ -33,13 +33,24 @@ public class HouseSubscribeDto implements Serializable {
 
     private String userName;
 
-    private String subscribeStatus;
+    private String status;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
 
     private String telephone;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /**
+     * 通过 HouseSubscribe 和 House 和 User 构造响应
+     *
+     * @param houseSubscribe
+     * @param house
+     * @param user
+     * @return
+     */
     public static HouseSubscribeDto convert2HouseSubScribeDtoByHouseSubscribe(HouseSubscribe houseSubscribe, House house, User user) {
         HouseSubscribeDto houseSubscribeDto = new HouseSubscribeDto();
         houseSubscribeDto.setId(houseSubscribe.getId());
@@ -51,11 +62,12 @@ public class HouseSubscribeDto implements Serializable {
             name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType();
         }
         houseSubscribeDto.setHouseName(name);
-        houseSubscribeDto.setUserId(user.getId());
+        houseSubscribeDto.setUserId(houseSubscribe.getUserId());
         houseSubscribeDto.setUserName(user.getUserName());
-        houseSubscribeDto.setSubscribeStatus(houseSubscribe.getHouseSubscribeStatus().getValue());
+        houseSubscribeDto.setStatus(houseSubscribe.getStatus().getValue());
         houseSubscribeDto.setOrderTime(houseSubscribe.getOrderTime());
         houseSubscribeDto.setTelephone(houseSubscribe.getTelephone());
+        houseSubscribeDto.setCreateTime(houseSubscribe.getCreateTime());
 
         return houseSubscribeDto;
     }

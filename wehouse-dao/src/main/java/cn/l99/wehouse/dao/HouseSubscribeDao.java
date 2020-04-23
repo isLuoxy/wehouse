@@ -1,6 +1,8 @@
 package cn.l99.wehouse.dao;
 
+import cn.l99.wehouse.pojo.HouseAndSubscribeAndUser;
 import cn.l99.wehouse.pojo.HouseSubscribe;
+import cn.l99.wehouse.pojo.vo.HouseSubscribeVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +34,23 @@ public interface HouseSubscribeDao {
      * @param userId
      * @return
      */
-    List<HouseSubscribe> getHouseSubscribeByUserId(@Param("userId") String userId, @Param("pageStart") int pageStart, @Param("pageSize") int pageSize);
+    List<HouseAndSubscribeAndUser> getHouseAndSubscribeAndUserByUserId(@Param("userId") String userId, @Param("pageStart") int pageStart, @Param("pageSize") int pageSize);
 
+
+    /**
+     * 通过房东id查找预定的房源列表，按照预定时间倒序
+     *
+     * @return
+     */
+    List<HouseAndSubscribeAndUser> getHouseAndSubscribeAndUserByOwnerId(@Param("ownerId") String ownerId, @Param("pageStart") int pageStart, @Param("pageSize") int pageSize);
+
+    /**
+     * 根据条件查找预定房源，按照预定时间倒序
+     *
+     * @param houseSubscribeVo
+     * @param pageStart
+     * @param pageSize
+     * @return
+     */
+    List<HouseAndSubscribeAndUser> searchHouseAndSubscribeAndUser(HouseSubscribeVo houseSubscribeVo, @Param("pageStart") int pageStart, @Param("pageSize") int pageSize);
 }

@@ -13,6 +13,7 @@ import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.pojo.vo.HouseSubscribeVo;
 import cn.l99.wehouse.pojo.vo.UserStudentAuthenticationVo;
 import cn.l99.wehouse.pojo.vo.UserVo;
+import cn.l99.wehouse.service.IHouseSubscribeExtService;
 import cn.l99.wehouse.service.IHouseSubscribeService;
 import cn.l99.wehouse.service.IUserService;
 import cn.l99.wehouse.service.redis.IRedisService;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Reference(version = "${wehouse.service.version}")
     IHouseSubscribeService houseSubscribeService;
+
+    @Reference(version = "${wehouse.service.version}")
+    IHouseSubscribeExtService houseSubscribeExtService;
 
     @PostMapping("/login")
     public Object login(@RequestBody UserVo userVo) {
@@ -135,13 +139,14 @@ public class UserController {
         HouseSubscribeExt houseSubscribeExt = houseSubscribeVo.convert2HouseSubscribeExt();
         houseSubscribeExt.setOperatorId(Integer.valueOf(userId));
         houseSubscribeExt.setOperatorType(OperatorType.U);
+        houseSubscribeExtService.addHouseSubscribeExt(houseSubscribeExt);
 
         // 将房源预定状态改成 已取消
         houseSubscribeService.updateHouseSubscribe(houseSubscribeVo);
         return CommonResult.success();
     }
 
-    @PutMapping("/i/house/subscribe/")
+    @PutMapping("/i/house/subscribe")
     public Object updateHouseSubscribe(@RequestBody HouseSubscribeVo houseSubscribeVo) {
         CommonResult result = houseSubscribeService.updateHouseSubscribe(houseSubscribeVo);
         return result;

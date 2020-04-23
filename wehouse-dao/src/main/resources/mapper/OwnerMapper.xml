@@ -18,19 +18,19 @@
         values (#{ownerName}, #{ownerPassword}, #{ownerPhone}, #{createTime}, #{lastLoginTime}, #{status})
     </insert>
 
-    <select id="selectOwnerByOwnerName" parameterType="String">
+    <select id="selectOwnerByOwnerName" parameterType="String" resultMap="ownerResultMap">
         select *
         from owner
         where owner_name = #{ownerName};
     </select>
 
-    <select id="selectOwnerByOwnerPhone" parameterType="String">
+    <select id="selectOwnerByOwnerPhone" parameterType="String" resultMap="ownerResultMap">
         select *
         from owner
         where owner_phone = #{ownerPhone}
     </select>
 
-    <select id="selectOwnerByOwnerId" parameterType="String">
+    <select id="selectOwnerByOwnerId" parameterType="String" resultMap="ownerResultMap">
         select *
         from owner
         where id = #{ownerId}

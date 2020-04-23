@@ -2,6 +2,7 @@ package cn.l99.wehouse.pojo.vo;
 
 import cn.l99.wehouse.pojo.Owner;
 import cn.l99.wehouse.pojo.User;
+import cn.l99.wehouse.pojo.baseEnum.Status;
 import cn.l99.wehouse.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class OwnerVo implements Serializable {
         owner.setOwnerPassword(ownerPassword);
         owner.setOwnerPhone(ownerPhone);
         owner.setCreateTime(DateUtils.now());
+        owner.setStatus(Status.N);
         return owner;
     }
 }

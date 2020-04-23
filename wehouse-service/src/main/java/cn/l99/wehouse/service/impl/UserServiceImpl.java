@@ -291,6 +291,4 @@ public class UserServiceImpl implements IUserService {
         }
         return CommonResult.failure(ErrorCode.STU_AUTH_FAILED);
     }
-
-
 }

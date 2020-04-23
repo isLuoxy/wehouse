@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 房源预定扩展
@@ -28,4 +29,6 @@ public class HouseSubscribeExt implements Serializable {
     private int operatorId;
 
     private OperatorType operatorType;
+
+    private Date lastUpdateTime;
 }

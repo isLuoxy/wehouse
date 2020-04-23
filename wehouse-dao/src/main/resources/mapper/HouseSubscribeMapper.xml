@@ -4,25 +4,20 @@
 <mapper namespace="cn.l99.wehouse.dao.HouseSubscribeDao">
 
     <resultMap id="HouseSubscribeResultMap" type="cn.l99.wehouse.pojo.HouseSubscribe">
-        <id property="id" column="id"/>
+        <id property="id" column="subscribe_pri_id"/>
         <result property="houseId" column="house_id"/>
         <result property="userId" column="user_id"/>
-        <result property="houseSubscribeStatus" column="status"/>
+        <result property="status" column="status"/>
         <result property="createTime" column="create_time"/>
         <result property="lastUpdateTime" column="last_update_time"/>
         <result property="orderTime" column="order_time"/>
         <result property="telephone" column="telephone"/>
     </resultMap>
 
+    <!--  房源预定表， house_subscribe hs  -->
     <sql id="HouseSubscribe_Column_List">
-        id,house_id,user_id,status,create_time,last_update_time,order_time,telephone
+        hs.id as subscribe_pri_id,house_id,user_id,hs.`status`,hs.create_time,hs.last_update_time,order_time,telephone
     </sql>
-
-    <select id="getHouseSubscribeByUserId" resultMap="HouseSubscribeResultMap">
-        select
-        <include refid="HouseSubscribe_Column_List"/>
-        from house_subscribe where user_id = #{userId} limit #{pageStart},#{pageSize};
-    </select>
 
     <update id="updateHouseSubscribe" parameterType="cn.l99.wehouse.pojo.HouseSubscribe">
         update house_subscribe
@@ -30,13 +25,13 @@
             <if test="telephone != null and telephone != ''">
                 telephone = #{telephone},
             </if>
-            <if test="orderTime != null and orderTime != ''">
+            <if test="orderTime != null">
                 order_time = #{orderTime},
             </if>
-            <if test="lastUpdateTime != null and lastUpdateTime != ''">
+            <if test="lastUpdateTime != null">
                 last_update_time = #{lastUpdateTime},
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null">
                 `status` = #{status}
             </if>
         </set>
@@ -49,4 +44,78 @@
         values (#{houseId}, #{userId}, #{status}, #{createTime}, #{lastUpdateTime}, #{orderTime}, #{telephone})
     </insert>
 
+    <!--  辅助结果集合，只映射部分字段 START -->
+    <!-- 房源表，house h-->
+    <sql id="House_Column_For_HouseSubscribe">
+        h.name as house_name,h.house_type,h.rental_type,h.rental_room
+    </sql>
+    <!--  用户表  user u  -->
+    <sql id="User_Column_For_HouseSubscribe">
+        u.user_name
+    </sql>
+
+    <resultMap id="HouseResultMap" type="cn.l99.wehouse.pojo.House">
+        <result property="name" column="house_name"/>
+        <result property="rentalType" column="rental_type"/>
+        <result property="houseType" column="house_type"/>
+        <result property="rentalRoom" column="rental_room"/>
+    </resultMap>
+    <resultMap id="UserResultMap" type="cn.l99.wehouse.pojo.User">
+        <result property="userName" column="user_name"/>
+    </resultMap>
+
+
+    <!--  辅助结果集合，只映射部分字段 END -->
+
+    <resultMap id="HouseAndSubscribeAndUserResultMap" type="cn.l99.wehouse.pojo.HouseAndSubscribeAndUser">
+        <association property="houseSubscribe" resultMap="HouseSubscribeResultMap"/>
+        <association property="house" resultMap="HouseResultMap"/>
+        <association property="user" resultMap="UserResultMap"/>
+    </resultMap>
+
+
+    <select id="getHouseAndSubscribeAndUserByUserId" resultMap="HouseAndSubscribeAndUserResultMap">
+        select
+        <include refid="HouseSubscribe_Column_List"/>,
+        <include refid="House_Column_For_HouseSubscribe"/>,
+        <include refid="User_Column_For_HouseSubscribe"/>
+        from house_subscribe hs,house h,`user` u
+        where user_id = u.id and house_id = h.id and hs.user_id = #{userId}
+        order by order_time desc limit #{pageStart},#{pageSize};
+    </select>
+
+    <select id="getHouseAndSubscribeAndUserByOwnerId" resultMap="HouseAndSubscribeAndUserResultMap">
+        select
+        <include refid="HouseSubscribe_Column_List"/>,
+        <include refid="House_Column_For_HouseSubscribe"/>,
+        <include refid="User_Column_For_HouseSubscribe"/>
+        from house_subscribe hs,house h,`user` u
+        where user_id = u.id and house_id = h.id and h.owner_id = #{ownerId}
+        order by order_time desc limit #{pageStart},#{pageSize};
+    </select>
+
+    <select id="searchHouseAndSubscribeAndUser" resultMap="HouseAndSubscribeAndUserResultMap">
+        select
+        <include refid="HouseSubscribe_Column_List"/>,
+        <include refid="House_Column_For_HouseSubscribe"/>,
+        <include refid="User_Column_For_HouseSubscribe"/>
+        from house_subscribe hs,house h,`user` u
+        where user_id = u.id and house_id = h.id
+        <if test="houseSubscribeVo.ownerId != null and houseSubscribeVo.ownerId != ''">
+            and h.owner_id = #{houseSubscribeVo.ownerId}
+        </if>
+        <if test="houseSubscribeVo.userName != null and houseSubscribeVo.userName != ''">
+            and user_name = #{houseSubscribeVo.userName}
+        </if>
+        <if test="houseSubscribeVo.status != null">
+            and hs.status = #{houseSubscribeVo.status}
+        </if>
+        <if test="houseSubscribeVo.startTime != null">
+            and order_time <![CDATA[>=]]> #{houseSubscribeVo.startTime}
+        </if>
+        <if test="houseSubscribeVo.endTime != null">
+            and order_time <![CDATA[<]]> #{houseSubscribeVo.endTime}
+        </if>
+        order by order_time desc limit #{pageStart},#{pageSize};
+    </select>
 </mapper>

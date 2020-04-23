@@ -36,7 +36,7 @@ public class HouseSubscribe implements Serializable {
     /**
      * 状态
      */
-    private HouseSubscribeStatus houseSubscribeStatus;
+    private HouseSubscribeStatus status;
 
     /**
      * 记录更新时间
