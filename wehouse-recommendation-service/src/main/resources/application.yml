@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
     username: root
-    password: root
+    password: wehouse
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 3
