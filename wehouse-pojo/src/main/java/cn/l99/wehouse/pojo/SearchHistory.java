@@ -1,6 +1,5 @@
 package cn.l99.wehouse.pojo;
 
-import cn.l99.wehouse.utils.condition.HouseCondition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

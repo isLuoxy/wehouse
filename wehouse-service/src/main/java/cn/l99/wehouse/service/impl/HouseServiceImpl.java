@@ -35,7 +35,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -154,16 +153,18 @@ public class HouseServiceImpl implements IHouseService {
             Date start = DateUtils.minusDays(DateUtils.get0Am(), 15);
             // 参考房源
             List<UserOperation> referenceList = userOperationService.findUserOperationByUserIdAndGtOperationTime(userId, start);
-
+            log.info("参考房源列表：{}", referenceList);
+            log.info("搜索日志埋点：");
             // 对房源列表进行个性化排序
-            List<String> sortHouseList = houseRecommendationService.sortHouse(
-                    referenceList.stream()
-                            .map(HouseServiceImpl::extractHouseIdFromUserOperationAndConvertTypeToString)
-                            .collect(Collectors.toList()),
-                    candidateList.stream()
-                            .map(HouseServiceImpl::extractHouseIdFromSimpleHouseDtoAndConvertTypeToString)
-                            .collect(Collectors.toList())
-            );
+            List<String> referenceListTmp = referenceList.stream()
+                    .map(HouseServiceImpl::extractHouseIdFromUserOperationAndConvertTypeToString)
+                    .collect(Collectors.toList());
+            log.info("参考房源id列表:{}", referenceListTmp);
+            List<String> candidateListTmp = candidateList.stream()
+                    .map(HouseServiceImpl::extractHouseIdFromSimpleHouseDtoAndConvertTypeToString)
+                    .collect(Collectors.toList());
+            log.info("候选房源id列表:{}", candidateListTmp);
+            List<String> sortHouseList = houseRecommendationService.sortHouse(referenceListTmp, candidateListTmp);
 
             // 对原本的候选房源根据排序后的房源列表进行排序
             Map<String, SimpleHouseDto> tmpMap = candidateList.stream().collect(Collectors.toMap(HouseServiceImpl::extractHouseIdFromSimpleHouseDtoAndConvertTypeToString, Function.identity()));

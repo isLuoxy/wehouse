@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -71,7 +70,7 @@ public class SecondHouseDto implements Serializable {
         this.rentalType = house.getRentalType().getValue();
         this.orientation = house.getOrientation().getValue();
         this.regionCnName = house.getRegionCnName();
-        this.elevator = house.getElevator().name();
+        this.elevator = house.getElevator().getValue();
         this.streetCnName = house.getStreetCnName();
         this.village = house.getVillage();
         this.floor = house.getFloor();

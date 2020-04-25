@@ -30,4 +30,5 @@ public interface UserDao {
 
     boolean updateUserStudentAuthentication(String userId, CommonType commonType);
 
+    boolean updateUserByUserId(User user);
 }

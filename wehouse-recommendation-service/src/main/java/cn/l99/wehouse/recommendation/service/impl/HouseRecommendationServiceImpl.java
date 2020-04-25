@@ -72,6 +72,11 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
 
         List<float[]> referenceVector = new ArrayList<>();
 
+        // 兼容向量初始为null
+        if (word2VEC == null) {
+            return candidate;
+        }
+
         reference.stream().forEach(r -> {
             float[] wordVector = word2VEC.getWordVector(r);
             if (wordVector != null) {

@@ -76,6 +76,7 @@ public class HouseController {
      */
     @PostMapping("/page_on_time")
     public Object pageOnTime(@RequestBody UserOperationVo userOperationVo) {
+        log.info("{}", userOperationVo);
         return userOperationService.updateUserOperation(userOperationVo.convertToUserOperation());
     }
 

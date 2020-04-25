@@ -59,6 +59,7 @@
         insert into user(user_name, user_nickname, user_password, user_phone, create_time)
         values (#{userName}, #{userNickname}, #{userPassword}, #{userPhone}, #{createTime})
     </insert>
+
     <update id="updateUserStudentAuthentication">
         update user
         set student_authentication = #{commonType}
@@ -71,4 +72,20 @@
             #{item}
         </foreach>
     </select>
+
+    <update id="updateUserByUserId" parameterType="cn.l99.wehouse.pojo.User">
+        update user
+        <set>
+            <if test="user.userNickName != null and user.userNickName != ''">
+                user_nickname = #{userNickName},
+            </if>
+            <if test="user.userPhone != null and user.userPhone != ''">
+                user_phone = #{userPhone},
+            </if>
+            <if test="user.studentAuthentication != null">
+                student_authentication = #{user.studentAuthentication}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

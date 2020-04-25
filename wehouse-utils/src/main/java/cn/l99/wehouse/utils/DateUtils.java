@@ -107,7 +107,7 @@ public class DateUtils {
     public static Date get0Am() {
         long current = System.currentTimeMillis();
         long zero = current - (current + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
-        return new Date(new Timestamp(zero).getTime());
+        return new Date(zero);
     }
 
     /**
@@ -119,6 +119,6 @@ public class DateUtils {
     public static Date get0Am(Date date) {
         long current = date.getTime();
         long zero = current - (current + TimeZone.getDefault().getRawOffset()) % (1000 * 3600 * 24);
-        return new Date(new Timestamp(zero).getTime());
+        return new Date(zero);
     }
 }

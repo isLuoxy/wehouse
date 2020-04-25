@@ -123,8 +123,8 @@ public class UserServiceImpl implements IUserService {
             return CommonResult.failure(ErrorCode.MISMATCH);
         }
         String token = UserUtils.generateToken(userVo.getUserName(), userVo.getUserPassword());
-        // 过期时间30分钟
-        redisUtils.set(token, String.valueOf(user.getId()), 1800);
+        // 过期时间120分钟
+        redisUtils.set(token, String.valueOf(user.getId()), 7200);
         Map<String, String> map = new HashMap<>(2);
         map.put("token", token);
         return CommonResult.success(map);

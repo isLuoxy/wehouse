@@ -58,9 +58,6 @@ dubbo:
     port: 20881
   provider:
     timeout: 300000
-# web port
-server:
-  port: 8888
 
 ---
 spring:
@@ -102,6 +99,3 @@ dubbo:
     port: 20886
   provider:
     timeout: 5000
-# web port
-server:
-  port: 8888

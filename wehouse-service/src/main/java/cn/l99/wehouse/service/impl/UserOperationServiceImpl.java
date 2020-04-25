@@ -5,15 +5,17 @@ import cn.l99.wehouse.pojo.UserOperation;
 import cn.l99.wehouse.pojo.baseEnum.ErrorCode;
 import cn.l99.wehouse.pojo.response.CommonResult;
 import cn.l99.wehouse.service.IUserOperationService;
+import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service(version = "${wehouse.service.version}")
+@Component
 @Slf4j
 public class UserOperationServiceImpl implements IUserOperationService {
 
@@ -33,9 +35,9 @@ public class UserOperationServiceImpl implements IUserOperationService {
     }
 
     @Override
-    @Async
     public void addUserOperation(UserOperation userOperation) {
         userOperationDao.insertUserOperation(userOperation);
+        log.info("返回主键:{}", userOperation.getId());
     }
 
     @Override

@@ -19,8 +19,6 @@ spring:
         stat:
           log-slow-sql: true
           slow-sql-millis: 1
-server:
-  port: 7000
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:

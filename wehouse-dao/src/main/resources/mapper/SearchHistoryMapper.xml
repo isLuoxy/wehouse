@@ -17,6 +17,6 @@
 
     <insert id="addSearchHistory" parameterType="cn.l99.wehouse.pojo.SearchHistory">
         insert into search_history(`user_id`, `condition`, key_words,search_time)
-        values (#{user_id}, #{condition}, #{keyWords},#{searchTime})
+        values (#{userId}, #{condition}, #{keyWords},#{searchTime})
     </insert>
 </mapper>

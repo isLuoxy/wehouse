@@ -17,17 +17,17 @@ public class UserOperationVo implements Serializable {
 
     private int usId;
 
-    private Date startTime;
+    private Long startTime;
 
-    private Date endTime;
+    private Long endTime;
 
     private int pageOnTime;
 
     public UserOperation convertToUserOperation() {
         UserOperation userOperation = new UserOperation();
         userOperation.setId(usId);
-        userOperation.setOperationStartTime(startTime);
-        userOperation.setOperationEndTime(endTime);
+        userOperation.setOperationStartTime(new Date(startTime));
+        userOperation.setOperationEndTime(new Date(endTime));
         userOperation.setPageOnTime(pageOnTime);
         return userOperation;
     }

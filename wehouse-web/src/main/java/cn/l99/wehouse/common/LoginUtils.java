@@ -41,9 +41,9 @@ public class LoginUtils {
         // 小于10分钟时进行续期
         if (currAge.intValue() < 600) {
             // 进行续期
-            log.info("对用户token{}进行续期", cookieValue);
-            CookieUtils.setMaxAge(request, response, cookieName, cookieValue, 1800);
-            redisService.expire(cookieValue, 1800);
+            log.info("用户剩余时间:{}, 对token为{}的用户自动续期", currAge.intValue(), cookieValue);
+            CookieUtils.setMaxAge(request, response, cookieName, cookieValue, 7200);
+            redisService.expire(cookieValue, 7200);
         }
     }
 
@@ -66,7 +66,7 @@ public class LoginUtils {
         if (correctLogin) {
             // 判断是否需要续期并自动续期
             renew(request, response, "token", token, redisService);
-            return getUserId(request,redisService);
+            return getUserId(request, redisService);
         }
         return null;
     }

@@ -45,14 +45,14 @@ public class SecondHouseExtDto implements Serializable {
 
     public void convert2SecondHouseExtDtoByAHouse(AHouse aHouse) {
         HouseExt houseExt = aHouse.getHouseExt();
-        this.television = houseExt.getTelevision().name();
-        this.fridge = houseExt.getFridge().name();
-        this.washingMachine = houseExt.getWashingMachine().name();
-        this.airConditioning = houseExt.getAirConditioning().name();
-        this.heater = houseExt.getHeater().name();
-        this.bed = houseExt.getBed().name();
-        this.broadband = houseExt.getBroadband().name();
-        this.wardrobe = houseExt.getWardrobe().name();
+        this.television = houseExt.getTelevision().getValue();
+        this.fridge = houseExt.getFridge().getValue();
+        this.washingMachine = houseExt.getWashingMachine().getValue();
+        this.airConditioning = houseExt.getAirConditioning().getValue();
+        this.heater = houseExt.getHeater().getValue();
+        this.bed = houseExt.getBed().getValue();
+        this.broadband = houseExt.getBroadband().getValue();
+        this.wardrobe = houseExt.getWardrobe().getValue();
         this.description = houseExt.getDescription();
 
         SubwayLines subwayLines = aHouse.getSubwayLines();
