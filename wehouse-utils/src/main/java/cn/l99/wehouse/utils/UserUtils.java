@@ -63,6 +63,7 @@ public class UserUtils {
         String uid = generatorCertificationLinkUid();
         String email = address;
         String token = generatorCertificationLinkToken(uid, email, userId);
+
         Map<String, String> map = new HashMap<>();
         String resultLink = String.format(link, uid, email, token);
         map.put("uid", uid);

@@ -39,7 +39,7 @@ public class LoginUtils {
             return;
         }
         // 小于10分钟时进行续期
-        if (currAge.intValue() < 600) {
+        if (currAge.intValue() > 0 && currAge.intValue() < 600) {
             // 进行续期
             log.info("用户剩余时间:{}, 对token为{}的用户自动续期", currAge.intValue(), cookieValue);
             CookieUtils.setMaxAge(request, response, cookieName, cookieValue, 7200);

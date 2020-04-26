@@ -1,20 +1,18 @@
 package cn.l99.wehouse.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.SecureRandom;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public class AESUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(AESUtils.class);
 
     /**
      * 加密
@@ -24,31 +22,19 @@ public class AESUtils {
      * @return
      */
     public static byte[] encrypt(String content, String password) {
+        byte[] result = new byte[1];
         try {
-            KeyGenerator kgen = KeyGenerator.getInstance("AES");
-            kgen.init(128, new SecureRandom(password.getBytes()));
-            SecretKey secretKey = kgen.generateKey();
-            byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+            byte[] key = generateKey(password);
+            SecretKeySpec sks = new SecretKeySpec(key, "AES");
             Cipher cipher = Cipher.getInstance("AES");// 创建密码器
             byte[] byteContent = content.getBytes("utf-8");
-            cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
-            byte[] result = cipher.doFinal(byteContent);
-            return result; // 加密
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+            cipher.init(Cipher.ENCRYPT_MODE, sks);// 初始化
+            result = cipher.doFinal(byteContent);
+        } catch (Exception e) {
+            log.error("加密失败");
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
 
@@ -60,28 +46,18 @@ public class AESUtils {
      * @return
      */
     public static byte[] decrypt(byte[] content, String password) {
+        byte[] result = new byte[1];
         try {
-            KeyGenerator kgen = KeyGenerator.getInstance("AES");
-            kgen.init(128, new SecureRandom(password.getBytes()));
-            SecretKey secretKey = kgen.generateKey();
-            byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+            byte[] keyBytes = generateKey(password);
+            SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");// 创建密码器
             cipher.init(Cipher.DECRYPT_MODE, key);// 初始化
-            byte[] result = cipher.doFinal(content);
-            return result; // 加密
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+            result = cipher.doFinal(content);
+        } catch (Exception e) {
+            log.error("解密失败");
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
 
@@ -119,5 +95,15 @@ public class AESUtils {
             result[i] = (byte) (high * 16 + low);
         }
         return result;
+    }
+
+    public static byte[] generateKey(String password) throws Exception {
+        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+        random.setSeed(password.getBytes("UTF-8"));
+        kgen.init(128, random);
+        SecretKey secretKey = kgen.generateKey();
+        byte[] enCodeFormat = secretKey.getEncoded();
+        return enCodeFormat;
     }
 }
