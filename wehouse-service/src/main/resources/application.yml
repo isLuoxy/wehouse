@@ -23,7 +23,7 @@ spring:
   profiles: dev
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
+    url: jdbc:mysql://localhost:3306/wehouse?useSSL=false&useUnicode=true&characterEncoding=utf-8
     username: root
     password:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -64,7 +64,7 @@ spring:
   profiles: uat
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
+    url: jdbc:mysql://localhost:3306/wehouse?useSSL=false&useUnicode=true&characterEncoding=utf-8
     username: root
     password: wehouse
     type: com.alibaba.druid.pool.DruidDataSource
