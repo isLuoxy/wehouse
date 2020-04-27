@@ -28,7 +28,7 @@ public interface IHouseService {
      *
      * @return
      */
-    Map<String,House> getHouseForHouseSubscribe(List<String> houseId);
+    Map<String, House> getHouseForHouseSubscribe(List<String> houseId);
 
     /**
      * 获取某个房源的详情信息
@@ -54,4 +54,7 @@ public interface IHouseService {
      * @return
      */
     CommonResult findHouseByCondition(String cityPyName, String condition, String searchWord, String userId);
+
+
+    CommonResult test();
 }

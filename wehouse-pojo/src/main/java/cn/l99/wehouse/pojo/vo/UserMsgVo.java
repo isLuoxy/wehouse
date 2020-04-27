@@ -24,7 +24,7 @@ public class UserMsgVo implements Serializable {
 //    不支持改动
 //    private String userName;
 
-    private String userNickName;
+    private String userNickname;
 
     private String userPhone;
 
@@ -35,7 +35,7 @@ public class UserMsgVo implements Serializable {
     public User convert2User() {
         User user = new User();
         user.setId(Integer.valueOf(userId));
-        user.setUserNickname(userNickName);
+        user.setUserNickname(userNickname);
         user.setStudentAuthentication(CommonType.get(studentAuthentication));
         user.setUserPhone(userPhone);
         return user;

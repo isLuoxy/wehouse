@@ -168,8 +168,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Map<Integer, User> getUserForHouseSubscribe(List<Integer> userId) {
-        List<User> userByUserId = userDao.getUserByUserId(userId);
-        return userByUserId == null ? null : userByUserId.stream().collect(Collectors.toMap(User::getId, Function.identity()));
+        return null;
     }
 
     /**
@@ -272,6 +271,9 @@ public class UserServiceImpl implements IUserService {
 
     private CommonResult verifyStuAtu(String uid, String email, String token) {
         String userStudentAuthenticationVoJsonString = (String) redisUtils.get(token);
+        if (StringUtils.isEmpty(userStudentAuthenticationVoJsonString)) {
+            return CommonResult.failure(ErrorCode.INVALID_AUTHENTICATION_LINK);
+        }
         UserStudentAuthenticationVo userStudentAuthenticationVo = JSONObject.parseObject(userStudentAuthenticationVoJsonString, UserStudentAuthenticationVo.class);
         log.info("学生邮箱验证基础信息：{}", userStudentAuthenticationVo);
         String uidTemp = userStudentAuthenticationVo.getUid();

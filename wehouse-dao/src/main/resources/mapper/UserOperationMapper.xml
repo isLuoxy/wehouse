@@ -7,7 +7,7 @@
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="houseId" column="house_id"/>
-        <result property="operationType" column="operation_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="operationType" column="operation_type"/>
         <result property="operationStartTime" column="operation_start_time"/>
         <result property="operationEndTime" column="operation_end_time"/>
         <result property="pageOnTime" column="page_on_time"/>

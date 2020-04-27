@@ -66,26 +66,34 @@
         where id = #{userId}
     </update>
 
-    <select id="getUserByUserId" parameterType="List" resultMap="userResultMap">
-        select id,user_name,user_nickname from user where id in
-        <foreach collection="userIdList" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+    <select id="getUser" resultMap="userResultMap">
+        select
+        <include refid="User_Column_List"/>
+        from user u
+        limit #{pageStart},#{pageSize};
     </select>
 
     <update id="updateUserByUserId" parameterType="cn.l99.wehouse.pojo.User">
         update user
         <set>
-            <if test="user.userNickName != null and user.userNickName != ''">
-                user_nickname = #{userNickName},
+            <if test="userNickname != null and userNickname != ''">
+                user_nickname = #{userNickname},
             </if>
-            <if test="user.userPhone != null and user.userPhone != ''">
+            <if test="userPhone != null and userPhone != ''">
                 user_phone = #{userPhone},
             </if>
-            <if test="user.studentAuthentication != null">
-                student_authentication = #{user.studentAuthentication}
+            <if test="studentAuthentication != null">
+                student_authentication = #{studentAuthentication},
+            </if>
+            <if test="status != null">
+                `status` = #{ status}
             </if>
         </set>
         where id = #{id}
     </update>
+
+    <select id="getTotal" resultType="Integer">
+        select count(*)
+        from user;
+    </select>
 </mapper>

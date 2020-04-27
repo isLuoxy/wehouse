@@ -9,6 +9,7 @@ import cn.l99.wehouse.service.IUserOperationService;
 import cn.l99.wehouse.service.redis.IRedisService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +37,7 @@ public class HouseController {
     @GetMapping("/zufang/{city}/f/{id}")
     public Object getAHouse(@PathVariable("city") String cityPyName, @PathVariable("id") String houseId, HttpServletRequest request, HttpServletResponse response) {
         // 这里的城市拼音暂不使用
-        String userId = LoginUtils.hasLoginAndReturnString(request, response, redisService);
-
+        String userId = LoginUtils.getUserId(request, redisService);
         CommonResult aHouseByHouseId = houseService.getAHouseByHouseId(houseId, userId);
         return aHouseByHouseId;
     }
@@ -80,4 +80,9 @@ public class HouseController {
         return userOperationService.updateUserOperation(userOperationVo.convertToUserOperation());
     }
 
+
+    @GetMapping("/test")
+    public Object test() {
+        return houseService.test();
+    }
 }

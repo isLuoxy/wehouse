@@ -35,6 +35,9 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
     @Async(value = "taskExecutor")
     public void addHouseVector(String houseId, List<String> referenceHouse) {
         // 查找参照房源的向量
+        if (word2VEC == null) {
+            return;
+        }
         List<float[]> referenceHouseVector = new ArrayList<>();
         log.info("word2VEC:{}", word2VEC);
         referenceHouse.forEach(house -> {

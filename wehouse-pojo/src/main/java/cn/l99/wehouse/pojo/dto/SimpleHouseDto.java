@@ -1,12 +1,12 @@
 package cn.l99.wehouse.pojo.dto;
 
 import cn.l99.wehouse.pojo.House;
-import cn.l99.wehouse.pojo.baseEnum.RentalRoom;
 import cn.l99.wehouse.pojo.baseEnum.RentalType;
 import cn.l99.wehouse.utils.BaseUnitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -45,8 +45,8 @@ public class SimpleHouseDto implements Serializable {
 
     public void convertToSimpleHouseDtoFromHouse(House house) {
         this.id = house.getId();
-        if (house.getRentalType().equals(RentalType.H)) {
-            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom().getValue();
+        if (house.getRentalType().equals(RentalType.H) && !StringUtils.isEmpty(house.getRentalRoom())) {
+            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom();
         } else {
             this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType();
         }

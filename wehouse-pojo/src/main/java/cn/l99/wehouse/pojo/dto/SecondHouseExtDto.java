@@ -43,6 +43,8 @@ public class SecondHouseExtDto implements Serializable {
 
     private String description;
 
+    private String location;
+
     public void convert2SecondHouseExtDtoByAHouse(AHouse aHouse) {
         HouseExt houseExt = aHouse.getHouseExt();
         this.television = houseExt.getTelevision().getValue();

@@ -62,7 +62,7 @@ public class House implements Serializable {
     private String houseType;
 
     @Field(type = FieldType.Keyword)
-    private RentalRoom rentalRoom;
+    private String rentalRoom;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String provinceCnName;
@@ -105,4 +105,8 @@ public class House implements Serializable {
     // 维度
     @Field(type = FieldType.Keyword)
     private String latitude;
+
+    @Field(type = FieldType.Date)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 }

@@ -27,6 +27,7 @@
         <result property="pictureUrl" column="picture_url"/>
         <result property="longitude" column="longitude"/>
         <result property="latitude" column="latitude"/>
+        <result property="createTime" column="create_time" />
     </resultMap>
 
     <!--  辅助结果集合，只映射部分字段  START -->
@@ -63,7 +64,7 @@
 
     <sql id="House_Column_List">
         h.id as house_pri_id,h.name as house_name,rental_type,orientation,area,floor,price,`check-in-time`,elevator,house_type,rental_room,province_cn_name,city_cn_name,region_cn_name,street_cn_name,
-        village,address,status,distance_to_subway,owner_id,picture_url,longitude,latitude
+        village,address,status,distance_to_subway,owner_id,picture_url,longitude,latitude,create_time
     </sql>
 
     <sql id="House_Ext_Column_List">
@@ -123,4 +124,20 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="getTotal" resultType="Integer">
+        select count(*)
+        from house;
+    </select>
+
+    <!--   暂时给管理员使用  -->
+    <update id="updateHouse" parameterType="cn.l99.wehouse.pojo.House">
+        update house
+        <set>
+            <if test="houseStatus != null">
+                `status` = #{houseStatus}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

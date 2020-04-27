@@ -44,4 +44,16 @@ public interface HouseDao {
      * @return
      */
     List<House> getHouseByHouseId(@Param("houseIdList") List<String> houseId);
+
+    /**
+     * 获取房源总数量
+     *
+     * @return
+     */
+    int getTotal();
+
+    /**
+     * 更新房源状态【房东操作】
+     */
+    boolean updateHouse(House house);
 }

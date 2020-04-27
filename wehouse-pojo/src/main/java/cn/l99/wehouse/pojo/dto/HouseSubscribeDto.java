@@ -57,7 +57,7 @@ public class HouseSubscribeDto implements Serializable {
         houseSubscribeDto.setHouseId(houseSubscribe.getHouseId());
         String name;
         if (house.getRentalType().equals(RentalType.H)) {
-            name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom().getValue();
+            name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom();
         } else {
             name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType();
         }

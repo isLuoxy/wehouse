@@ -26,7 +26,9 @@ public interface UserDao {
 
     List<HouseCollection> selectHouseAndCollectionByUserId(String userId);
 
-    List<User> getUserByUserId(@Param("userIdList") List<Integer> userId);
+    List<User> getUser(@Param("pageStart") int pageStart, @Param("pageSize") int pageSize);
+
+    int getTotal();
 
     boolean updateUserStudentAuthentication(String userId, CommonType commonType);
 

@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class DistrictConfig extends Config {
 
-    //
+
     public static final String url = "https://restapi.amap.com/v3/config/district?keywords=%s&subdistrict=%d&key=%s&extensions=%s";
 
     public enum extensions {

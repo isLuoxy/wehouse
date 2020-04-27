@@ -55,11 +55,22 @@ public class CommonResult implements Serializable {
 
     /**
      * 带响应的成功请求
+     *
      * @param data
      * @return
      */
     public static CommonResult success(Object data) {
         return new CommonResult(data);
+    }
+
+    /**
+     * 用于前端正确码有要求时
+     * @param errorCode
+     * @param data
+     * @return
+     */
+    public static CommonResult success(int errorCode, Object data) {
+        return new CommonResult(errorCode, "", data);
     }
 
     /**

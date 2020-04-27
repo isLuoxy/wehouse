@@ -1,15 +1,13 @@
 package cn.l99.wehouse.pojo.dto;
 
 import cn.l99.wehouse.pojo.House;
-import cn.l99.wehouse.pojo.baseEnum.CommonType;
-import cn.l99.wehouse.pojo.baseEnum.Orientation;
-import cn.l99.wehouse.pojo.baseEnum.RentalRoom;
 import cn.l99.wehouse.pojo.baseEnum.RentalType;
 import cn.l99.wehouse.utils.BaseUnitUtils;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -47,7 +45,6 @@ public class SecondHouseDto implements Serializable {
 
     private String rentalRoom;
 
-
     private String regionCnName;
 
     private String streetCnName;
@@ -56,14 +53,16 @@ public class SecondHouseDto implements Serializable {
 
     private String address;
 
+    private String location;
+
     private int ownerId;
 
     private String pictureUrl;
 
     public void convert2SecondHouseDtoByHouse(House house) {
         this.id = house.getId();
-        if (house.getRentalType().equals(RentalType.H)) {
-            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom().getValue();
+        if (house.getRentalType().equals(RentalType.H) && !StringUtils.isEmpty(house.getRentalRoom())) {
+            this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType() + "-" + house.getRentalRoom();
         } else {
             this.name = house.getRentalType().getValue() + "-" + house.getName() + house.getHouseType();
         }
@@ -79,5 +78,6 @@ public class SecondHouseDto implements Serializable {
         this.pictureUrl = house.getPictureUrl();
         this.address = house.getAddress();
         this.ownerId = house.getOwnerId();
+        this.location = house.getVillage();
     }
 }

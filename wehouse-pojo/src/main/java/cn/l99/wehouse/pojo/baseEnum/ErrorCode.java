@@ -43,6 +43,9 @@ public enum ErrorCode {
     // 邮件发送失败
     EMAIL_SEND_FAILED(4403, "验证邮件发送失败"),
 
+    // 邮件发送失败
+    INVALID_AUTHENTICATION_LINK(4404, "无效的认证链接"),
+
     // 房源信息不存在
     HOUSE_NOT_EXIST(4301, "房源信息不存在"),
 

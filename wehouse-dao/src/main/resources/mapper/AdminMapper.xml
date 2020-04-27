@@ -9,11 +9,44 @@
         <result property="adminPassword" column="admin_password"/>
     </resultMap>
 
+    <resultMap id="HouseOwnerResultMap" type="cn.l99.wehouse.pojo.admin.HouseOwner">
+        <id property="houseId" column="house_pri_id"/>
+        <result property="houseName" column="name"/>
+        <result property="rentalType" column="rental_type"/>
+        <result property="area" column="area"/>
+        <result property="price" column="price"/>
+        <result property="houseType" column="house_type"/>
+        <result property="rentalRoom" column="rental_room"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="ownerId" column="owner_id"/>
+        <result property="ownerName" column="owner_name"/>
+    </resultMap>
+
     <select id="selectAdminByAdminNameAndAdminPassword" parameterType="cn.l99.wehouse.pojo.vo.AdminVo"
             resultMap="AdminResultMap">
         select id as admin_pri_id, admin_name, admin_password
         from admin
         where admin_name = #{adminName}
           and admin_password = #{adminPassword};
+    </select>
+
+    <select id="getAllHouse" resultMap="HouseOwnerResultMap">
+        select h.id as house_pri_id,
+               h.name,
+               h.rental_type,
+               h.area,
+               h.price,
+               h.house_type,
+               h.rental_room,
+               h.create_time,
+               h.status,
+               h.owner_id,
+               o.owner_name
+        from house h
+                 left join
+             owner o
+             on o.id = h.owner_id
+        limit #{pageStart},#{pageSize};
     </select>
 </mapper>

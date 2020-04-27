@@ -2,6 +2,7 @@ package cn.l99.wehouse.service.impl;
 
 import cn.l99.wehouse.dao.HouseDao;
 import cn.l99.wehouse.dao.HouseExtDao;
+import cn.l99.wehouse.map.utils.AroundUtils;
 import cn.l99.wehouse.pojo.AHouse;
 import cn.l99.wehouse.pojo.House;
 import cn.l99.wehouse.pojo.SearchHistory;
@@ -15,6 +16,7 @@ import cn.l99.wehouse.pojo.vo.HouseVo;
 import cn.l99.wehouse.redis.RedisUtils;
 import cn.l99.wehouse.service.IHouseService;
 import cn.l99.wehouse.service.ISearchHistoryService;
+import cn.l99.wehouse.service.ITestService;
 import cn.l99.wehouse.service.IUserOperationService;
 import cn.l99.wehouse.service.elasticsearch.ESIHouseService;
 import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
@@ -25,10 +27,14 @@ import cn.l99.wehouse.utils.condition.recommendation.HouseRecommendationConditio
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,6 +106,13 @@ public class HouseServiceImpl implements IHouseService {
         HouseDto houseDto = new HouseDto();
         houseDto.convertByAHouse(aHouseByHouseId);
 
+        // 获取最近地铁站,作为位置展示
+        String distance = AroundUtils.getDistance(aHouseByHouseId.getHouse().getLongitude(), aHouseByHouseId.getHouse().getLatitude());
+        if (!StringUtils.isEmpty(distance)) {
+            houseDto.getHouse().setLocation("距" + distance + "米");
+            log.info("{}", houseDto.getHouse().getLocation());
+        }
+
         if (!StringUtils.isEmpty(userId)) {
             // 当用户登录后，需要进行页面埋点，记录用户在页面的停留时间
             UserOperation userOperation = constructUserOperation(userId, houseId, OperationType.C);
@@ -120,18 +133,18 @@ public class HouseServiceImpl implements IHouseService {
 
         // == 异步为新房源添加房源向量 ==
         // 1、获取相似房源
-        log.info("添加房源向量");
-        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
-        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
-        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
-        // 2、新增房源向量
-        houseRecommendationService.addHouseVector(house.getId(),
-                similarHouses
-                        .stream()
-                        .map(House::getId)
-                        .collect(Collectors.toList()));
-
-        log.info("新增房源到es");
+//        log.info("添加房源向量");
+//        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
+//        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
+//        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
+//        // 2、新增房源向量
+//        houseRecommendationService.addHouseVector(house.getId(),
+//                similarHouses
+//                        .stream()
+//                        .map(House::getId)
+//                        .collect(Collectors.toList()));
+//
+//        log.info("新增房源到es");
         // 添加房源到 es
         esHouseService.addHouseToEs(house);
         return CommonResult.success();
@@ -233,4 +246,14 @@ public class HouseServiceImpl implements IHouseService {
         return searchHistory;
     }
 
+
+    @Autowired
+    ITestService testService;
+
+    // 上传数据
+    @Override
+    public CommonResult test() {
+        testService.readDate();
+        return CommonResult.success();
+    }
 }

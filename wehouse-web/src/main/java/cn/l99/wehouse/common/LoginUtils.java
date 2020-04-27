@@ -79,8 +79,7 @@ public class LoginUtils {
      */
     public static String getUserId(HttpServletRequest request, IRedisService redisService) {
         String token = CookieUtils.getCookieValue(request, "token");
-        Object data = redisService.getValueIfExist(token).getData();
-        return data == null ? null : (String) data;
+        return token == null ? null : (String) redisService.getValueIfExist(token).getData();
     }
 
 }
