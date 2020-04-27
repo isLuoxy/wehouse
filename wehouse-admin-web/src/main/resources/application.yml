@@ -1,0 +1,51 @@
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+spring:
+  profiles:
+    active: dev
+
+
+---
+spring:
+  profiles: dev
+
+# service version
+wehouse:
+  service:
+    version: 1.0.dev
+
+# Dubbo Config properties
+dubbo:
+  application:
+    id: wehouse-admin-web-dev
+    name: wehouse-admin-web-dev
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
+# web port
+server:
+  port: 8888
+
+---
+spring:
+  profiles: uat
+
+
+# service version
+wehouse:
+  service:
+    version: 1.0
+
+# Dubbo Config properties
+dubbo:
+  application:
+    id: wehouse-admin-web
+    name: wehouse-admin-web
+  registry:
+    protocol: zookeeper
+    address: 127.0.0.1:2181
+# web port
+server:
+  port: 8888

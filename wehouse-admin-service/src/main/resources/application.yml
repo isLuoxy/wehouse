@@ -1,0 +1,68 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wehouse?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: wehouse
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 3
+      min-idle: 3
+      max-active: 10
+      max-wait: 6000
+      stat-view-servlet:
+        login-username: root
+        login-password:
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1
+server:
+  port: 7000
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+---
+spring:
+  profiles: dev
+
+wehouse:
+  service:
+    version: 1.0.dev
+
+dubbo:
+  application:
+    id: wehouse-admin-service-dev
+    name: wehouse-admin-service-dev
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
+  protocol:
+    name: dubbo
+    port: 20882
+  provider:
+    timeout: 300000
+---
+spring:
+  profiles: uat
+
+wehouse:
+  service:
+    version: 1.0
+
+dubbo:
+  application:
+    id: wehouse-admin-service
+    name: wehouse-admin-service
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
+  protocol:
+    name: dubbo
+    port: 20887
+  provider:
+    timeout: 300000

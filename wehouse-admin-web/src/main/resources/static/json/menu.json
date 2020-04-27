@@ -1,0 +1,82 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": [
+    {
+      "id": 1,
+      "name": "用户管理",
+      "icon": "&#xe6b8;",
+      "url": "",
+      "children": [
+        {
+          "id": 2,
+          "name": "用户列表",
+          "icon": "",
+          "url": "./pages/user/user_list.html"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "房东管理",
+      "icon": "&#xe6ce;",
+      "url": "",
+      "children": [
+        {
+          "id": 4,
+          "name": "房东列表",
+          "icon": "",
+          "url": "./pages/owner/owner_list.html"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "房源管理",
+      "icon": "&#xe705;",
+      "url": "",
+      "children": [
+        {
+          "id": 6,
+          "name": "房源列表",
+          "icon": "",
+          "url": "./pages/house/house_list.html"
+        },
+        {
+			"id": 7,
+			"name": "房源推荐工具",
+			"icon": "",
+			"url": ""
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "预约管理",
+      "icon": "&#xe723;",
+      "url": "",
+      "children": [
+        {
+          "id": 9,
+          "name": "预约列表",
+          "icon": "",
+          "url": "./pages/order/list.html"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "系统管理",
+      "icon": "&#xe726;",
+      "url": "",
+      "children": [
+        {
+          "id": 11,
+          "name": "管理员列表",
+          "icon": "",
+          "url": "./pages/admin/list.html"
+        }
+      ]
+    }
+  ]
+}
