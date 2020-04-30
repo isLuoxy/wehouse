@@ -49,7 +49,28 @@ dubbo:
     name: wehouse-web
   registry:
     protocol: zookeeper
-    address: 127.0.0.1:2181
+    address: 121.36.29.50:2181
+# web port
+server:
+  port: 9999
+
+---
+spring:
+  profiles: docker_uat
+
+# service version
+wehouse:
+  service:
+    version: 1.0
+
+# Dubbo Config properties
+dubbo:
+  application:
+    id: wehouse-web
+    name: wehouse-web
+  registry:
+    protocol: zookeeper
+    address: 121.36.29.50:2181
 # web port
 server:
   port: 9999

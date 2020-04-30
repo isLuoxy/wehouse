@@ -103,8 +103,34 @@ public class HouseServiceImpl implements IHouseService {
         if (aHouseByHouseId == null) {
             return CommonResult.failure(ErrorCode.HOUSE_NOT_EXIST);
         }
+
         HouseDto houseDto = new HouseDto();
         houseDto.convertByAHouse(aHouseByHouseId);
+
+
+        // TODO 用于获取推荐房源
+        House house = aHouseByHouseId.getHouse();
+        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
+        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
+        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
+        if (similarHouses != null && similarHouses.size() >= 3) {
+            List<SimpleHouseDto> temp = new ArrayList<>(3);
+            for (int i = 0; i < 3; i++) {
+                SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
+                simpleHouseDto.convertToSimpleHouseDtoFromHouse(similarHouses.get(i));
+                temp.add(simpleHouseDto);
+            }
+            houseDto.setRecommendation(temp);
+        } else if (similarHouses != null) {
+            List<SimpleHouseDto> temp = new ArrayList<>();
+            similarHouses.forEach(house1 -> {
+                SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
+                simpleHouseDto.convertToSimpleHouseDtoFromHouse(house1);
+                temp.add(simpleHouseDto);
+            });
+            houseDto.setRecommendation(temp);
+        }
+
 
         // 获取最近地铁站,作为位置展示
         String distance = AroundUtils.getDistance(aHouseByHouseId.getHouse().getLongitude(), aHouseByHouseId.getHouse().getLatitude());
@@ -246,6 +272,15 @@ public class HouseServiceImpl implements IHouseService {
         return searchHistory;
     }
 
+
+    @Override
+    public CommonResult getRecommendationHouseByHouseId(String houseId) {
+        List<String> recommendationByCenterHouse = houseRecommendationService.getRecommendationByCenterHouse(houseId, 3);
+        if (recommendationByCenterHouse == null || recommendationByCenterHouse.isEmpty()) {
+            return CommonResult.failure(000, "没有推荐房源");
+        }
+        return CommonResult.success(recommendationByCenterHouse);
+    }
 
     @Autowired
     ITestService testService;

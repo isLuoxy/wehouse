@@ -14,6 +14,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 房屋二级展示封装数据
@@ -28,6 +29,8 @@ public class HouseDto implements Serializable {
     private SecondHouseDto house;
 
     private SecondHouseExtDto houseExt;
+
+    private List<SimpleHouseDto> recommendation;
 
     // 记录用户页面停留时间的埋点，如果不为空，说明需要记录用户离开页面的时间，此时前端可以根据该标识发送用户离开页面时间；为空则不需要
     private Integer usId;

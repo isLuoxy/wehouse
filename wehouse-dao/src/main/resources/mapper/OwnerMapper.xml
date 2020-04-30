@@ -8,7 +8,7 @@
         <result property="ownerName" column="owner_name"/>
         <result property="ownerPassword" column="owner_password"/>
         <result property="ownerPhone" column="owner_phone"/>
-        <result property="ownerStatus" column="status"/>
+        <result property="status" column="status"/>
         <result property="createTime" column="create_time"/>
         <result property="lastLoginTime" column="last_login_time"/>
     </resultMap>

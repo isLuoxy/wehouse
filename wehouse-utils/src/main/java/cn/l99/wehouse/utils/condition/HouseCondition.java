@@ -19,8 +19,8 @@ public class HouseCondition {
     // 页面大小
     private String pageSize = "30";
 
-    // 房屋类型
-    private String houseType;
+    // 出租类型
+    private String RentalType;
 
     // 租金 <
     private String rentLessThan;
@@ -48,13 +48,6 @@ public class HouseCondition {
     }
 
 
-    public String getHouseType() {
-        return houseType;
-    }
-
-    public void setHouseType(String houseType) {
-        this.houseType = houseType;
-    }
 
 
     public String getRentLessThan() {
@@ -97,5 +90,13 @@ public class HouseCondition {
 
     public void setPageSize(String pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getRentalType() {
+        return RentalType;
+    }
+
+    public void setRentalType(String rentalType) {
+        RentalType = rentalType;
     }
 }

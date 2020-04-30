@@ -11,6 +11,7 @@ import cn.l99.wehouse.utils.SmsUtils;
 import cn.l99.wehouse.utils.UserUtils;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -27,6 +28,7 @@ public class OwnerServiceImpl implements IOwnerService {
 
     final RedisUtils redisUtils;
 
+    @Autowired
     public OwnerServiceImpl(OwnerDao ownerDao, RedisUtils redisUtils) {
         this.ownerDao = ownerDao;
         this.redisUtils = redisUtils;

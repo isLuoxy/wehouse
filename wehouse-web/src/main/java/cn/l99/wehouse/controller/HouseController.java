@@ -80,6 +80,17 @@ public class HouseController {
         return userOperationService.updateUserOperation(userOperationVo.convertToUserOperation());
     }
 
+    /**
+     * 获取特定房源的推荐房源
+     *
+     * @param houseId 房源Id
+     * @return
+     */
+    @GetMapping("/house/recommendation/{id}")
+    public Object getRecommendation(@PathVariable("id") String houseId) {
+        log.info("获取房源id为{} 的推荐房源", houseId);
+        return null;
+    }
 
     @GetMapping("/test")
     public Object test() {

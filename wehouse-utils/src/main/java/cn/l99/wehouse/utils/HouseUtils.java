@@ -144,7 +144,7 @@ public class HouseUtils {
                 break;
             case "z":
                 RentalType rentalType = RentalType.valueOf(conditionStr);
-                houseCondition.setHouseType(rentalType.data);
+                houseCondition.setRentalType(rentalType.data);
                 break;
             case "r":
                 String rent = Rent.valueOf(conditionStr).desc;

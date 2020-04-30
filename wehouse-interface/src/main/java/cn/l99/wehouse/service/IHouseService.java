@@ -55,6 +55,12 @@ public interface IHouseService {
      */
     CommonResult findHouseByCondition(String cityPyName, String condition, String searchWord, String userId);
 
+    /**
+     * 根据特定房源获取推荐房源
+     *
+     * @return
+     */
+    CommonResult getRecommendationHouseByHouseId(String houseId);
 
     CommonResult test();
 }

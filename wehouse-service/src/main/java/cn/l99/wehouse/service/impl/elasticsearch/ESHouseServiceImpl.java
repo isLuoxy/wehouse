@@ -96,7 +96,7 @@ public class ESHouseServiceImpl implements ESIHouseService {
         UseSearchStringConstructQueryBuilder(boolQueryBuilder, search);
 
         // 设置分页
-        if(houseCondition == null){
+        if (houseCondition == null) {
             houseCondition = new HouseCondition();
         }
         Pageable pageable = PageRequest.of(Integer.parseInt(houseCondition.getPageStart()), Integer.parseInt(houseCondition.getPageSize()));
@@ -162,8 +162,8 @@ public class ESHouseServiceImpl implements ESIHouseService {
         if (houseCondition.getSubwayLineId() != null) {
             boolQueryBuilder.must(QueryBuilders.termQuery("houseExt.subwayLineId", houseCondition.getSubwayLineId()));
         }
-        if (houseCondition.getHouseType() != null) {
-            boolQueryBuilder.must(QueryBuilders.termQuery("houseType", houseCondition.getHouseType()));
+        if (houseCondition.getRentalType() != null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("rentalType", houseCondition.getRentalType()));
         }
         if (houseCondition.getOrientation() != null) {
             boolQueryBuilder.must(QueryBuilders.termQuery("orientation", houseCondition.getOrientation()));

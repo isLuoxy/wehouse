@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -27,6 +28,10 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
     @Override
     public List<String> getRecommendationByCenterHouse(String HouseId, int amount) {
         log.info("房源id:{},推荐房源", HouseId);
+        if (word2VEC == null) {
+            log.info("word2Vec 为空");
+            return Collections.emptyList();
+        }
         List<String> result = word2VEC.wordsNearest(HouseId, amount);
         return result;
     }
