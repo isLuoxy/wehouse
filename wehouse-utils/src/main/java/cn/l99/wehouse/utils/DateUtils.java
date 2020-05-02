@@ -29,6 +29,26 @@ public class DateUtils {
         return localDateTime2Date(localDateTime.plusDays(dayToAdd));
     }
 
+    /**
+     * 增加特定小时
+     *
+     * @return
+     */
+    public static Date plusHours(Date currDate, int hourToAdd) {
+        LocalDateTime localDateTime = date2LocalDateTime(currDate);
+        return localDateTime2Date(localDateTime.plusHours(hourToAdd));
+    }
+
+    /**
+     * 增加特定分钟
+     *
+     * @return
+     */
+    public static Date plusMinutes(Date currDate, int minuteToAdd) {
+        LocalDateTime localDateTime = date2LocalDateTime(currDate);
+        return localDateTime2Date(localDateTime.plusMinutes(minuteToAdd));
+    }
+
     public static Date now() {
         return new Date();
     }

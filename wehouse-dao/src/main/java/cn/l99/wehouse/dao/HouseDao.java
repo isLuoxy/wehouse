@@ -53,6 +53,13 @@ public interface HouseDao {
     int getTotal();
 
     /**
+     * 获取所以房源的id
+     *
+     * @return
+     */
+    List<String> getTotalId();
+
+    /**
      * 更新房源状态【房东操作】
      */
     boolean updateHouse(House house);

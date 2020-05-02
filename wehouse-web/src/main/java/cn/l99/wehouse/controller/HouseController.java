@@ -96,4 +96,14 @@ public class HouseController {
     public Object test() {
         return houseService.test();
     }
+
+    @GetMapping("/test2")
+    public Object test2() {
+        return houseService.test2();
+    }
+
+    @GetMapping("/test3")
+    public Object tese3() {
+        return houseService.test3();
+    }
 }

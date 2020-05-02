@@ -62,5 +62,23 @@ public interface IHouseService {
      */
     CommonResult getRecommendationHouseByHouseId(String houseId);
 
+    // ======== 非线上功能 ===========
+
+    /**
+     * 从 excel 中读取数据
+     *
+     * @return
+     */
     CommonResult test();
+
+    /**
+     * 构造 历史数据
+     */
+    CommonResult test2();
+
+    /**
+     * 训练任务
+     * @return
+     */
+    CommonResult test3();
 }

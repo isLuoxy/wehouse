@@ -27,6 +27,7 @@ import cn.l99.wehouse.utils.condition.recommendation.HouseRecommendationConditio
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -110,20 +112,36 @@ public class HouseServiceImpl implements IHouseService {
 
         // TODO 用于获取推荐房源
         House house = aHouseByHouseId.getHouse();
-        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
-        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
-        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
-        if (similarHouses != null && similarHouses.size() >= 3) {
-            List<SimpleHouseDto> temp = new ArrayList<>(3);
-            for (int i = 0; i < 3; i++) {
-                SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
-                simpleHouseDto.convertToSimpleHouseDtoFromHouse(similarHouses.get(i));
-                temp.add(simpleHouseDto);
+        // 通过推荐模块获取推荐房源列表
+        List<String> recommendationByCenterHouse = houseRecommendationService.getRecommendationByCenterHouse(house.getId(), 3);
+        if (recommendationByCenterHouse == null || recommendationByCenterHouse.isEmpty()) {
+            // 下面是通过搜索当前房源的相似房源来进行房源推荐
+            log.info("通过搜索获取推荐房源");
+            HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
+            CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
+            List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
+            if (similarHouses != null && similarHouses.size() >= 3) {
+                List<SimpleHouseDto> temp = new ArrayList<>(3);
+                for (int i = 0; i < 3; i++) {
+                    SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
+                    simpleHouseDto.convertToSimpleHouseDtoFromHouse(similarHouses.get(i));
+                    temp.add(simpleHouseDto);
+                }
+                houseDto.setRecommendation(temp);
+            } else if (similarHouses != null) {
+                List<SimpleHouseDto> temp = new ArrayList<>();
+                similarHouses.forEach(house1 -> {
+                    SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
+                    simpleHouseDto.convertToSimpleHouseDtoFromHouse(house1);
+                    temp.add(simpleHouseDto);
+                });
+                houseDto.setRecommendation(temp);
             }
-            houseDto.setRecommendation(temp);
-        } else if (similarHouses != null) {
+        } else {
+            log.info("通过推荐模块获取推荐房源");
+            List<House> houseByHouseId = houseDao.getHouseByHouseId(recommendationByCenterHouse);
             List<SimpleHouseDto> temp = new ArrayList<>();
-            similarHouses.forEach(house1 -> {
+            houseByHouseId.forEach(house1 -> {
                 SimpleHouseDto simpleHouseDto = new SimpleHouseDto();
                 simpleHouseDto.convertToSimpleHouseDtoFromHouse(house1);
                 temp.add(simpleHouseDto);
@@ -159,18 +177,18 @@ public class HouseServiceImpl implements IHouseService {
 
         // == 异步为新房源添加房源向量 ==
         // 1、获取相似房源
-//        log.info("添加房源向量");
-//        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
-//        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
-//        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
-//        // 2、新增房源向量
-//        houseRecommendationService.addHouseVector(house.getId(),
-//                similarHouses
-//                        .stream()
-//                        .map(House::getId)
-//                        .collect(Collectors.toList()));
-//
-//        log.info("新增房源到es");
+        log.info("添加房源向量");
+        HouseRecommendationCondition houseRecommendationCondition = acqHouseRecommendationCondition(house);
+        CommonResult similarHouseByCondition = esHouseService.findSimilarHouseByCondition(houseRecommendationCondition);
+        List<House> similarHouses = (List<House>) similarHouseByCondition.getData();
+        // 2、新增房源向量
+        houseRecommendationService.addHouseVector(house.getId(),
+                similarHouses
+                        .stream()
+                        .map(House::getId)
+                        .collect(Collectors.toList()));
+
+        log.info("新增房源到es");
         // 添加房源到 es
         esHouseService.addHouseToEs(house);
         return CommonResult.success();
@@ -289,6 +307,22 @@ public class HouseServiceImpl implements IHouseService {
     @Override
     public CommonResult test() {
         testService.readDate();
+        return CommonResult.success();
+    }
+
+    @Override
+    public CommonResult test2() {
+        try {
+            testService.constructHistory();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return CommonResult.success();
+    }
+
+    @Override
+    public CommonResult test3() {
+        testService.training();
         return CommonResult.success();
     }
 }

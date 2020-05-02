@@ -38,4 +38,10 @@ public interface IHouseRecommendationService {
      * @return 排序后的候选房源
      */
     List<String> sortHouse(List<String> reference, List<String> candidate);
+
+
+    /**
+     * 测试构造数据使用，手动调用训练任务
+     */
+    void test3();
 }

@@ -25,7 +25,6 @@ public class RecommendedTasks {
     @Autowired
     public UserOperationDao userOperationDao;
 
-
     /**
      * 每日全量更新词向量
      */
@@ -34,7 +33,7 @@ public class RecommendedTasks {
         Date s = DateUtils.now();
         log.info("=== 开始调度任务，当前时间：{} ====", DateUtils.now());
         // 从数据库读取用户点击记录，并且进行数据收集和清洗
-        Date start = DateUtils.minusMonths(DateUtils.get0Am(), 2);
+        Date start = DateUtils.minusMonths(DateUtils.get0Am(), 1);
         List<UserOperation> userOperations = userOperationDao.findUserOperationByOperationTime(start);
         Map<String, List<UserOperation>> userOperationMap = new HashMap<>();
         for (UserOperation userOperation : userOperations) {
@@ -58,13 +57,8 @@ public class RecommendedTasks {
         log.info("耗时：{}ms", e.getTime() - s.getTime());
     }
 
-    private void writeFile(File file, List<String> listToWrite) throws IOException {
-        try (BufferedWriter br = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("G://writer.txt"), "UTF-8"), 1024)) {
-            for (String s : listToWrite) {
-                br.write(s);
-                br.newLine();
-            }
-        }
+    private void writeFile() throws IOException {
+        Word2VEC word2VEC = Word2VecFactory.getWord2VEC();
     }
 
     private List<String> dataCollation(Map<String, List<UserOperation>> userOperationMap) {

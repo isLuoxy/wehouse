@@ -1,5 +1,6 @@
 package cn.l99.wehouse.recommendation.service.impl;
 
+import cn.l99.wehouse.recommendation.schedule.RecommendedTasks;
 import cn.l99.wehouse.recommendation.word2vec.Word2VEC;
 import cn.l99.wehouse.recommendation.word2vec.Word2VecFactory;
 import cn.l99.wehouse.recommendation.word2vec.pojo.WordEntry;
@@ -7,6 +8,7 @@ import cn.l99.wehouse.recommendation.word2vec.utils.Word2VECUtils;
 import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
 import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.ArrayList;
@@ -23,10 +25,10 @@ import java.util.TreeSet;
 @Slf4j
 public class HouseRecommendationServiceImpl implements IHouseRecommendationService {
 
-    private Word2VEC word2VEC = Word2VecFactory.getWord2VEC();
 
     @Override
     public List<String> getRecommendationByCenterHouse(String HouseId, int amount) {
+        Word2VEC word2VEC = Word2VecFactory.getWord2VEC();
         log.info("房源id:{},推荐房源", HouseId);
         if (word2VEC == null) {
             log.info("word2Vec 为空");
@@ -39,6 +41,7 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
     @Override
     @Async(value = "taskExecutor")
     public void addHouseVector(String houseId, List<String> referenceHouse) {
+        Word2VEC word2VEC = Word2VecFactory.getWord2VEC();
         // 查找参照房源的向量
         if (word2VEC == null) {
             return;
@@ -77,7 +80,7 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
 
     @Override
     public List<String> sortHouse(List<String> reference, List<String> candidate) {
-
+        Word2VEC word2VEC = Word2VecFactory.getWord2VEC();
         List<float[]> referenceVector = new ArrayList<>();
 
         // 兼容向量初始为null
@@ -132,5 +135,14 @@ public class HouseRecommendationServiceImpl implements IHouseRecommendationServi
         });
 
         return result;
+    }
+
+
+    @Autowired
+    RecommendedTasks tasks;
+
+    @Override
+    public void test3() {
+        tasks.scheduledTask();
     }
 }

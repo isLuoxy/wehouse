@@ -1,11 +1,17 @@
 package cn.l99.wehouse.service.impl;
 
+import cn.l99.wehouse.dao.HouseDao;
+import cn.l99.wehouse.dao.UserOperationDao;
 import cn.l99.wehouse.map.utils.GeoCodeUtils;
+import cn.l99.wehouse.pojo.UserOperation;
+import cn.l99.wehouse.pojo.baseEnum.OperationType;
 import cn.l99.wehouse.pojo.baseEnum.Orientation;
 import cn.l99.wehouse.pojo.vo.HouseVo;
 import cn.l99.wehouse.service.IHouseService;
 import cn.l99.wehouse.service.ITestService;
+import cn.l99.wehouse.service.recommendation.IHouseRecommendationService;
 import cn.l99.wehouse.utils.DateUtils;
+import com.alibaba.dubbo.config.annotation.Reference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -21,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -31,6 +38,15 @@ public class TestServiceImpl implements ITestService {
 
     @Autowired
     IHouseService houseService;
+
+    @Autowired
+    HouseDao houseDao;
+
+    @Autowired
+    UserOperationDao userOperationDao;
+
+    @Reference(version = "${wehouse.service.version}")
+    IHouseRecommendationService houseRecommendationService;
 
     @Override
     @Async
@@ -51,6 +67,51 @@ public class TestServiceImpl implements ITestService {
         }
         long end = System.currentTimeMillis();
         log.info("总耗时: {}ms", end - start);
+    }
+
+    @Override
+    @Async
+    public void constructHistory() throws ParseException {
+        // 获取所有的房源id
+        List<String> houseId = houseDao.getTotalId();
+        log.info("共有房源数量 {}", houseId.size());
+
+        // 随机选择用户，和选择房源id，并生成时间
+        String startDate = "2020-02-01 00:00:00";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date start = simpleDateFormat.parse(startDate);
+
+        long startT = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            long lineStartT = System.currentTimeMillis();
+            int lineNumber = random.nextInt(30);
+            // 上个浏览结束时间
+            Date endTmp = DateUtils.plusMinutes(start, random.nextInt(100000));
+
+            // 随机用户
+            int user = random.nextInt(10000);
+            for (int j = 0; j < lineNumber; j++) {
+                // 随机房源
+                String house = houseId.get(random.nextInt(houseId.size()));
+                // 随机开始时间
+                Date startTmp = DateUtils.plusMinutes(endTmp, random.nextInt(30));
+                endTmp = DateUtils.plusMinutes(startTmp, random.nextInt(30));
+                int pageOnTime = (int) DateUtils.millsBetweenMills(startTmp, endTmp);
+                log.info("开始时间:{},结束时间:{},页面停留时间:{}", startTmp, endTmp, pageOnTime);
+                UserOperation userOperation = new UserOperation();
+                userOperation.setHouseId(house);
+                userOperation.setUserId(user);
+                userOperation.setOperationType(OperationType.C);
+                userOperation.setOperationStartTime(startTmp);
+                userOperation.setOperationEndTime(endTmp);
+                userOperation.setPageOnTime(pageOnTime);
+                userOperationDao.insertUserOperation(userOperation);
+            }
+            long lineEndT = System.currentTimeMillis();
+            log.info("行数有{}个数据，耗时{}ms", lineNumber, lineEndT - lineStartT);
+        }
+        long endT = System.currentTimeMillis();
+        log.info("总耗时:{}ms", endT - startT);
     }
 
     private void deal(File file) throws IOException, InvalidFormatException, ParseException {
@@ -79,6 +140,12 @@ public class TestServiceImpl implements ITestService {
         }
         long end = System.currentTimeMillis();
         log.info("文件:{} 新增数据耗时: {}ms", file.getName(), end - start);
+    }
+
+    @Override
+    @Async
+    public void training() {
+        houseRecommendationService.test3();
     }
 
     private HouseVo getHouserVo(String[] temp) throws ParseException {
@@ -133,4 +200,5 @@ public class TestServiceImpl implements ITestService {
         houseVo.setOrientation(values[random.nextInt(4)].getValue());
         return houseVo;
     }
+
 }
