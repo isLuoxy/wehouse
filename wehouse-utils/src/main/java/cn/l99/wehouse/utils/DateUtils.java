@@ -92,6 +92,7 @@ public class DateUtils {
         return Math.abs(ChronoUnit.MILLIS.between(date2LocalDateTime(firstDate), date2LocalDateTime(secondDate)));
     }
 
+
     /**
      * @param firstDate
      * @param secondDate
