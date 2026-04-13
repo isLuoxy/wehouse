@@ -10,7 +10,7 @@ spring:
 spring:
   profiles: dev
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
     username: root
     password:
@@ -55,7 +55,7 @@ server:
 spring:
   profiles: uat
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wehouse?useSSL=false
     username: root
     password: root
